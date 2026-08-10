@@ -15,7 +15,7 @@
 (function () {
   "use strict";
 
-  var PIXEL_ID = "2161665674417703";
+  var PIXEL_ID = "1242058424697245";
   var API_HOST = "api.srv936408.hstgr.cloud";
   var CAPI_ENDPOINT = "https://" + API_HOST + "/tracking/purchase";
 
