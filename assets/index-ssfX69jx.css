@@ -5,7 +5,7 @@
 .hc-countdown-label{font-size:.8rem;font-weight:600;color:hsl(var(--foreground));text-transform:uppercase;letter-spacing:.02em}
 .hc-countdown-value{font-family:ui-monospace,monospace;font-size:1.15rem;font-weight:800;color:hsl(var(--cta));font-variant-numeric:tabular-nums;margin-left:.35rem}
 @keyframes hc-countdown-pulse{0%,100%{box-shadow:0 0 0 0 rgba(45,190,235,.45)}50%{box-shadow:0 0 0 8px rgba(45,190,235,0)}}
-.hc-card-light{background:#F2FAFD;border-color:#F5C518;transition:border-color .2s ease}
+.hc-card-light{background:#FBF0C7;border-color:#E0B94D;transition:border-color .2s ease}
 .hc-card-light:hover{border-color:hsl(var(--primary))}
 .hc-text-dark{color:#1A1025}
 .hc-text-muted-dark{color:#5B4B82}
