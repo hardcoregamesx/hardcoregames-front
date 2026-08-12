@@ -220,7 +220,14 @@
   function fetchJson(path) {
     var token = localStorage.getItem(TOKEN_KEY);
     if (!token) return Promise.resolve(null);
-    return fetch(API_BASE + path, { headers: { Authorization: "Bearer " + token } })
+    // La API no manda Cache-Control, así que sin esto WebKit (Safari y
+    // Chrome iOS, ambos sobre WKWebView) puede servir la respuesta vieja
+    // del fetch anterior en vez de pedirla de nuevo, incluso después de
+    // que pageshow dispare un refetch tras volver de /rewards/.
+    return fetch(API_BASE + path, {
+      headers: { Authorization: "Bearer " + token },
+      cache: "no-store",
+    })
       .then(function (res) {
         return res.ok ? res.json() : null;
       })
@@ -270,5 +277,15 @@
   // `event.persisted` detecta exactamente esa restauración y refresca.
   window.addEventListener("pageshow", function (event) {
     if (event.persisted) init();
+  });
+
+  // Chrome iOS corre sobre WKWebView, no sobre su propio motor, y ahí
+  // `pageshow`/`persisted` no siempre se comporta igual que en Safari.
+  // `visibilitychange` es más universal: se dispara cada vez que esta
+  // pestaña vuelve a quedar visible, sin depender de cómo cada navegador
+  // implemente su caché de navegación. Es barato y las funciones de abajo
+  // ya son seguras de repetir (no duplican nodos ni relanzan el cupón).
+  document.addEventListener("visibilitychange", function () {
+    if (document.visibilityState === "visible") init();
   });
 })();
