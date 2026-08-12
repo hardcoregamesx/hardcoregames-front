@@ -91,6 +91,13 @@
   function renderPointsPill(points) {
     if (isPointsDismissed()) return;
 
+    var existing = document.getElementById("hc-rewards-points-pill");
+    if (existing) {
+      var existingLabel = existing.querySelector("span");
+      if (existingLabel) existingLabel.textContent = "⭐ " + points;
+      return;
+    }
+
     var pill = document.createElement("div");
     pill.id = "hc-rewards-points-pill";
     pill.setAttribute(
@@ -255,4 +262,13 @@
   } else {
     init();
   }
+
+  // En móvil (Safari/Chrome) volver con el botón "atrás" desde /rewards/
+  // casi siempre restaura la página desde bfcache: no hay reload, así que
+  // este script no se re-ejecuta y un cupón recién ganado nunca llega a
+  // aplicarse ni a mostrar su cuenta regresiva. `pageshow` con
+  // `event.persisted` detecta exactamente esa restauración y refresca.
+  window.addEventListener("pageshow", function (event) {
+    if (event.persisted) init();
+  });
 })();
