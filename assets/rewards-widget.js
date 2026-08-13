@@ -23,12 +23,156 @@
   var GLOBAL_COUPON_KEY = "global_coupon_code";
   var HIDDEN_PATH_PREFIXES = ["/rewards", "/checkout", "/auth"];
   var CONTAINER_ID = "hc-rewards-widget";
+  // Compartidas con sorteos-widget.js: ambos widgets se apilan en el mismo
+  // contenedor (#hc-rewards-widget), asi que la posicion y el estado de
+  // colapsado deben ser una sola fuente de verdad para los dos.
+  var POS_KEY = "hc_widget_pos";
+  var COLLAPSED_KEY = "hc_widget_collapsed";
 
   function shouldSkipPath() {
     var path = window.location.pathname || "/";
     return HIDDEN_PATH_PREFIXES.some(function (p) {
       return path.indexOf(p) === 0;
     });
+  }
+
+  // -------------------------------------------------------------------- //
+  // Arrastrar y colapsar (pestaña expandible)
+  // -------------------------------------------------------------------- //
+
+  function applyStoredPosition(el) {
+    try {
+      var raw = localStorage.getItem(POS_KEY);
+      if (!raw) return;
+      var pos = JSON.parse(raw);
+      if (typeof pos.right === "number" && typeof pos.bottom === "number") {
+        el.style.right = pos.right + "px";
+        el.style.bottom = pos.bottom + "px";
+      }
+    } catch (e) {
+      // localStorage con datos corruptos: se ignora y se usa la posicion
+      // por defecto, nunca debe romper el resto del widget.
+    }
+  }
+
+  function savePosition(right, bottom) {
+    try {
+      localStorage.setItem(POS_KEY, JSON.stringify({ right: right, bottom: bottom }));
+    } catch (e) {}
+  }
+
+  function isCollapsed() {
+    return localStorage.getItem(COLLAPSED_KEY) === "1";
+  }
+
+  function setCollapsed(el, collapsed) {
+    try {
+      localStorage.setItem(COLLAPSED_KEY, collapsed ? "1" : "0");
+    } catch (e) {}
+    Array.prototype.forEach.call(el.children, function (child) {
+      if (child.id !== "hc-widget-handle") {
+        child.style.display = collapsed ? "none" : "";
+      }
+    });
+    var arrow = document.getElementById("hc-widget-handle-arrow");
+    if (arrow) arrow.textContent = collapsed ? "❮" : "❯";
+  }
+
+  function makeDraggable(handle, container) {
+    var dragging = false;
+    var moved = false;
+    var startX, startY, startRight, startBottom;
+
+    function clientXY(e) {
+      if (e.touches && e.touches.length) {
+        return { x: e.touches[0].clientX, y: e.touches[0].clientY };
+      }
+      return { x: e.clientX, y: e.clientY };
+    }
+
+    function onDown(e) {
+      dragging = true;
+      moved = false;
+      var p = clientXY(e);
+      startX = p.x;
+      startY = p.y;
+      var rect = container.getBoundingClientRect();
+      startRight = window.innerWidth - rect.right;
+      startBottom = window.innerHeight - rect.bottom;
+      e.preventDefault();
+    }
+
+    function onMove(e) {
+      if (!dragging) return;
+      var p = clientXY(e);
+      var dx = p.x - startX;
+      var dy = p.y - startY;
+      if (Math.abs(dx) > 4 || Math.abs(dy) > 4) moved = true;
+      var maxRight = Math.max(window.innerWidth - 48, 0);
+      var maxBottom = Math.max(window.innerHeight - 48, 0);
+      var newRight = Math.min(Math.max(startRight - dx, 0), maxRight);
+      var newBottom = Math.min(Math.max(startBottom - dy, 0), maxBottom);
+      container.style.right = newRight + "px";
+      container.style.bottom = newBottom + "px";
+    }
+
+    function onUp() {
+      if (!dragging) return;
+      dragging = false;
+      if (moved) {
+        var rect = container.getBoundingClientRect();
+        savePosition(window.innerWidth - rect.right, window.innerHeight - rect.bottom);
+      } else {
+        // No hubo arrastre real: fue un tap/click sobre el asa, alterna
+        // colapsado en vez de mover.
+        setCollapsed(container, !isCollapsed());
+      }
+    }
+
+    handle.addEventListener("mousedown", onDown);
+    window.addEventListener("mousemove", onMove);
+    window.addEventListener("mouseup", onUp);
+    handle.addEventListener("touchstart", onDown, { passive: false });
+    window.addEventListener("touchmove", onMove, { passive: false });
+    window.addEventListener("touchend", onUp);
+  }
+
+  function initDragAndCollapse(el) {
+    if (el.getAttribute("data-hc-drag-init")) return;
+    el.setAttribute("data-hc-drag-init", "1");
+
+    applyStoredPosition(el);
+
+    var handle = document.createElement("div");
+    handle.id = "hc-widget-handle";
+    handle.title = "Arrastra para mover · toca para ocultar/mostrar";
+    handle.setAttribute(
+      "style",
+      [
+        "width:28px",
+        "height:28px",
+        "border-radius:50%",
+        "background:rgba(20,10,35,0.75)",
+        "color:#fff",
+        "display:flex",
+        "align-items:center",
+        "justify-content:center",
+        "font-size:12px",
+        "cursor:grab",
+        "user-select:none",
+        "touch-action:none",
+        "align-self:flex-end",
+        "box-shadow:0 2px 10px rgba(0,0,0,0.4)",
+      ].join(";")
+    );
+    var arrow = document.createElement("span");
+    arrow.id = "hc-widget-handle-arrow";
+    arrow.textContent = "❯";
+    handle.appendChild(arrow);
+    el.insertBefore(handle, el.firstChild);
+    makeDraggable(handle, el);
+
+    if (isCollapsed()) setCollapsed(el, true);
   }
 
   function isPointsDismissed() {
@@ -64,6 +208,7 @@
       );
       document.body.appendChild(el);
     }
+    initDragAndCollapse(el);
     return el;
   }
 
@@ -224,7 +369,12 @@
     // Chrome iOS, ambos sobre WKWebView) puede servir la respuesta vieja
     // del fetch anterior en vez de pedirla de nuevo, incluso después de
     // que pageshow dispare un refetch tras volver de /rewards/.
-    return fetch(API_BASE + path, {
+    // `cache:"no-store"` solo no basta: hay bugs conocidos de WebKit donde
+    // igual sirve la respuesta cacheada. Un query param con timestamp
+    // cambia la URL en sí, así que ningún cache (HTTP o del propio bug de
+    // WebKit) puede servir una respuesta vieja para una URL "nueva".
+    var bustedPath = path + (path.indexOf("?") === -1 ? "?" : "&") + "_=" + Date.now();
+    return fetch(API_BASE + bustedPath, {
       headers: { Authorization: "Bearer " + token },
       cache: "no-store",
     })
