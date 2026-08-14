@@ -1,0 +1,566 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Game Pass Ultimate | Hardcore Games</title>
+<meta name="description" content="Elige tu plan de Xbox Game Pass Ultimate en menos de un minuto. Entrega inmediata, garantía y soporte por WhatsApp.">
+<meta name="robots" content="noindex">
+<style>
+  :root {
+    --background: hsl(262 60% 10%);
+    --foreground: hsl(0 0% 100%);
+    --card: hsl(262 50% 15%);
+    --card-2: hsl(262 50% 18%);
+    --primary: hsl(262 70% 55%);
+    --secondary: hsl(262 50% 20%);
+    --muted: hsl(262 40% 25%);
+    --muted-foreground: hsl(262 10% 70%);
+    --accent: hsl(145 65% 55%);
+    --destructive: hsl(0 84.2% 60.2%);
+    --border: hsl(262 40% 25%);
+    --radius: .75rem;
+    --cta: hsl(48 95% 60%);
+    --cta-foreground: hsl(262 60% 10%);
+    --gradient-bg: linear-gradient(135deg, #4C0F85 0%, #2DBEEB 100%);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  ::selection { background: var(--cta); color: var(--cta-foreground); }
+  a { color: inherit; }
+
+  h1, h2 {
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    margin: 0;
+  }
+
+  .tabular { font-variant-numeric: tabular-nums; }
+
+  .wrap { max-width: 640px; margin: 0 auto; padding: 0 20px; }
+
+  /* ---- hero ---- */
+  .hero-banner {
+    position: relative;
+    width: 100%;
+    min-height: 420px;
+    overflow: hidden;
+    display: flex;
+    align-items: flex-end;
+    background: var(--gradient-bg);
+  }
+  .hero-banner .hero-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 30%;
+    display: none;
+  }
+  .hero-banner .hero-bg.is-visible { display: block; }
+  .hero-scrim {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(90deg, hsl(262 60% 10% / .96) 0%, hsl(262 60% 10% / .82) 32%, hsl(262 60% 10% / .3) 62%, hsl(262 60% 10% / .05) 88%),
+      linear-gradient(180deg, hsl(262 60% 10% / .2) 0%, hsl(262 60% 10% / .55) 45%, hsl(262 60% 10% / .98) 100%);
+  }
+  .hero-inner { position: relative; z-index: 2; width: 100%; padding-top: 40px; padding-bottom: 30px; }
+  .hero h1, .hero .sub, .hero .price-row { text-shadow: 0 2px 16px rgba(0,0,0,.45); }
+  @media (min-width: 760px) { .hero-banner { min-height: 540px; } }
+
+  .platform-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: hsl(145 65% 55% / .18);
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    padding: 5px 10px;
+    border-radius: 999px;
+    margin-bottom: 16px;
+  }
+  .hero h1 { font-size: clamp(38px, 9vw, 52px); text-wrap: balance; }
+  .hero .sub { color: var(--foreground); opacity: .9; font-size: 16px; max-width: 46ch; margin: 14px 0 24px; }
+
+  .price-row { display: flex; align-items: baseline; gap: 10px; margin-bottom: 22px; }
+  .price-label { font-size: 13px; color: var(--muted-foreground); text-transform: uppercase; letter-spacing: .06em; }
+  .price-value { font-weight: 800; font-size: 32px; letter-spacing: -0.01em; }
+  .price-unit { color: var(--muted-foreground); font-size: 14px; }
+
+  .cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    background: var(--cta);
+    color: var(--cta-foreground);
+    font-weight: 700;
+    font-size: 17px;
+    border: none;
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    cursor: pointer;
+    transition: filter 120ms ease, transform 120ms ease;
+  }
+  .cta:hover { filter: brightness(1.06); }
+  .cta:active { transform: scale(.98); }
+  .cta:focus-visible { outline: 2px solid var(--foreground); outline-offset: 3px; }
+
+  /* ---- trust bar ---- */
+  .trust { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+  .trust-item { background: var(--card); padding: 14px 10px; text-align: center; }
+  .trust-item .dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; margin-right: 6px; }
+  .trust-item .t { font-weight: 700; font-size: 13px; }
+  .trust-item .d { color: var(--muted-foreground); font-size: 11.5px; margin-top: 2px; }
+
+  /* ---- section rhythm ---- */
+  section { padding: 40px 0; }
+  section + section { border-top: 1px solid var(--border); }
+  .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--primary); margin-bottom: 10px; }
+  .sec-title { font-size: 26px; margin-bottom: 8px; }
+  .sec-body { color: var(--muted-foreground); max-width: 48ch; margin: 0 0 22px; }
+
+  /* ---- decision helper ---- */
+  .choice-row { display: flex; flex-direction: column; gap: 10px; }
+  .choice-btn {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 16px 18px; text-align: left; color: var(--foreground); font-size: 15.5px; font-weight: 600; cursor: pointer;
+  }
+  .choice-btn .h { display: block; font-weight: 700; }
+  .choice-btn .s { display: block; color: var(--muted-foreground); font-weight: 400; font-size: 13.5px; margin-top: 2px; }
+  .choice-btn .arrow { flex: none; color: var(--muted-foreground); font-size: 20px; font-weight: 700; }
+  .choice-btn[aria-pressed="true"] { border-color: var(--cta); background: hsl(48 95% 60% / .1); }
+  .choice-btn[aria-pressed="true"] .arrow { color: var(--cta); }
+  .choice-btn:focus-visible { outline: 2px solid var(--cta); outline-offset: 2px; }
+
+  /* ---- plans ---- */
+  .plan-group { display: none; }
+  .plan-group.is-active { display: block; }
+  .plans { display: grid; grid-template-columns: 1fr; gap: 12px; }
+  @media (min-width: 520px) {
+    .plans { grid-template-columns: repeat(3, 1fr); }
+    .plans.plans-2 { grid-template-columns: repeat(2, 1fr); max-width: 420px; }
+  }
+  .plan-card {
+    position: relative; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 18px 16px 16px; display: flex; flex-direction: column; gap: 10px;
+  }
+  .plan-card.is-recommended { border-color: var(--cta); background: linear-gradient(180deg, hsl(48 95% 60% / .12), var(--card) 60%); }
+  .plan-badge {
+    position: absolute; top: -11px; left: 14px; background: var(--cta); color: var(--cta-foreground);
+    font-weight: 700; font-size: 10.5px; letter-spacing: .06em; text-transform: uppercase; padding: 3px 8px; border-radius: 999px;
+  }
+  .plan-duration { font-weight: 800; font-size: 20px; }
+  .plan-price { font-weight: 800; font-size: 24px; }
+  .plan-price-old { color: var(--muted-foreground); font-size: 13px; text-decoration: line-through; margin-left: 6px; }
+  .plan-stock { font-size: 12px; color: var(--accent); }
+  .plan-stock.is-low { color: var(--destructive); }
+  .plan-pick {
+    margin-top: auto; background: transparent; border: 1px solid var(--border); color: var(--foreground);
+    font-weight: 700; font-size: 13.5px; padding: 10px; border-radius: calc(var(--radius) - .25rem); cursor: pointer;
+  }
+  .plan-card.is-recommended .plan-pick { background: var(--cta); color: var(--cta-foreground); border-color: var(--cta); }
+  .plan-pick:focus-visible { outline: 2px solid var(--cta); outline-offset: 2px; }
+
+  .more-durations { margin-top: 14px; text-align: center; }
+  .more-durations summary {
+    cursor: pointer; color: var(--muted-foreground); font-size: 13.5px; font-weight: 600; list-style: none;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .more-durations summary::-webkit-details-marker { display: none; }
+  .more-durations summary::after { content: "+"; font-weight: 800; }
+  .more-durations[open] summary::after { content: "\2212"; }
+  .more-plans { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 14px; text-align: left; }
+  @media (min-width: 520px) { .more-plans { grid-template-columns: repeat(2, 1fr); } }
+  .mini-plan { display: flex; align-items: center; justify-content: space-between; background: var(--card); border: 1px solid var(--border); border-radius: calc(var(--radius) - .25rem); padding: 12px 14px; font-size: 14px; }
+  .mini-plan .p { font-weight: 800; font-size: 16px; }
+
+  /* ---- faq ---- */
+  .faq-item { border-bottom: 1px solid var(--border); }
+  .faq-item summary {
+    cursor: pointer; padding: 16px 0; font-weight: 700; font-size: 15px; list-style: none;
+    display: flex; justify-content: space-between; align-items: center; gap: 12px;
+  }
+  .faq-item summary::-webkit-details-marker { display: none; }
+  .faq-item summary::after { content: "+"; color: var(--muted-foreground); flex: none; font-weight: 800; }
+  .faq-item[open] summary::after { content: "\2212"; }
+  .faq-item p { margin: 0 0 16px; color: var(--muted-foreground); font-size: 14px; max-width: 52ch; }
+
+  /* ---- portal note ---- */
+  .portal-note { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; display: flex; flex-direction: column; gap: 10px; }
+  .portal-note .t { font-weight: 700; font-size: 14.5px; }
+  .portal-note .d { color: var(--muted-foreground); font-size: 13.5px; }
+  .portal-note a { color: var(--primary); font-weight: 700; font-size: 13.5px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; }
+  .portal-note a:hover { text-decoration: underline; }
+
+  footer { padding: 30px 0 50px; text-align: center; color: var(--muted-foreground); font-size: 12px; }
+
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+
+<section class="hero-banner">
+  <img class="hero-bg" id="heroBanner" src="" alt="">
+  <div class="hero-scrim"></div>
+  <div class="hero hero-inner wrap">
+    <span class="platform-tag" id="v-platform_label">Xbox Series / Xbox One</span>
+    <h1 id="v-title">Game Pass Ultimate</h1>
+    <p class="sub" id="v-subtitle">Acceso a más de 500 juegos + multijugador online.</p>
+
+    <div class="price-row">
+      <span class="price-label" id="v-price_label">Desde</span>
+      <span class="price-value tabular" id="v-price_amount">$37.990</span>
+      <span class="price-unit" id="v-price_unit">COP / mes</span>
+    </div>
+
+    <button class="cta" id="v-cta_label" onclick="document.getElementById('choiceRow').scrollIntoView({behavior:'smooth', block:'center'})">Comprar ahora</button>
+  </div>
+</section>
+
+<div class="wrap">
+
+  <section style="padding-top:28px;">
+    <div class="trust" id="trustBar"></div>
+  </section>
+
+  <section>
+    <div class="eyebrow" id="v-step1_eyebrow">Paso 1</div>
+    <h2 class="sec-title" id="v-step1_title">¿Cómo la vas a usar?</h2>
+    <p class="sec-body" id="v-step1_body">Con esto sabemos qué plan te conviene — sin que tengas que leer la ficha técnica completa.</p>
+
+    <div class="choice-row" id="choiceRow">
+      <button class="choice-btn" data-mode="personal" aria-pressed="true">
+        <span><span class="h" id="v-choice_a_title">Solo yo, en mi consola</span><span class="s" id="v-choice_a_desc">Te damos correo y clave. Es la opción más económica.</span></span>
+        <span class="arrow">&rsaquo;</span>
+      </button>
+      <button class="choice-btn" data-mode="propia" aria-pressed="false">
+        <span><span class="h" id="v-choice_b_title">Prefiero mi propia cuenta</span><span class="s" id="v-choice_b_desc">Instalamos el servicio directo en tu perfil de Xbox. Ideal si le prestas tu perfil a alguien más.</span></span>
+        <span class="arrow">&rsaquo;</span>
+      </button>
+    </div>
+  </section>
+
+  <section>
+    <div class="eyebrow" id="v-step2_eyebrow">Paso 2</div>
+    <h2 class="sec-title" id="v-step2_title">Elige la duración</h2>
+    <p class="sec-body" id="plansBody">Correo y clave para tu propio perfil de Xbox. No se comparte con nadie más.</p>
+
+    <div class="plan-group is-active" data-group="personal">
+      <div class="plans plans-2" id="plansPersonal"></div>
+    </div>
+    <div class="plan-group" data-group="propia">
+      <div class="plans" id="plansPropia"></div>
+      <details class="more-durations" id="moreDurations" style="display:none;">
+        <summary id="moreDurationsSummary">Ver otras duraciones</summary>
+        <div class="more-plans" id="morePlansList"></div>
+      </details>
+    </div>
+  </section>
+
+  <section>
+    <div class="eyebrow" id="v-faq_eyebrow">Antes de pagar</div>
+    <h2 class="sec-title" id="v-faq_title">Lo que suele preguntarse</h2>
+    <div id="faqList"></div>
+  </section>
+
+  <section style="padding-bottom: 10px;">
+    <div class="portal-note">
+      <div class="t" id="v-portal_title">¿Quieres ver todas las duraciones y la letra chica completa?</div>
+      <div class="d" id="v-portal_desc">La ficha técnica completa del producto, con todas las variantes y notas, sigue disponible.</div>
+      <a id="v-portal_link" href="https://www.hardcoregames.co/product/4">Ver ficha completa &rsaquo;</a>
+    </div>
+  </section>
+
+  <footer id="v-footer">Hardcore Games — todos los derechos reservados.</footer>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var PRODUCT_ID = 4;
+  var API_BASE = 'https://admin.hardcoregames.co/products';
+
+  // ---------------------------------------------------------------
+  // Copy por defecto. Se pinta de inmediato para que la página nunca
+  // se vea vacía; si la variable de sistema "gamepassultimate" carga
+  // bien, sus valores reemplazan estos en el sitio. Editable en
+  // /admin/products/variablessistema/ (fila "gamepassultimate", el
+  // campo "valor" es el JSON completo).
+  // ---------------------------------------------------------------
+  var CONTENT_DEFAULTS = {
+    platform_label: 'Xbox Series / Xbox One',
+    title: 'Game Pass Ultimate',
+    subtitle: 'Acceso a más de 500 juegos + multijugador online.',
+    price_label: 'Desde',
+    price_amount: '$37.990',
+    price_unit: 'COP / mes',
+    cta_label: 'Comprar ahora',
+    banner_image: '',
+    trust: [
+      { title: 'Entrega hoy', desc: 'Correo y clave al instante', tone: 'primary' },
+      { title: 'Con garantía', desc: 'Reposición si el código falla', tone: 'accent' },
+      { title: 'Soporte real', desc: 'Por WhatsApp', tone: 'cta' }
+    ],
+    step1_eyebrow: 'Paso 1',
+    step1_title: '¿Cómo la vas a usar?',
+    step1_body: 'Con esto sabemos qué plan te conviene — sin que tengas que leer la ficha técnica completa.',
+    choice_a_title: 'Solo yo, en mi consola',
+    choice_a_desc: 'Te damos correo y clave. Es la opción más económica.',
+    choice_b_title: 'Prefiero mi propia cuenta',
+    choice_b_desc: 'Instalamos el servicio directo en tu perfil de Xbox. Ideal si le prestas tu perfil a alguien más.',
+    step2_eyebrow: 'Paso 2',
+    step2_title: 'Elige la duración',
+    step2_body_personal: 'Correo y clave para tu propio perfil de Xbox. No se comparte con nadie más.',
+    step2_body_propia: 'Código sobre tu cuenta: no compartes nada, se activa directamente en tu perfil de Xbox.',
+    badge_recommended: 'Recomendado',
+    badge_best_price: 'Mejor precio',
+    pick_button_label: 'Elegir',
+    stock_suffix: 'en stock',
+    low_stock_threshold: 2,
+    faq_eyebrow: 'Antes de pagar',
+    faq_title: 'Lo que suele preguntarse',
+    faq: [
+      { q: '¿Cuál es la diferencia entre primaria, secundaria y código?', a: 'Primaria y secundaria: te damos una cuenta con correo y clave, juegas con tu propio perfil dentro de ella. Código: lo canjeas directamente sobre tu cuenta de Xbox, sin compartir nada con nadie.' },
+      { q: '¿Necesito internet después de instalar?', a: 'No, una vez activado puedes jugar sin conexión constante, salvo para el multijugador online.' },
+      { q: '¿Puedo reinstalar cuando quiera?', a: 'Sí, en cualquiera de las modalidades puedes reinstalar el servicio las veces que necesites.' },
+      { q: '¿Cómo cuenta Xbox los meses?', a: 'Xbox cuenta cada mes como 30 días exactos, sin importar si el mes calendario tiene 28, 30 o 31.' },
+      { q: '¿Qué pasa si el código o la cuenta falla?', a: 'Tienes garantía: si algo no funciona, te lo reponemos. Escríbenos por WhatsApp y lo resolvemos.' }
+    ],
+    portal_title: '¿Quieres ver todas las duraciones y la letra chica completa?',
+    portal_desc: 'La ficha técnica completa del producto, con todas las variantes y notas, sigue disponible.',
+    portal_link: 'Ver ficha completa ›',
+    portal_href: 'https://www.hardcoregames.co/product/' + PRODUCT_ID,
+    footer: 'Hardcore Games — todos los derechos reservados.'
+  };
+
+  // Combinaciones reales de plan (respaldo si la API no responde a
+  // tiempo). Se reemplazan en cuanto llega la respuesta en vivo de
+  // getCombinationPriceByGame, así que precio y stock siempre
+  // terminan siendo los reales del catálogo, no estos.
+  var PLANS_DEFAULTS = [
+    { desc_licence: 'Primaria', duracion_dias_alquiler: 30, precio: 50900, precio_descuento: 37990, stock: 1 },
+    { desc_licence: 'Secundaria', duracion_dias_alquiler: 30, precio: 50900, precio_descuento: 37990, stock: 1 },
+    { desc_licence: 'Primaria', duracion_dias_alquiler: 60, precio: 99990, precio_descuento: 64990, stock: 1 },
+    { desc_licence: 'Secundaria', duracion_dias_alquiler: 60, precio: 99990, precio_descuento: 64990, stock: 1 },
+    { desc_licence: 'Codigo', duracion_dias_alquiler: 90, precio: 199990, precio_descuento: 149990, stock: 4 },
+    { desc_licence: 'Codigo', duracion_dias_alquiler: 150, precio: 299990, precio_descuento: 249990, stock: 6 },
+    { desc_licence: 'Codigo', duracion_dias_alquiler: 210, precio: 349990, precio_descuento: 339990, stock: 3 },
+    { desc_licence: 'Codigo', duracion_dias_alquiler: 390, precio: 960000, precio_descuento: 599990, stock: 8 }
+  ];
+
+  function fmtCOP(n) {
+    return '$' + Number(n).toLocaleString('es-CO');
+  }
+  function monthsLabel(days) {
+    var m = Math.round(days / 30);
+    return m + (m === 1 ? ' mes' : ' meses');
+  }
+  function setText(id, value) {
+    var el = document.getElementById(id);
+    if (el && value != null) el.textContent = value;
+  }
+
+  // ---------------- contenido de texto ----------------
+  function renderContent(c) {
+    setText('v-platform_label', c.platform_label);
+    setText('v-title', c.title);
+    setText('v-subtitle', c.subtitle);
+    setText('v-price_label', c.price_label);
+    setText('v-price_amount', c.price_amount);
+    setText('v-price_unit', c.price_unit);
+    setText('v-cta_label', c.cta_label);
+    setText('v-step1_eyebrow', c.step1_eyebrow);
+    setText('v-step1_title', c.step1_title);
+    setText('v-step1_body', c.step1_body);
+    setText('v-choice_a_title', c.choice_a_title);
+    setText('v-choice_a_desc', c.choice_a_desc);
+    setText('v-choice_b_title', c.choice_b_title);
+    setText('v-choice_b_desc', c.choice_b_desc);
+    setText('v-step2_eyebrow', c.step2_eyebrow);
+    setText('v-step2_title', c.step2_title);
+    setText('v-faq_eyebrow', c.faq_eyebrow);
+    setText('v-faq_title', c.faq_title);
+    setText('v-portal_title', c.portal_title);
+    setText('v-portal_desc', c.portal_desc);
+    setText('v-portal_link', c.portal_link);
+    setText('v-footer', c.footer);
+
+    var portalLink = document.getElementById('v-portal_link');
+    if (portalLink && c.portal_href) portalLink.setAttribute('href', c.portal_href);
+
+    var heroImg = document.getElementById('heroBanner');
+    if (c.banner_image) {
+      heroImg.src = c.banner_image;
+      heroImg.classList.add('is-visible');
+    } else {
+      heroImg.classList.remove('is-visible');
+    }
+
+    var trustBar = document.getElementById('trustBar');
+    trustBar.innerHTML = '';
+    (c.trust || []).forEach(function (item) {
+      var el = document.createElement('div');
+      el.className = 'trust-item';
+      var dotColor = item.tone === 'accent' ? 'var(--accent)' : item.tone === 'cta' ? 'var(--cta)' : 'var(--primary)';
+      el.innerHTML =
+        '<div class="t"><span class="dot" style="background:' + dotColor + '"></span>' + item.title + '</div>' +
+        '<div class="d">' + item.desc + '</div>';
+      trustBar.appendChild(el);
+    });
+
+    var faqList = document.getElementById('faqList');
+    faqList.innerHTML = '';
+    (c.faq || []).forEach(function (item) {
+      var d = document.createElement('details');
+      d.className = 'faq-item';
+      d.innerHTML = '<summary>' + item.q + '</summary><p>' + item.a + '</p>';
+      faqList.appendChild(d);
+    });
+
+    document.getElementById('plansBody').textContent = c.step2_body_personal;
+
+    window.__CONTENT = c;
+    if (window.__PLANS) renderPlans(window.__PLANS);
+  }
+
+  // ---------------- planes (datos reales del catálogo) ----------------
+  function groupPersonal(rows) {
+    var byDuration = {};
+    rows.filter(function (r) { return r.desc_licence === 'Primaria' || r.desc_licence === 'Secundaria'; })
+      .forEach(function (r) {
+        var key = r.duracion_dias_alquiler;
+        if (!byDuration[key]) byDuration[key] = { duracion: key, precio: r.precio, precio_descuento: r.precio_descuento, stock: 0 };
+        byDuration[key].stock += r.stock;
+      });
+    return Object.keys(byDuration).map(function (k) { return byDuration[k]; }).sort(function (a, b) { return a.duracion - b.duracion; });
+  }
+
+  function groupCodigo(rows) {
+    var byDuration = {};
+    rows.filter(function (r) { return r.desc_licence === 'Codigo'; })
+      .forEach(function (r) {
+        var key = r.duracion_dias_alquiler;
+        if (!byDuration[key]) byDuration[key] = { duracion: key, precio: r.precio, precio_descuento: r.precio_descuento, stock: 0 };
+        byDuration[key].stock += r.stock;
+      });
+    return Object.keys(byDuration).map(function (k) { return byDuration[k]; }).sort(function (a, b) { return a.duracion - b.duracion; });
+  }
+
+  function planCardHTML(plan, isRecommended, badgeText, c) {
+    var stockLow = plan.stock <= (c.low_stock_threshold || 2);
+    return (
+      '<div class="plan-card' + (isRecommended ? ' is-recommended' : '') + '">' +
+      (isRecommended ? '<span class="plan-badge">' + badgeText + '</span>' : '') +
+      '<div class="plan-duration">' + monthsLabel(plan.duracion) + '</div>' +
+      '<div><span class="plan-price tabular">' + fmtCOP(plan.precio_descuento) + '</span>' +
+      (plan.precio > plan.precio_descuento ? '<span class="plan-price-old tabular">' + fmtCOP(plan.precio) + '</span>' : '') + '</div>' +
+      '<div class="plan-stock' + (stockLow ? ' is-low' : '') + '">' + plan.stock + ' ' + c.stock_suffix + '</div>' +
+      '<button class="plan-pick">' + c.pick_button_label + '</button>' +
+      '</div>'
+    );
+  }
+
+  function renderPlans(rows) {
+    var c = window.__CONTENT || CONTENT_DEFAULTS;
+    var personal = groupPersonal(rows);
+    var codigo = groupCodigo(rows);
+
+    var personalHTML = personal.map(function (p, i) {
+      return planCardHTML(p, i === personal.length - 1 && personal.length > 1, c.badge_recommended, c);
+    }).join('');
+    document.getElementById('plansPersonal').innerHTML = personalHTML;
+
+    var mainCodigo = codigo.slice(0, 2);
+    var restCodigo = codigo.slice(2);
+    var bestIndex = codigo.reduce(function (bestI, p, i, arr) {
+      var costPerDay = p.precio_descuento / p.duracion;
+      var bestCostPerDay = arr[bestI].precio_descuento / arr[bestI].duracion;
+      return costPerDay < bestCostPerDay ? i : bestI;
+    }, 0);
+    var best = codigo[bestIndex];
+    var shown = codigo.filter(function (p) { return p === best; }).concat(mainCodigo.filter(function (p) { return p !== best; })).slice(0, 3);
+    if (shown.indexOf(best) === -1) shown.unshift(best);
+    shown = shown.slice(0, 3).sort(function (a, b) { return a.duracion - b.duracion; });
+
+    var codigoHTML = shown.map(function (p) {
+      return planCardHTML(p, p === best, c.badge_best_price, c);
+    }).join('');
+    document.getElementById('plansPropia').innerHTML = codigoHTML;
+
+    var rest = codigo.filter(function (p) { return shown.indexOf(p) === -1; });
+    var moreEl = document.getElementById('moreDurations');
+    if (rest.length) {
+      moreEl.style.display = '';
+      document.getElementById('moreDurationsSummary').textContent =
+        'Ver ' + (rest.length === 1 ? 'otra duración' : 'otras duraciones') + ' (' + rest.map(function (p) { return monthsLabel(p.duracion); }).join(', ') + ')';
+      document.getElementById('morePlansList').innerHTML = rest.map(function (p) {
+        return '<div class="mini-plan"><span>' + monthsLabel(p.duracion) + '</span><span class="p tabular">' + fmtCOP(p.precio_descuento) + '</span></div>';
+      }).join('');
+    } else {
+      moreEl.style.display = 'none';
+    }
+  }
+
+  // ---------------- selector de decisión ----------------
+  var buttons = document.querySelectorAll('.choice-btn');
+  var groups = document.querySelectorAll('.plan-group');
+  buttons.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var mode = btn.getAttribute('data-mode');
+      buttons.forEach(function (b) { b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'); });
+      groups.forEach(function (g) { g.classList.toggle('is-active', g.getAttribute('data-group') === mode); });
+      var c = window.__CONTENT || CONTENT_DEFAULTS;
+      document.getElementById('plansBody').textContent = mode === 'personal' ? c.step2_body_personal : c.step2_body_propia;
+    });
+  });
+
+  // ---------------- carga inicial ----------------
+  renderContent(CONTENT_DEFAULTS);
+  window.__PLANS = PLANS_DEFAULTS;
+  renderPlans(PLANS_DEFAULTS);
+
+  fetch(API_BASE + '/systemVariables/gamepassultimate')
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (res) {
+      if (res && res.data && res.data.valor) {
+        var parsed = JSON.parse(res.data.valor);
+        if (parsed && parsed.gamepassultimate) renderContent(parsed.gamepassultimate);
+      }
+    })
+    .catch(function () { /* se queda con el texto por defecto */ });
+
+  fetch(API_BASE + '/getCombinationPriceByGame/' + PRODUCT_ID)
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (res) {
+      if (res && res.data && res.data.length) {
+        window.__PLANS = res.data;
+        renderPlans(res.data);
+      }
+    })
+    .catch(function () { /* se queda con los planes por defecto */ });
+})();
+</script>
+</body>
+</html>
