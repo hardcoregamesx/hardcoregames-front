@@ -56,7 +56,7 @@
     var a = document.createElement("a");
     a.className = "hc-rewards-nav-btn";
     a.href = REWARDS_URL;
-    a.textContent = "🎁 Rewards";
+    a.textContent = "🎁 Premios";
     return a;
   }
 
