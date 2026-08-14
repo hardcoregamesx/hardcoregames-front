@@ -178,6 +178,7 @@
   .plan-pick {
     margin-top: auto; background: transparent; border: 1px solid var(--border); color: var(--foreground);
     font-weight: 700; font-size: 13.5px; padding: 10px; border-radius: calc(var(--radius) - .25rem); cursor: pointer;
+    text-decoration: none; text-align: center; display: block;
   }
   .plan-card.is-recommended .plan-pick { background: var(--cta); color: var(--cta-foreground); border-color: var(--cta); }
   .plan-pick:focus-visible { outline: 2px solid var(--cta); outline-offset: 2px; }
@@ -215,6 +216,9 @@
 
   footer { padding: 30px 0 50px; text-align: center; color: var(--muted-foreground); font-size: 12px; }
 
+  .site-header { position: absolute; top: 0; left: 0; right: 0; z-index: 3; padding: 16px 20px; }
+  .site-header img { height: 28px; display: block; }
+
   @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 </style>
 </head>
@@ -223,6 +227,9 @@
 <section class="hero-banner">
   <img class="hero-bg" id="heroBanner" src="" alt="">
   <div class="hero-scrim"></div>
+  <a class="site-header" href="https://hardcoregames.co/" aria-label="Ir al inicio de Hardcore Games">
+    <img src="/logo.png" alt="Hardcore Games">
+  </a>
   <div class="hero hero-inner wrap">
     <span class="platform-tag" id="v-platform_label">Xbox Series / Xbox One</span>
     <h1 id="v-title">Game Pass Ultimate</h1>
@@ -317,7 +324,7 @@
     price_amount: '$37.990',
     price_unit: 'COP / mes',
     cta_label: 'Comprar ahora',
-    banner_image: '',
+    banner_image: 'https://cms-assets.xboxservices.com/assets/35/4b/354b3ddf-1b39-48c2-92d7-44e5fda75dc4.jpg?n=RE2TAjc.jpg&q=90&o=f',
     trust: [
       { title: 'Entrega hoy', desc: 'Correo y clave al instante', tone: 'primary' },
       { title: 'Con garantía', desc: 'Reposición si el código falla', tone: 'accent' },
@@ -477,7 +484,7 @@
       '<div><span class="plan-price tabular">' + fmtCOP(plan.precio_descuento) + '</span>' +
       (plan.precio > plan.precio_descuento ? '<span class="plan-price-old tabular">' + fmtCOP(plan.precio) + '</span>' : '') + '</div>' +
       '<div class="plan-stock' + (stockLow ? ' is-low' : '') + '">' + plan.stock + ' ' + c.stock_suffix + '</div>' +
-      '<button class="plan-pick">' + c.pick_button_label + '</button>' +
+      '<a class="plan-pick" href="' + (c.portal_href || '#') + '">' + c.pick_button_label + '</a>' +
       '</div>'
     );
   }
@@ -562,5 +569,10 @@
     .catch(function () { /* se queda con los planes por defecto */ });
 })();
 </script>
+
+<!-- Hardcore Rewards: widget flotante (no toca el bundle de la app) -->
+<script src="/assets/rewards-widget.js"></script>
+<!-- Hardcore Sorteos: widget flotante (no toca el bundle de la app) -->
+<script src="/assets/sorteos-widget.js"></script>
 </body>
 </html>
