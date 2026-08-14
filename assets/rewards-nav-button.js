@@ -73,9 +73,24 @@
     });
   }
 
+  // El nav lo renderiza React del lado del cliente: en DOMContentLoaded
+  // "#root" todavía puede estar vacío, así que un solo intento no basta.
+  // Reintenta cada 400ms hasta encontrar el link (se detiene apenas lo
+  // procesa) o hasta 15s (~37 intentos) para no quedar corriendo si algún
+  // día cambia el nav y el link deja de existir.
+  var MAX_ATTEMPTS = 37;
+  var RETRY_MS = 400;
+
   function init() {
     injectStyles();
-    process();
+    var attempts = 0;
+    var timer = setInterval(function () {
+      attempts++;
+      process();
+      if (document.querySelector(".hc-rewards-nav-btn") || attempts >= MAX_ATTEMPTS) {
+        clearInterval(timer);
+      }
+    }, RETRY_MS);
   }
 
   if (document.readyState === "loading") {
