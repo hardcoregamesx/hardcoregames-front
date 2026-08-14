@@ -61,6 +61,12 @@
     <!-- Hardcore Sorteos: widget flotante (no toca el bundle de la app) -->
     <script src="/assets/sorteos-widget.js"></script>
     <!-- Hardcore Rewards: botón en el menú superior (no toca el bundle de la app) -->
-    <script src="/assets/rewards-nav-button.js"></script>
+    <!-- ?v=2: fuerza un fetch fresco una sola vez. El primer deploy salio sin
+         el Cache-Control:no-cache de default.conf, asi que quien cargo el
+         sitio en esa ventana quedo con el script viejo cacheado "immutable"
+         por 1 anio. index.html se revalida siempre (no-cache), asi que un
+         cambio en esta URL fuerza el fetch nuevo sin importar que hubiera
+         quedado cacheado bajo la URL sin "?v=2". -->
+    <script src="/assets/rewards-nav-button.js?v=2"></script>
   </body>
 </html>
