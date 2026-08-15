@@ -86,7 +86,7 @@
     return fetch(REGISTER_API, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ first_name: '', last_name: '', email: email, password: password, phone_number: '', avatar: '' })
+      body: JSON.stringify({ first_name: '', last_name: '', email: email, password: password, phone_number: '', avatar: '', guest_checkout: true })
     }).then(function (r) {
       if (r.status === 400) {
         return r.json().then(function (body) {
@@ -150,12 +150,6 @@
       '.gcw-submit:disabled{opacity:.6;cursor:default;}' +
       '.gcw-cancel{display:block;width:100%;text-align:center;margin-top:10px;background:none;border:none;color:hsl(var(--muted-foreground));font-size:13.5px;cursor:pointer;padding:6px;font-family:inherit;}' +
       '.gcw-note{font-size:11.5px;color:hsl(var(--muted-foreground));margin-top:14px;text-align:center;}' +
-      '.gcw-success{display:none;text-align:center;}' +
-      '.gcw-success.is-visible{display:block;}' +
-      '.gcw-success .gcw-check{font-size:32px;margin-bottom:8px;}' +
-      '.gcw-success h3{font-size:19px;font-weight:800;margin:0 0 6px;color:hsl(var(--foreground));}' +
-      '.gcw-success p{color:hsl(var(--muted-foreground));font-size:13.5px;margin:0 0 18px;}' +
-      '.gcw-sorteos-link{display:block;width:100%;text-align:center;background:rgba(255,255,255,.06);color:hsl(var(--foreground));border:1px solid hsl(var(--border));border-radius:calc(var(--radius,.75rem) - .25rem);font-weight:700;font-size:14px;padding:12px;margin-bottom:10px;text-decoration:none;font-family:inherit;box-sizing:border-box;}' +
       '</style>' +
       '<div class="gcw-dialog" role="dialog" aria-modal="true" aria-labelledby="gcwTitle">' +
       '<h3 id="gcwTitle">Un solo dato para continuar</h3>' +
@@ -168,13 +162,6 @@
       '<button type="button" class="gcw-cancel" id="gcwCancel">Cancelar</button>' +
       '</form>' +
       '<p class="gcw-note" id="gcwNote">Al continuar creamos tu cuenta en Hardcore Games con este correo — y esta compra te inscribe automáticamente en los sorteos activos.</p>' +
-      '<div class="gcw-success" id="gcwSuccess">' +
-      '<div class="gcw-check">🎉</div>' +
-      '<h3>¡Cuenta creada!</h3>' +
-      '<p>Esta compra ya te inscribe automáticamente en los sorteos activos.</p>' +
-      '<a href="/rewards/?view=sorteos" target="_blank" rel="noopener" class="gcw-sorteos-link">Ver sorteos activos &rsaquo;</a>' +
-      '<button type="button" class="gcw-submit" id="gcwContinue">Continuar mi compra</button>' +
-      '</div>' +
       '</div>';
     document.body.appendChild(wrap);
 
@@ -185,8 +172,6 @@
     var submitBtn = wrap.querySelector('#gcwSubmit');
     var cancelBtn = wrap.querySelector('#gcwCancel');
     var noteEl = wrap.querySelector('#gcwNote');
-    var successEl = wrap.querySelector('#gcwSuccess');
-    var continueBtn = wrap.querySelector('#gcwContinue');
     var pending = null; // { action, combo }
 
     function showError(html) { errorEl.innerHTML = html; errorEl.classList.add('is-visible'); }
@@ -195,7 +180,6 @@
     function resetToForm() {
       form.style.display = '';
       noteEl.style.display = '';
-      successEl.classList.remove('is-visible');
     }
     function resumePendingAndReload() {
       try {
@@ -226,11 +210,8 @@
       submitBtn.textContent = 'Un momento…';
 
       guestRegisterAndLogin(email).then(function () {
-        form.style.display = 'none';
-        noteEl.style.display = 'none';
-        successEl.classList.add('is-visible');
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Continuar';
+        // Sin pantalla intermedia: directo al carrito/checkout real.
+        resumePendingAndReload();
       }).catch(function (err) {
         submitBtn.disabled = false;
         submitBtn.textContent = 'Continuar';
@@ -242,8 +223,6 @@
         }
       });
     });
-
-    continueBtn.addEventListener('click', resumePendingAndReload);
 
     modalEls = {
       open: function (action, combo) {
