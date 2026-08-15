@@ -480,6 +480,10 @@
         <span><span class="h" id="v-choice_b_title">Prefiero mi propia cuenta</span><span class="s" id="v-choice_b_desc">Instalamos el servicio directo en tu perfil de Xbox. Ideal si le prestas tu perfil a alguien más.</span></span>
         <span class="arrow">&rsaquo;</span>
       </button>
+      <button class="choice-btn" data-mode="cuotas" aria-pressed="false">
+        <span><span class="h" id="v-choice_c_title">Pagar a cuotas</span><span class="s" id="v-choice_c_desc">Divide el pago en cuotas mensuales. Reservas aquí y coordinas el resto por WhatsApp.</span></span>
+        <span class="arrow">&rsaquo;</span>
+      </button>
     </div>
   </section>
 
@@ -497,6 +501,10 @@
         <summary id="moreDurationsSummary">Ver otras duraciones</summary>
         <div class="more-plans" id="morePlansList"></div>
       </details>
+    </div>
+    <div class="plan-group" data-group="cuotas">
+      <div class="plans plans-2" id="plansCuotas"></div>
+      <p class="sec-body" id="cuotasEmptyMsg" style="display:none; margin-top: 14px;"></p>
     </div>
   </section>
 
@@ -539,7 +547,12 @@
   "use strict";
 
   var PRODUCT_ID = 4;
+  var PRODUCT_ID_CUOTAS = 310;
   var API_BASE = 'https://admin.hardcoregames.co/products';
+  // Mismo host que usa el bundle React (Fe) para /products/<id>: es de ahí
+  // de donde sale el title/image "canónico" que el resto del sitio espera
+  // encontrar en localStorage.cart_combinations (ver más abajo).
+  var CATALOG_API_BASE = 'https://api.srv936408.hstgr.cloud';
 
   // ---------------------------------------------------------------
   // Copy por defecto. Se pinta de inmediato para que la página nunca
@@ -569,10 +582,14 @@
     choice_a_desc: 'Te damos correo y clave. Es la opción más económica.',
     choice_b_title: 'Prefiero mi propia cuenta',
     choice_b_desc: 'Instalamos el servicio directo en tu perfil de Xbox. Ideal si le prestas tu perfil a alguien más.',
+    choice_c_title: 'Pagar a cuotas',
+    choice_c_desc: 'Divide el pago en cuotas mensuales. Reservas aquí y coordinas el resto por WhatsApp.',
     step2_eyebrow: 'Paso 2',
     step2_title: 'Elige la duración',
     step2_body_personal: 'Correo y clave para tu propio perfil de Xbox. No se comparte con nadie más.',
     step2_body_propia: 'Código sobre tu cuenta: no compartes nada, se activa directamente en tu perfil de Xbox.',
+    step2_body_cuotas: 'Se entrega cuenta primaria o secundaria (la que haya disponible). Este pago reserva tu cupo; el resto de la primera cuota se coordina por WhatsApp.',
+    cuotas_empty_msg: 'Estamos preparando los planes a cuotas. Escríbenos por WhatsApp mientras tanto.',
     badge_recommended: 'Recomendado',
     badge_best_price: 'Mejor precio',
     pick_button_label: 'Elegir',
@@ -623,6 +640,12 @@
 
   // ---------------- contenido de texto ----------------
   function renderContent(c) {
+    // El JSON guardado en /admin/products/variablessistema/ puede ser de
+    // antes de que existiera algún campo nuevo (pasó justo con
+    // choice_c_title/step2_body_cuotas/cuotas_empty_msg al agregar la
+    // opción de cuotas) — se completa con CONTENT_DEFAULTS para que un
+    // campo ausente en el admin nunca deje texto vacío en pantalla.
+    c = Object.assign({}, CONTENT_DEFAULTS, c || {});
     setText('v-platform_label', c.platform_label);
     setText('v-title', c.title);
     setText('v-subtitle', c.subtitle);
@@ -637,6 +660,8 @@
     setText('v-choice_a_desc', c.choice_a_desc);
     setText('v-choice_b_title', c.choice_b_title);
     setText('v-choice_b_desc', c.choice_b_desc);
+    setText('v-choice_c_title', c.choice_c_title);
+    setText('v-choice_c_desc', c.choice_c_desc);
     setText('v-step2_eyebrow', c.step2_eyebrow);
     setText('v-step2_title', c.step2_title);
     setText('v-faq_eyebrow', c.faq_eyebrow);
@@ -682,6 +707,7 @@
 
     window.__CONTENT = c;
     if (window.__PLANS) renderPlans(window.__PLANS);
+    renderCuotasPlans(window.__PLANS_CUOTAS);
   }
 
   // ---------------- planes (datos reales del catálogo) ----------------
@@ -698,6 +724,16 @@
   // prefiere explícitamente sobre Secundaria — no es un simple empate
   // por precio, es evitar la fila que sabemos que está rota.
   var LICENCE_PRIORITY = ['Primaria', 'Codigo', 'Secundaria'];
+
+  // pk (string) -> { plan, productId }. Se llena cada vez que se pinta una
+  // tarjeta y lo lee el click de "Elegir" para saber a qué producto
+  // pertenece esa combinación (product_id de Products, no el pk de
+  // GameDetail) — hace falta para escribir cart_combinations con el
+  // title/image correctos según sea plan de contado (4) o a cuotas (310).
+  var PLAN_INDEX = {};
+  function registerPlan(plan, productId) {
+    PLAN_INDEX[String(plan.pk)] = { plan: plan, productId: productId };
+  }
 
   function pickRepresentative(rows) {
     function score(r) {
@@ -720,7 +756,14 @@
       var group = byDuration[k];
       var rep = pickRepresentative(group);
       var totalStock = group.reduce(function (s, r) { return s + r.stock; }, 0);
-      return { duracion: Number(k), precio: rep.precio, precio_descuento: rep.precio_descuento, stock: totalStock, pk: rep.pk };
+      // Se conserva la fila completa (consola/licencia/desc_*) además de
+      // los campos agregados — hace falta íntegra para poblar
+      // cart_combinations cuando se elige este plan.
+      return {
+        duracion: Number(k), precio: rep.precio, precio_descuento: rep.precio_descuento,
+        stock: totalStock, pk: rep.pk, consola: rep.consola, desc_console: rep.desc_console,
+        licencia: rep.licencia, desc_licence: rep.desc_licence
+      };
     }).sort(function (a, b) { return a.duracion - b.duracion; });
   }
 
@@ -732,8 +775,17 @@
     return groupByDuration(rows.filter(function (r) { return r.desc_licence === 'Codigo'; }));
   }
 
-  function planCardHTML(plan, isRecommended, badgeText, c) {
+  // El producto a cuotas se entrega "aleatoriamente primaria o secundaria,
+  // depende lo que esté disponible" (así lo dice su ficha) — no hay forma
+  // de elegir licencia, así que no se filtra/separa por desc_licence como
+  // en groupPersonal/groupCodigo, se agrupa todo por duración tal cual.
+  function groupCuotas(rows) {
+    return groupByDuration(rows);
+  }
+
+  function planCardHTML(plan, productId, isRecommended, badgeText, c) {
     var stockLow = plan.stock <= (c.low_stock_threshold || 2);
+    var href = 'https://www.hardcoregames.co/product/' + productId;
     return (
       '<div class="plan-card' + (isRecommended ? ' is-recommended' : '') + '">' +
       (isRecommended ? '<span class="plan-badge">' + badgeText + '</span>' : '') +
@@ -741,7 +793,7 @@
       '<div><span class="plan-price tabular">' + fmtCOP(plan.precio_descuento) + '</span>' +
       (plan.precio > plan.precio_descuento ? '<span class="plan-price-old tabular">' + fmtCOP(plan.precio) + '</span>' : '') + '</div>' +
       '<div class="plan-stock' + (stockLow ? ' is-low' : '') + '">' + plan.stock + ' ' + c.stock_suffix + '</div>' +
-      '<a class="plan-pick" href="' + (c.portal_href || '#') + '" data-pk="' + plan.pk + '">' + c.pick_button_label + '</a>' +
+      '<a class="plan-pick" href="' + href + '" data-pk="' + plan.pk + '">' + c.pick_button_label + '</a>' +
       '</div>'
     );
   }
@@ -750,9 +802,11 @@
     var c = window.__CONTENT || CONTENT_DEFAULTS;
     var personal = groupPersonal(rows);
     var codigo = groupCodigo(rows);
+    personal.forEach(function (p) { registerPlan(p, PRODUCT_ID); });
+    codigo.forEach(function (p) { registerPlan(p, PRODUCT_ID); });
 
     var personalHTML = personal.map(function (p, i) {
-      return planCardHTML(p, i === personal.length - 1 && personal.length > 1, c.badge_recommended, c);
+      return planCardHTML(p, PRODUCT_ID, i === personal.length - 1 && personal.length > 1, c.badge_recommended, c);
     }).join('');
     document.getElementById('plansPersonal').innerHTML = personalHTML;
 
@@ -769,7 +823,7 @@
     shown = shown.slice(0, 3).sort(function (a, b) { return a.duracion - b.duracion; });
 
     var codigoHTML = shown.map(function (p) {
-      return planCardHTML(p, p === best, c.badge_best_price, c);
+      return planCardHTML(p, PRODUCT_ID, p === best, c.badge_best_price, c);
     }).join('');
     document.getElementById('plansPropia').innerHTML = codigoHTML;
 
@@ -787,6 +841,37 @@
     }
   }
 
+  // Producto 310 ("A CUOTAS - GAME PASS ULTIMATE ANUAL"): al momento de
+  // escribir esto no tiene combinaciones cargadas en el catálogo
+  // (getCombinationPriceByGame devuelve []), así que sin stock/precio no
+  // hay nada que pintar — se muestra cuotas_empty_msg en vez de una
+  // grilla vacía. En cuanto el admin cargue combinaciones reales, esta
+  // misma función las pinta solas, sin tocar código.
+  function renderCuotasPlans(rows) {
+    var c = window.__CONTENT || CONTENT_DEFAULTS;
+    var plans = groupCuotas(rows || []);
+    var container = document.getElementById('plansCuotas');
+    var emptyMsg = document.getElementById('cuotasEmptyMsg');
+
+    if (!plans.length) {
+      container.innerHTML = '';
+      emptyMsg.textContent = c.cuotas_empty_msg || '';
+      emptyMsg.style.display = '';
+      return;
+    }
+    emptyMsg.style.display = 'none';
+
+    plans.forEach(function (p) { registerPlan(p, PRODUCT_ID_CUOTAS); });
+    var bestIndex = plans.reduce(function (bestI, p, i, arr) {
+      var costPerDay = p.precio_descuento / p.duracion;
+      var bestCostPerDay = arr[bestI].precio_descuento / arr[bestI].duracion;
+      return costPerDay < bestCostPerDay ? i : bestI;
+    }, 0);
+    container.innerHTML = plans.map(function (p, i) {
+      return planCardHTML(p, PRODUCT_ID_CUOTAS, i === bestIndex && plans.length > 1, c.badge_best_price, c);
+    }).join('');
+  }
+
   // ---------------- selector de decisión ----------------
   var buttons = document.querySelectorAll('.choice-btn');
   var groups = document.querySelectorAll('.plan-group');
@@ -796,7 +881,14 @@
       buttons.forEach(function (b) { b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'); });
       groups.forEach(function (g) { g.classList.toggle('is-active', g.getAttribute('data-group') === mode); });
       var c = window.__CONTENT || CONTENT_DEFAULTS;
-      document.getElementById('plansBody').textContent = mode === 'personal' ? c.step2_body_personal : c.step2_body_propia;
+      document.getElementById('plansBody').textContent =
+        mode === 'personal' ? c.step2_body_personal :
+        mode === 'cuotas' ? c.step2_body_cuotas :
+        c.step2_body_propia;
+      var portalLink = document.getElementById('v-portal_link');
+      if (portalLink) {
+        portalLink.setAttribute('href', 'https://www.hardcoregames.co/product/' + (mode === 'cuotas' ? PRODUCT_ID_CUOTAS : PRODUCT_ID));
+      }
     });
   });
 
@@ -829,6 +921,41 @@
     return Array.prototype.map.call(bytes, function (b) { return b.toString(36); }).join('').slice(0, 24) + 'Aa1!';
   }
 
+  // El sitio real (product/:id) escribe una entrada en
+  // localStorage.cart_combinations al agregar al carrito — es lo ÚNICO de
+  // donde /cart saca nombre, foto y desglose de precio de cada línea (no
+  // hay fetch de producto en esa página). Como esta landing agrega al
+  // carrito llamando directo a /shopping-car/, sin pasar por esa pantalla,
+  // nunca se escribía esa entrada — por eso /cart mostraba "Producto #<id>"
+  // y una imagen de placeholder para todo lo agregado desde acá. Hay que
+  // replicar exactamente esa misma escritura aquí.
+  function writeCartCombination(plan, productId) {
+    try {
+      var info = (window.__PRODUCT_CATALOG || {})[productId] || {};
+      var cache = JSON.parse(localStorage.getItem('cart_combinations') || '{}');
+      cache[String(plan.pk)] = {
+        id_combination: plan.pk,
+        product_id: plan.pk,
+        base_game_id: productId,
+        is_retail: true,
+        title: info.title || 'Producto',
+        image: info.image || '/placeholder.svg',
+        desc_console: plan.desc_console,
+        desc_licence: plan.desc_licence,
+        price: (plan.precio_descuento > 0 && plan.precio_descuento < plan.precio) ? plan.precio_descuento : plan.precio,
+        coupon: undefined,
+        consola: plan.consola,
+        licencia: plan.licencia,
+        duracion_dias_alquiler: plan.duracion
+      };
+      localStorage.setItem('cart_combinations', JSON.stringify(cache));
+    } catch (e) {
+      // storage bloqueado/lleno: la compra sigue funcionando igual, /cart
+      // solo cae al "Producto #<id>" genérico como si viniera de otro
+      // dispositivo.
+    }
+  }
+
   function addToCartAndGoToCart(jwt, pk, fallbackHref) {
     return fetch(CART_API, {
       method: 'POST',
@@ -838,6 +965,8 @@
       // 409 = "ya está en el carrito": no es un error, ya quedó como
       // queríamos, así que sigue igual que un 2xx.
       if (!r.ok && r.status !== 409) throw new Error('shopping-car respondió ' + r.status);
+      var entry = PLAN_INDEX[String(pk)];
+      if (entry) writeCartCombination(entry.plan, entry.productId);
       window.location.href = CART_URL;
     }).catch(function () {
       window.location.href = fallbackHref;
@@ -1052,7 +1181,22 @@
   // ---------------- carga inicial ----------------
   renderContent(CONTENT_DEFAULTS);
   window.__PLANS = PLANS_DEFAULTS;
+  window.__PLANS_CUOTAS = [];
   renderPlans(PLANS_DEFAULTS);
+  renderCuotasPlans([]);
+
+  // Title/image "canónicos" del catálogo (mismo endpoint que usa la ficha
+  // de producto real) para las dos familias de producto que vive en esta
+  // landing — hacen falta para escribir cart_combinations bien.
+  window.__PRODUCT_CATALOG = {};
+  [PRODUCT_ID, PRODUCT_ID_CUOTAS].forEach(function (id) {
+    fetch(CATALOG_API_BASE + '/products/' + id)
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (res) {
+        if (res && res.data) window.__PRODUCT_CATALOG[id] = { title: res.data.title, image: res.data.image };
+      })
+      .catch(function () { /* si falla, cart_combinations cae al título/imagen genéricos */ });
+  });
 
   fetch(API_BASE + '/systemVariables/gamepassultimate')
     .then(function (r) { return r.ok ? r.json() : null; })
@@ -1073,6 +1217,16 @@
       }
     })
     .catch(function () { /* se queda con los planes por defecto */ });
+
+  fetch(API_BASE + '/getCombinationPriceByGame/' + PRODUCT_ID_CUOTAS)
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (res) {
+      if (res && res.data) {
+        window.__PLANS_CUOTAS = res.data;
+        renderCuotasPlans(res.data);
+      }
+    })
+    .catch(function () { /* se queda con el mensaje "muy pronto" */ });
 })();
 </script>
 
