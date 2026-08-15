@@ -1,3 +1,9 @@
 .git
 *.bak*
 *.bak_v*
+# Tooling de prerender: no se sirve al navegador, solo se usa para generar
+# prerender/ antes del build. Ver scripts/prerender.mjs.
+scripts/
+package.json
+package-lock.json
+node_modules/

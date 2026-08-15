@@ -1,8 +1,6 @@
 *.bak
 *.bak.*
 *.bak_*
-
-.claude/
-
 .claude/
 .specify/
+node_modules/

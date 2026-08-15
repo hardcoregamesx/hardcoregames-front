@@ -1,0 +1,12 @@
+{
+  "name": "hardcoregames-front-tooling",
+  "private": true,
+  "type": "module",
+  "description": "Solo scripts de build (prerender SEO). No es el codigo fuente del sitio ni se sirve al navegador (ver .dockerignore).",
+  "scripts": {
+    "prerender": "node scripts/prerender.mjs"
+  },
+  "devDependencies": {
+    "playwright": "1.47.0"
+  }
+}

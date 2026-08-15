@@ -2,6 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta name="google-site-verification" content="nBjg_e5Wq8DGMhAOcRSGGIfHENQZpUJn9IX_dhkhiLw" />
 
     <!-- Meta Pixel Code -->
     <script>
@@ -50,6 +51,11 @@
 
   gtag('config', 'AW-18382206101');
 </script>
+<!-- Google Analytics 4 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-GKCE278731"></script>
+<script>
+  gtag('config', 'G-GKCE278731');
+</script>
 </head>
 
   <body>
@@ -68,5 +74,9 @@
          cambio en esta URL fuerza el fetch nuevo sin importar que hubiera
          quedado cacheado bajo la URL sin "?v=2". -->
     <script src="/assets/rewards-nav-button.js?v=2"></script>
+    <!-- SEO: title/meta/canonical/JSON-LD dinamicos por ruta (no toca el bundle de la app) -->
+    <script src="/assets/seo-meta.js"></script>
+    <!-- Traduce al espanol los textos fijos en ingles de /filters (no toca el bundle de la app) -->
+    <script src="/assets/filters-i18n.js"></script>
   </body>
 </html>
