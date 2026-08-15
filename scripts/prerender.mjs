@@ -32,21 +32,36 @@ async function renderOne(browser, url, i, total) {
       "Mozilla/5.0 (compatible; HardcoreGamesPrerenderer/1.0; +https://www.hardcoregames.co)",
   });
   const page = await context.newPage();
+  const isProduct = /^\/product\/\d+\/?$/.test(pathname);
   try {
     await page.goto(url, { waitUntil: "domcontentloaded", timeout: 30000 });
     try {
       await page.waitForFunction(
-        () => {
+        (checkHeading) => {
           const main = document.querySelector("main");
-          const hasContent = !!main && main.innerText.trim().length > 40;
-          // seo-meta.js reintenta hasta que el heading real reemplaza el
-          // esqueleto "Cargando producto..."; esperamos lo mismo aqui para
-          // no capturar el <title>/<meta> con el placeholder todavia puesto.
-          const titleReady = !/cargando/i.test(document.title);
-          return hasContent && titleReady;
+          if (!main) return false;
+          const hasContent = main.innerText.trim().length > 40;
+          if (!checkHeading) return hasContent;
+          // El heading real reemplaza al esqueleto "Cargando producto...".
+          // seo-meta.js usa esta misma señal para reintentar su propio
+          // poll (cada 250ms); esperamos el dato real en el DOM antes de
+          // capturar, en vez de fiarnos de document.title (que puede seguir
+          // en su valor por defecto si el poll de seo-meta.js aun no corrio).
+          const heading = main.querySelector("h1, h2");
+          const headingText =
+            heading && heading.textContent ? heading.textContent.trim() : "";
+          const hasRealHeading =
+            headingText.length > 0 && !/^cargando/i.test(headingText);
+          return hasContent && hasRealHeading;
         },
-        { timeout: 12000 }
+        isProduct,
+        { timeout: 15000 }
       );
+      if (isProduct) {
+        // margen para que el poll de seo-meta.js (250ms) aplique el heading
+        // real a title/meta/JSON-LD despues de que aparecio en el DOM.
+        await page.waitForTimeout(500);
+      }
     } catch {
       // seguimos igual: mejor un snapshot parcial que ninguno
     }
