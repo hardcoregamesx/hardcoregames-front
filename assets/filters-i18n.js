@@ -90,9 +90,35 @@
     characterData: true,
   });
 
+  // La app es una SPA renderizada por React: el contenido de /filters llega
+  // en varias tandas asincronas (fetch de productos, apertura del panel de
+  // filtros) despues de que este script ya corrio. El MutationObserver cubre
+  // la mayoria de los casos, pero como red de seguridad reintenta por unos
+  // segundos tras cada carga/cambio de ruta.
+  function pollForAWhile() {
+    var attempts = 0;
+    var interval = setInterval(function () {
+      attempts++;
+      applyTranslation();
+      if (attempts >= 20) clearInterval(interval);
+    }, 300);
+  }
+
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", applyTranslation);
+    document.addEventListener("DOMContentLoaded", function () {
+      applyTranslation();
+      pollForAWhile();
+    });
   } else {
     applyTranslation();
+    pollForAWhile();
   }
+
+  var lastPath = location.pathname;
+  setInterval(function () {
+    if (location.pathname !== lastPath) {
+      lastPath = location.pathname;
+      if (isFiltersPage()) pollForAWhile();
+    }
+  }, 500);
 })();
