@@ -6,6 +6,16 @@
 <title>Game Pass Ultimate | Hardcore Games</title>
 <meta name="description" content="Elige tu plan de Xbox Game Pass Ultimate en menos de un minuto. Entrega inmediata, garantía y soporte por WhatsApp.">
 <meta name="robots" content="noindex">
+<script>
+  // El checkout de invitado guarda la sesión en localStorage, que es por
+  // origen. Si alguien entra por el dominio raíz (sin "www"), esa sesión
+  // quedaría invisible para el resto del sitio (carrito, checkout), que
+  // vive en www.hardcoregames.co. El apex no redirige solo, así que se
+  // fuerza aquí, antes de que se pinte nada.
+  if (location.hostname === 'hardcoregames.co') {
+    location.replace('https://www.hardcoregames.co' + location.pathname + location.search + location.hash);
+  }
+</script>
 <style>
   :root {
     --background: hsl(262 60% 10%);
@@ -188,6 +198,36 @@
   }
   .plan-pick { transition: background 120ms ease, color 120ms ease, border-color 120ms ease, transform 100ms ease; }
   .plan-pick:focus-visible { outline: 2px solid var(--cta); outline-offset: 2px; }
+
+  /* ---- checkout de invitado ---- */
+  .gc-overlay {
+    display: none; position: fixed; inset: 0; background: rgba(0,0,0,.6);
+    z-index: 80; align-items: center; justify-content: center; padding: 20px;
+  }
+  .gc-overlay.is-open { display: flex; }
+  .gc-dialog {
+    background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+    box-shadow: 0 20px 50px rgba(0,0,0,.5); max-width: 380px; width: 100%; padding: 24px;
+  }
+  .gc-dialog h3 { font-size: 19px; font-weight: 800; margin: 0 0 6px; }
+  .gc-sub { color: var(--muted-foreground); font-size: 13.5px; margin: 0 0 18px; }
+  .gc-field { margin-bottom: 14px; }
+  .gc-field label { display: block; font-size: 12px; font-weight: 700; color: var(--muted-foreground); margin-bottom: 6px; text-transform: uppercase; letter-spacing: .04em; }
+  .gc-field input {
+    width: 100%; background: var(--secondary); border: 1px solid var(--border); border-radius: calc(var(--radius) - .25rem);
+    color: var(--foreground); font-size: 15px; padding: 11px 12px; font-family: inherit;
+  }
+  .gc-field input:focus-visible { outline: 2px solid var(--cta); outline-offset: 1px; }
+  .gc-error { color: var(--destructive); font-size: 13px; margin: -6px 0 14px; display: none; }
+  .gc-error.is-visible { display: block; }
+  .gc-error a { color: inherit; text-decoration: underline; }
+  .gc-submit {
+    width: 100%; background: var(--cta); color: var(--cta-foreground); border: none; border-radius: calc(var(--radius) - .25rem);
+    font-weight: 800; font-size: 15px; padding: 13px; cursor: pointer; text-align: center; font-family: inherit;
+  }
+  .gc-submit:disabled { opacity: .6; cursor: default; }
+  .gc-cancel { display: block; width: 100%; text-align: center; margin-top: 10px; background: none; border: none; color: var(--muted-foreground); font-size: 13.5px; cursor: pointer; padding: 6px; font-family: inherit; }
+  .gc-note { font-size: 11.5px; color: var(--muted-foreground); margin-top: 14px; text-align: center; }
 
   .more-durations { margin-top: 14px; text-align: center; }
   .more-durations summary {
@@ -440,6 +480,10 @@
         <span><span class="h" id="v-choice_b_title">Prefiero mi propia cuenta</span><span class="s" id="v-choice_b_desc">Instalamos el servicio directo en tu perfil de Xbox. Ideal si le prestas tu perfil a alguien más.</span></span>
         <span class="arrow">&rsaquo;</span>
       </button>
+      <button class="choice-btn" data-mode="cuotas" aria-pressed="false">
+        <span><span class="h" id="v-choice_c_title">Pagar a cuotas</span><span class="s" id="v-choice_c_desc">Divide el pago en cuotas mensuales. Reservas aquí y coordinas el resto por WhatsApp.</span></span>
+        <span class="arrow">&rsaquo;</span>
+      </button>
     </div>
   </section>
 
@@ -458,6 +502,10 @@
         <div class="more-plans" id="morePlansList"></div>
       </details>
     </div>
+    <div class="plan-group" data-group="cuotas">
+      <div class="plans plans-2" id="plansCuotas"></div>
+      <p class="sec-body" id="cuotasEmptyMsg" style="display:none; margin-top: 14px;"></p>
+    </div>
   </section>
 
   <section>
@@ -475,6 +523,23 @@
   </section>
 
   <footer id="v-footer">Hardcore Games — todos los derechos reservados.</footer>
+
+  <div class="gc-overlay" id="gcOverlay" role="dialog" aria-modal="true" aria-labelledby="gcTitle" aria-hidden="true">
+    <div class="gc-dialog">
+      <h3 id="gcTitle">Un solo dato para continuar</h3>
+      <p class="gc-sub">Ahí te llega la key de tu compra. Sin formularios largos ni contraseñas que recordar.</p>
+      <form id="gcForm" novalidate>
+        <div class="gc-field">
+          <label for="gcEmail">Correo</label>
+          <input type="email" id="gcEmail" name="email" placeholder="tu@correo.com" autocomplete="email" required>
+        </div>
+        <p class="gc-error" id="gcError"></p>
+        <button type="submit" class="gc-submit" id="gcSubmit">Continuar</button>
+        <button type="button" class="gc-cancel" id="gcCancel">Cancelar</button>
+      </form>
+      <p class="gc-note">Al continuar creamos tu cuenta en Hardcore Games con este correo.</p>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -482,7 +547,12 @@
   "use strict";
 
   var PRODUCT_ID = 4;
+  var PRODUCT_ID_CUOTAS = 310;
   var API_BASE = 'https://admin.hardcoregames.co/products';
+  // Mismo host que usa el bundle React (Fe) para /products/<id>: es de ahí
+  // de donde sale el title/image "canónico" que el resto del sitio espera
+  // encontrar en localStorage.cart_combinations (ver más abajo).
+  var CATALOG_API_BASE = 'https://api.srv936408.hstgr.cloud';
 
   // ---------------------------------------------------------------
   // Copy por defecto. Se pinta de inmediato para que la página nunca
@@ -512,10 +582,14 @@
     choice_a_desc: 'Te damos correo y clave. Es la opción más económica.',
     choice_b_title: 'Prefiero mi propia cuenta',
     choice_b_desc: 'Instalamos el servicio directo en tu perfil de Xbox. Ideal si le prestas tu perfil a alguien más.',
+    choice_c_title: 'Pagar a cuotas',
+    choice_c_desc: 'Divide el pago en cuotas mensuales. Reservas aquí y coordinas el resto por WhatsApp.',
     step2_eyebrow: 'Paso 2',
     step2_title: 'Elige la duración',
     step2_body_personal: 'Correo y clave para tu propio perfil de Xbox. No se comparte con nadie más.',
     step2_body_propia: 'Código sobre tu cuenta: no compartes nada, se activa directamente en tu perfil de Xbox.',
+    step2_body_cuotas: 'Se entrega cuenta primaria o secundaria (la que haya disponible). Este pago reserva tu cupo; el resto de la primera cuota se coordina por WhatsApp.',
+    cuotas_empty_msg: 'Estamos preparando los planes a cuotas. Escríbenos por WhatsApp mientras tanto.',
     badge_recommended: 'Recomendado',
     badge_best_price: 'Mejor precio',
     pick_button_label: 'Elegir',
@@ -566,6 +640,12 @@
 
   // ---------------- contenido de texto ----------------
   function renderContent(c) {
+    // El JSON guardado en /admin/products/variablessistema/ puede ser de
+    // antes de que existiera algún campo nuevo (pasó justo con
+    // choice_c_title/step2_body_cuotas/cuotas_empty_msg al agregar la
+    // opción de cuotas) — se completa con CONTENT_DEFAULTS para que un
+    // campo ausente en el admin nunca deje texto vacío en pantalla.
+    c = Object.assign({}, CONTENT_DEFAULTS, c || {});
     setText('v-platform_label', c.platform_label);
     setText('v-title', c.title);
     setText('v-subtitle', c.subtitle);
@@ -580,6 +660,8 @@
     setText('v-choice_a_desc', c.choice_a_desc);
     setText('v-choice_b_title', c.choice_b_title);
     setText('v-choice_b_desc', c.choice_b_desc);
+    setText('v-choice_c_title', c.choice_c_title);
+    setText('v-choice_c_desc', c.choice_c_desc);
     setText('v-step2_eyebrow', c.step2_eyebrow);
     setText('v-step2_title', c.step2_title);
     setText('v-faq_eyebrow', c.faq_eyebrow);
@@ -625,6 +707,7 @@
 
     window.__CONTENT = c;
     if (window.__PLANS) renderPlans(window.__PLANS);
+    renderCuotasPlans(window.__PLANS_CUOTAS);
   }
 
   // ---------------- planes (datos reales del catálogo) ----------------
@@ -641,6 +724,16 @@
   // prefiere explícitamente sobre Secundaria — no es un simple empate
   // por precio, es evitar la fila que sabemos que está rota.
   var LICENCE_PRIORITY = ['Primaria', 'Codigo', 'Secundaria'];
+
+  // pk (string) -> { plan, productId }. Se llena cada vez que se pinta una
+  // tarjeta y lo lee el click de "Elegir" para saber a qué producto
+  // pertenece esa combinación (product_id de Products, no el pk de
+  // GameDetail) — hace falta para escribir cart_combinations con el
+  // title/image correctos según sea plan de contado (4) o a cuotas (310).
+  var PLAN_INDEX = {};
+  function registerPlan(plan, productId) {
+    PLAN_INDEX[String(plan.pk)] = { plan: plan, productId: productId };
+  }
 
   function pickRepresentative(rows) {
     function score(r) {
@@ -663,7 +756,14 @@
       var group = byDuration[k];
       var rep = pickRepresentative(group);
       var totalStock = group.reduce(function (s, r) { return s + r.stock; }, 0);
-      return { duracion: Number(k), precio: rep.precio, precio_descuento: rep.precio_descuento, stock: totalStock, pk: rep.pk };
+      // Se conserva la fila completa (consola/licencia/desc_*) además de
+      // los campos agregados — hace falta íntegra para poblar
+      // cart_combinations cuando se elige este plan.
+      return {
+        duracion: Number(k), precio: rep.precio, precio_descuento: rep.precio_descuento,
+        stock: totalStock, pk: rep.pk, consola: rep.consola, desc_console: rep.desc_console,
+        licencia: rep.licencia, desc_licence: rep.desc_licence
+      };
     }).sort(function (a, b) { return a.duracion - b.duracion; });
   }
 
@@ -675,8 +775,17 @@
     return groupByDuration(rows.filter(function (r) { return r.desc_licence === 'Codigo'; }));
   }
 
-  function planCardHTML(plan, isRecommended, badgeText, c) {
+  // El producto a cuotas se entrega "aleatoriamente primaria o secundaria,
+  // depende lo que esté disponible" (así lo dice su ficha) — no hay forma
+  // de elegir licencia, así que no se filtra/separa por desc_licence como
+  // en groupPersonal/groupCodigo, se agrupa todo por duración tal cual.
+  function groupCuotas(rows) {
+    return groupByDuration(rows);
+  }
+
+  function planCardHTML(plan, productId, isRecommended, badgeText, c) {
     var stockLow = plan.stock <= (c.low_stock_threshold || 2);
+    var href = 'https://www.hardcoregames.co/product/' + productId;
     return (
       '<div class="plan-card' + (isRecommended ? ' is-recommended' : '') + '">' +
       (isRecommended ? '<span class="plan-badge">' + badgeText + '</span>' : '') +
@@ -684,7 +793,7 @@
       '<div><span class="plan-price tabular">' + fmtCOP(plan.precio_descuento) + '</span>' +
       (plan.precio > plan.precio_descuento ? '<span class="plan-price-old tabular">' + fmtCOP(plan.precio) + '</span>' : '') + '</div>' +
       '<div class="plan-stock' + (stockLow ? ' is-low' : '') + '">' + plan.stock + ' ' + c.stock_suffix + '</div>' +
-      '<a class="plan-pick" href="' + (c.portal_href || '#') + '" data-pk="' + plan.pk + '">' + c.pick_button_label + '</a>' +
+      '<a class="plan-pick" href="' + href + '" data-pk="' + plan.pk + '">' + c.pick_button_label + '</a>' +
       '</div>'
     );
   }
@@ -693,9 +802,11 @@
     var c = window.__CONTENT || CONTENT_DEFAULTS;
     var personal = groupPersonal(rows);
     var codigo = groupCodigo(rows);
+    personal.forEach(function (p) { registerPlan(p, PRODUCT_ID); });
+    codigo.forEach(function (p) { registerPlan(p, PRODUCT_ID); });
 
     var personalHTML = personal.map(function (p, i) {
-      return planCardHTML(p, i === personal.length - 1 && personal.length > 1, c.badge_recommended, c);
+      return planCardHTML(p, PRODUCT_ID, i === personal.length - 1 && personal.length > 1, c.badge_recommended, c);
     }).join('');
     document.getElementById('plansPersonal').innerHTML = personalHTML;
 
@@ -712,7 +823,7 @@
     shown = shown.slice(0, 3).sort(function (a, b) { return a.duracion - b.duracion; });
 
     var codigoHTML = shown.map(function (p) {
-      return planCardHTML(p, p === best, c.badge_best_price, c);
+      return planCardHTML(p, PRODUCT_ID, p === best, c.badge_best_price, c);
     }).join('');
     document.getElementById('plansPropia').innerHTML = codigoHTML;
 
@@ -730,6 +841,37 @@
     }
   }
 
+  // Producto 310 ("A CUOTAS - GAME PASS ULTIMATE ANUAL"): al momento de
+  // escribir esto no tiene combinaciones cargadas en el catálogo
+  // (getCombinationPriceByGame devuelve []), así que sin stock/precio no
+  // hay nada que pintar — se muestra cuotas_empty_msg en vez de una
+  // grilla vacía. En cuanto el admin cargue combinaciones reales, esta
+  // misma función las pinta solas, sin tocar código.
+  function renderCuotasPlans(rows) {
+    var c = window.__CONTENT || CONTENT_DEFAULTS;
+    var plans = groupCuotas(rows || []);
+    var container = document.getElementById('plansCuotas');
+    var emptyMsg = document.getElementById('cuotasEmptyMsg');
+
+    if (!plans.length) {
+      container.innerHTML = '';
+      emptyMsg.textContent = c.cuotas_empty_msg || '';
+      emptyMsg.style.display = '';
+      return;
+    }
+    emptyMsg.style.display = 'none';
+
+    plans.forEach(function (p) { registerPlan(p, PRODUCT_ID_CUOTAS); });
+    var bestIndex = plans.reduce(function (bestI, p, i, arr) {
+      var costPerDay = p.precio_descuento / p.duracion;
+      var bestCostPerDay = arr[bestI].precio_descuento / arr[bestI].duracion;
+      return costPerDay < bestCostPerDay ? i : bestI;
+    }, 0);
+    container.innerHTML = plans.map(function (p, i) {
+      return planCardHTML(p, PRODUCT_ID_CUOTAS, i === bestIndex && plans.length > 1, c.badge_best_price, c);
+    }).join('');
+  }
+
   // ---------------- selector de decisión ----------------
   var buttons = document.querySelectorAll('.choice-btn');
   var groups = document.querySelectorAll('.plan-group');
@@ -739,18 +881,143 @@
       buttons.forEach(function (b) { b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'); });
       groups.forEach(function (g) { g.classList.toggle('is-active', g.getAttribute('data-group') === mode); });
       var c = window.__CONTENT || CONTENT_DEFAULTS;
-      document.getElementById('plansBody').textContent = mode === 'personal' ? c.step2_body_personal : c.step2_body_propia;
+      document.getElementById('plansBody').textContent =
+        mode === 'personal' ? c.step2_body_personal :
+        mode === 'cuotas' ? c.step2_body_cuotas :
+        c.step2_body_propia;
+      var portalLink = document.getElementById('v-portal_link');
+      if (portalLink) {
+        portalLink.setAttribute('href', 'https://www.hardcoregames.co/product/' + (mode === 'cuotas' ? PRODUCT_ID_CUOTAS : PRODUCT_ID));
+      }
     });
   });
 
   // ---------------- carrito directo al elegir un plan ----------------
-  // El sitio real guarda la sesión (jwt_token) en localStorage, por
-  // origen. Esta página solo la ve si se visita en el MISMO origen donde
-  // el usuario inició sesión (www.hardcoregames.co) — en el dominio raíz
-  // (hardcoregames.co) no hay forma de leerla, así que cae al
-  // comportamiento anterior (ir a la ficha a elegir de nuevo).
+  // El sitio real guarda la sesión (jwt_token + user_data) en localStorage,
+  // por origen — por eso el guard de apex→www al principio del <head>.
+  // Si ya hay sesión, se agrega al carrito directo. Si no, se pide el
+  // correo (checkout de invitado: cuenta silenciosa, sin contraseña que el
+  // visitante tenga que inventar ni código de verificación) y se sigue
+  // igual. Cualquier fallo real cae al comportamiento de antes: ir a la
+  // ficha del producto a elegir ahí.
   var CART_API = 'https://api.srv936408.hstgr.cloud/shopping-car/';
   var CART_URL = 'https://www.hardcoregames.co/cart';
+  var AUTH_LOGIN_API = 'https://api.srv936408.hstgr.cloud/auth/login';
+  var REGISTER_API = 'https://admin.hardcoregames.co/users/register/';
+
+  function decodeJwtPayload(token) {
+    try {
+      var b64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+      var json = decodeURIComponent(atob(b64).split('').map(function (c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join(''));
+      return JSON.parse(json);
+    } catch (e) { return null; }
+  }
+
+  function randomPassword() {
+    var bytes = new Uint8Array(18);
+    crypto.getRandomValues(bytes);
+    return Array.prototype.map.call(bytes, function (b) { return b.toString(36); }).join('').slice(0, 24) + 'Aa1!';
+  }
+
+  // El sitio real (product/:id) escribe una entrada en
+  // localStorage.cart_combinations al agregar al carrito — es lo ÚNICO de
+  // donde /cart saca nombre, foto y desglose de precio de cada línea (no
+  // hay fetch de producto en esa página). Como esta landing agrega al
+  // carrito llamando directo a /shopping-car/, sin pasar por esa pantalla,
+  // nunca se escribía esa entrada — por eso /cart mostraba "Producto #<id>"
+  // y una imagen de placeholder para todo lo agregado desde acá. Hay que
+  // replicar exactamente esa misma escritura aquí.
+  function writeCartCombination(plan, productId) {
+    try {
+      var info = (window.__PRODUCT_CATALOG || {})[productId] || {};
+      var cache = JSON.parse(localStorage.getItem('cart_combinations') || '{}');
+      cache[String(plan.pk)] = {
+        id_combination: plan.pk,
+        product_id: plan.pk,
+        base_game_id: productId,
+        is_retail: true,
+        title: info.title || 'Producto',
+        image: info.image || '/placeholder.svg',
+        desc_console: plan.desc_console,
+        desc_licence: plan.desc_licence,
+        price: (plan.precio_descuento > 0 && plan.precio_descuento < plan.precio) ? plan.precio_descuento : plan.precio,
+        coupon: undefined,
+        consola: plan.consola,
+        licencia: plan.licencia,
+        duracion_dias_alquiler: plan.duracion
+      };
+      localStorage.setItem('cart_combinations', JSON.stringify(cache));
+    } catch (e) {
+      // storage bloqueado/lleno: la compra sigue funcionando igual, /cart
+      // solo cae al "Producto #<id>" genérico como si viniera de otro
+      // dispositivo.
+    }
+  }
+
+  function addToCartAndGoToCart(jwt, pk, fallbackHref) {
+    return fetch(CART_API, {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + jwt, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ product_id: Number(pk), estado: true })
+    }).then(function (r) {
+      // 409 = "ya está en el carrito": no es un error, ya quedó como
+      // queríamos, así que sigue igual que un 2xx.
+      if (!r.ok && r.status !== 409) throw new Error('shopping-car respondió ' + r.status);
+      var entry = PLAN_INDEX[String(pk)];
+      if (entry) writeCartCombination(entry.plan, entry.productId);
+      window.location.href = CART_URL;
+    }).catch(function () {
+      window.location.href = fallbackHref;
+    });
+  }
+
+  function guestCheckout(email, pk, fallbackHref) {
+    var password = randomPassword();
+    return fetch(REGISTER_API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ first_name: '', last_name: '', email: email, password: password, phone_number: '', avatar: '' })
+    }).then(function (r) {
+      if (r.status === 400) {
+        return r.json().then(function (body) {
+          var msg = (body && body.message) || '';
+          var code = msg.indexOf('ya existe') !== -1 ? 'EMAIL_TAKEN' : 'REGISTER_FAILED';
+          return Promise.reject({ code: code });
+        });
+      }
+      if (!r.ok) return Promise.reject({ code: 'REGISTER_FAILED' });
+      return fetch(AUTH_LOGIN_API, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'username=' + encodeURIComponent(email) + '&password=' + encodeURIComponent(password)
+      });
+    }).then(function (r) {
+      if (!r.ok) return Promise.reject({ code: 'LOGIN_FAILED' });
+      return r.json();
+    }).then(function (loginRes) {
+      var payload = decodeJwtPayload(loginRes.access_token);
+      var userId = 0;
+      if (payload) {
+        if (typeof payload.user_id === 'number') userId = payload.user_id;
+        else if (!isNaN(Number(payload.sub))) userId = Number(payload.sub);
+      }
+      var userData = {
+        id: userId,
+        email: email,
+        first_name: (payload && typeof payload.first_name === 'string') ? payload.first_name : email.split('@')[0],
+        last_name: '',
+        liked_game_ids: (payload && Array.isArray(payload.liked_game_ids)) ? payload.liked_game_ids : [],
+        is_superuser: !!(payload && payload.is_superuser === true)
+      };
+      try {
+        localStorage.setItem('jwt_token', loginRes.access_token);
+        localStorage.setItem('user_data', JSON.stringify(userData));
+      } catch (e) { /* storage bloqueado */ }
+      return addToCartAndGoToCart(loginRes.access_token, pk, fallbackHref);
+    });
+  }
 
   document.addEventListener('click', function (ev) {
     var link = ev.target.closest && ev.target.closest('.plan-pick');
@@ -764,22 +1031,94 @@
     var jwt = null;
     try { jwt = localStorage.getItem('jwt_token'); } catch (e) { /* storage bloqueado */ }
 
-    if (!pk || !jwt) {
+    if (!pk) {
       setTimeout(function () { window.location.href = fallbackHref; }, 180);
       return;
     }
 
-    fetch(CART_API, {
-      method: 'POST',
-      headers: { 'Authorization': 'Bearer ' + jwt, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ product_id: Number(pk), estado: true })
-    }).then(function (r) {
-      if (!r.ok) throw new Error('shopping-car respondió ' + r.status);
-      window.location.href = CART_URL;
-    }).catch(function () {
+    if (jwt) {
+      addToCartAndGoToCart(jwt, pk, fallbackHref);
+      return;
+    }
+
+    if (typeof window.__openGuestCheckout === 'function') {
+      window.__openGuestCheckout(pk, fallbackHref);
+    } else {
       window.location.href = fallbackHref;
-    });
+    }
   });
+
+  // ---------------- modal de checkout de invitado ----------------
+  (function () {
+    var overlay = document.getElementById('gcOverlay');
+    var form = document.getElementById('gcForm');
+    var emailInput = document.getElementById('gcEmail');
+    var errorEl = document.getElementById('gcError');
+    var submitBtn = document.getElementById('gcSubmit');
+    var cancelBtn = document.getElementById('gcCancel');
+    var pendingPk = null;
+    var pendingFallback = null;
+
+    function showError(html) {
+      errorEl.innerHTML = html;
+      errorEl.classList.add('is-visible');
+    }
+    function clearError() {
+      errorEl.innerHTML = '';
+      errorEl.classList.remove('is-visible');
+    }
+    function closeModal() {
+      overlay.classList.remove('is-open');
+      overlay.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+    function leaveToFallback() {
+      closeModal();
+      if (pendingFallback) window.location.href = pendingFallback;
+    }
+
+    window.__openGuestCheckout = function (pk, fallbackHref) {
+      pendingPk = pk;
+      pendingFallback = fallbackHref;
+      clearError();
+      emailInput.value = '';
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Continuar';
+      overlay.classList.add('is-open');
+      overlay.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+      setTimeout(function () { emailInput.focus(); }, 50);
+    };
+
+    cancelBtn.addEventListener('click', leaveToFallback);
+    overlay.addEventListener('click', function (ev) { if (ev.target === overlay) leaveToFallback(); });
+    document.addEventListener('keydown', function (ev) {
+      if (ev.key === 'Escape' && overlay.classList.contains('is-open')) leaveToFallback();
+    });
+
+    form.addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var email = emailInput.value.trim().toLowerCase();
+      if (!email || email.indexOf('@') === -1 || email.indexOf('.') === -1) {
+        showError('Escribe un correo válido.');
+        return;
+      }
+      clearError();
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Un momento…';
+
+      guestCheckout(email, pendingPk, pendingFallback).catch(function (err) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Continuar';
+        var code = err && err.code;
+        if (code === 'EMAIL_TAKEN') {
+          showError('Ya tienes una cuenta con este correo. <a href="https://www.hardcoregames.co/auth">Inicia sesión</a> y elige el plan de nuevo.');
+        } else {
+          showError('No pudimos continuar. Intenta de nuevo.');
+        }
+      });
+    });
+  })();
 
   // ---------------- header: drawer de categorías ----------------
   (function () {
@@ -842,7 +1181,22 @@
   // ---------------- carga inicial ----------------
   renderContent(CONTENT_DEFAULTS);
   window.__PLANS = PLANS_DEFAULTS;
+  window.__PLANS_CUOTAS = [];
   renderPlans(PLANS_DEFAULTS);
+  renderCuotasPlans([]);
+
+  // Title/image "canónicos" del catálogo (mismo endpoint que usa la ficha
+  // de producto real) para las dos familias de producto que vive en esta
+  // landing — hacen falta para escribir cart_combinations bien.
+  window.__PRODUCT_CATALOG = {};
+  [PRODUCT_ID, PRODUCT_ID_CUOTAS].forEach(function (id) {
+    fetch(CATALOG_API_BASE + '/products/' + id)
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (res) {
+        if (res && res.data) window.__PRODUCT_CATALOG[id] = { title: res.data.title, image: res.data.image };
+      })
+      .catch(function () { /* si falla, cart_combinations cae al título/imagen genéricos */ });
+  });
 
   fetch(API_BASE + '/systemVariables/gamepassultimate')
     .then(function (r) { return r.ok ? r.json() : null; })
@@ -863,6 +1217,16 @@
       }
     })
     .catch(function () { /* se queda con los planes por defecto */ });
+
+  fetch(API_BASE + '/getCombinationPriceByGame/' + PRODUCT_ID_CUOTAS)
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (res) {
+      if (res && res.data) {
+        window.__PLANS_CUOTAS = res.data;
+        renderCuotasPlans(res.data);
+      }
+    })
+    .catch(function () { /* se queda con el mensaje "muy pronto" */ });
 })();
 </script>
 
