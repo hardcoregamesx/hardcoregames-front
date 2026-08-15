@@ -6,6 +6,16 @@
 <title>Game Pass Ultimate | Hardcore Games</title>
 <meta name="description" content="Elige tu plan de Xbox Game Pass Ultimate en menos de un minuto. Entrega inmediata, garantía y soporte por WhatsApp.">
 <meta name="robots" content="noindex">
+<script>
+  // El checkout de invitado guarda la sesión en localStorage, que es por
+  // origen. Si alguien entra por el dominio raíz (sin "www"), esa sesión
+  // quedaría invisible para el resto del sitio (carrito, checkout), que
+  // vive en www.hardcoregames.co. El apex no redirige solo, así que se
+  // fuerza aquí, antes de que se pinte nada.
+  if (location.hostname === 'hardcoregames.co') {
+    location.replace('https://www.hardcoregames.co' + location.pathname + location.search + location.hash);
+  }
+</script>
 <style>
   :root {
     --background: hsl(262 60% 10%);
@@ -188,6 +198,36 @@
   }
   .plan-pick { transition: background 120ms ease, color 120ms ease, border-color 120ms ease, transform 100ms ease; }
   .plan-pick:focus-visible { outline: 2px solid var(--cta); outline-offset: 2px; }
+
+  /* ---- checkout de invitado ---- */
+  .gc-overlay {
+    display: none; position: fixed; inset: 0; background: rgba(0,0,0,.6);
+    z-index: 80; align-items: center; justify-content: center; padding: 20px;
+  }
+  .gc-overlay.is-open { display: flex; }
+  .gc-dialog {
+    background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+    box-shadow: 0 20px 50px rgba(0,0,0,.5); max-width: 380px; width: 100%; padding: 24px;
+  }
+  .gc-dialog h3 { font-size: 19px; font-weight: 800; margin: 0 0 6px; }
+  .gc-sub { color: var(--muted-foreground); font-size: 13.5px; margin: 0 0 18px; }
+  .gc-field { margin-bottom: 14px; }
+  .gc-field label { display: block; font-size: 12px; font-weight: 700; color: var(--muted-foreground); margin-bottom: 6px; text-transform: uppercase; letter-spacing: .04em; }
+  .gc-field input {
+    width: 100%; background: var(--secondary); border: 1px solid var(--border); border-radius: calc(var(--radius) - .25rem);
+    color: var(--foreground); font-size: 15px; padding: 11px 12px; font-family: inherit;
+  }
+  .gc-field input:focus-visible { outline: 2px solid var(--cta); outline-offset: 1px; }
+  .gc-error { color: var(--destructive); font-size: 13px; margin: -6px 0 14px; display: none; }
+  .gc-error.is-visible { display: block; }
+  .gc-error a { color: inherit; text-decoration: underline; }
+  .gc-submit {
+    width: 100%; background: var(--cta); color: var(--cta-foreground); border: none; border-radius: calc(var(--radius) - .25rem);
+    font-weight: 800; font-size: 15px; padding: 13px; cursor: pointer; text-align: center; font-family: inherit;
+  }
+  .gc-submit:disabled { opacity: .6; cursor: default; }
+  .gc-cancel { display: block; width: 100%; text-align: center; margin-top: 10px; background: none; border: none; color: var(--muted-foreground); font-size: 13.5px; cursor: pointer; padding: 6px; font-family: inherit; }
+  .gc-note { font-size: 11.5px; color: var(--muted-foreground); margin-top: 14px; text-align: center; }
 
   .more-durations { margin-top: 14px; text-align: center; }
   .more-durations summary {
@@ -475,6 +515,23 @@
   </section>
 
   <footer id="v-footer">Hardcore Games — todos los derechos reservados.</footer>
+
+  <div class="gc-overlay" id="gcOverlay" role="dialog" aria-modal="true" aria-labelledby="gcTitle" aria-hidden="true">
+    <div class="gc-dialog">
+      <h3 id="gcTitle">Un solo dato para continuar</h3>
+      <p class="gc-sub">Ahí te llega la key de tu compra. Sin formularios largos ni contraseñas que recordar.</p>
+      <form id="gcForm" novalidate>
+        <div class="gc-field">
+          <label for="gcEmail">Correo</label>
+          <input type="email" id="gcEmail" name="email" placeholder="tu@correo.com" autocomplete="email" required>
+        </div>
+        <p class="gc-error" id="gcError"></p>
+        <button type="submit" class="gc-submit" id="gcSubmit">Continuar</button>
+        <button type="button" class="gc-cancel" id="gcCancel">Cancelar</button>
+      </form>
+      <p class="gc-note">Al continuar creamos tu cuenta en Hardcore Games con este correo.</p>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -744,13 +801,94 @@
   });
 
   // ---------------- carrito directo al elegir un plan ----------------
-  // El sitio real guarda la sesión (jwt_token) en localStorage, por
-  // origen. Esta página solo la ve si se visita en el MISMO origen donde
-  // el usuario inició sesión (www.hardcoregames.co) — en el dominio raíz
-  // (hardcoregames.co) no hay forma de leerla, así que cae al
-  // comportamiento anterior (ir a la ficha a elegir de nuevo).
+  // El sitio real guarda la sesión (jwt_token + user_data) en localStorage,
+  // por origen — por eso el guard de apex→www al principio del <head>.
+  // Si ya hay sesión, se agrega al carrito directo. Si no, se pide el
+  // correo (checkout de invitado: cuenta silenciosa, sin contraseña que el
+  // visitante tenga que inventar ni código de verificación) y se sigue
+  // igual. Cualquier fallo real cae al comportamiento de antes: ir a la
+  // ficha del producto a elegir ahí.
   var CART_API = 'https://api.srv936408.hstgr.cloud/shopping-car/';
   var CART_URL = 'https://www.hardcoregames.co/cart';
+  var AUTH_LOGIN_API = 'https://api.srv936408.hstgr.cloud/auth/login';
+  var REGISTER_API = 'https://admin.hardcoregames.co/users/register/';
+
+  function decodeJwtPayload(token) {
+    try {
+      var b64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+      var json = decodeURIComponent(atob(b64).split('').map(function (c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join(''));
+      return JSON.parse(json);
+    } catch (e) { return null; }
+  }
+
+  function randomPassword() {
+    var bytes = new Uint8Array(18);
+    crypto.getRandomValues(bytes);
+    return Array.prototype.map.call(bytes, function (b) { return b.toString(36); }).join('').slice(0, 24) + 'Aa1!';
+  }
+
+  function addToCartAndGoToCart(jwt, pk, fallbackHref) {
+    return fetch(CART_API, {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + jwt, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ product_id: Number(pk), estado: true })
+    }).then(function (r) {
+      // 409 = "ya está en el carrito": no es un error, ya quedó como
+      // queríamos, así que sigue igual que un 2xx.
+      if (!r.ok && r.status !== 409) throw new Error('shopping-car respondió ' + r.status);
+      window.location.href = CART_URL;
+    }).catch(function () {
+      window.location.href = fallbackHref;
+    });
+  }
+
+  function guestCheckout(email, pk, fallbackHref) {
+    var password = randomPassword();
+    return fetch(REGISTER_API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ first_name: '', last_name: '', email: email, password: password, phone_number: '', avatar: '' })
+    }).then(function (r) {
+      if (r.status === 400) {
+        return r.json().then(function (body) {
+          var msg = (body && body.message) || '';
+          var code = msg.indexOf('ya existe') !== -1 ? 'EMAIL_TAKEN' : 'REGISTER_FAILED';
+          return Promise.reject({ code: code });
+        });
+      }
+      if (!r.ok) return Promise.reject({ code: 'REGISTER_FAILED' });
+      return fetch(AUTH_LOGIN_API, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'username=' + encodeURIComponent(email) + '&password=' + encodeURIComponent(password)
+      });
+    }).then(function (r) {
+      if (!r.ok) return Promise.reject({ code: 'LOGIN_FAILED' });
+      return r.json();
+    }).then(function (loginRes) {
+      var payload = decodeJwtPayload(loginRes.access_token);
+      var userId = 0;
+      if (payload) {
+        if (typeof payload.user_id === 'number') userId = payload.user_id;
+        else if (!isNaN(Number(payload.sub))) userId = Number(payload.sub);
+      }
+      var userData = {
+        id: userId,
+        email: email,
+        first_name: (payload && typeof payload.first_name === 'string') ? payload.first_name : email.split('@')[0],
+        last_name: '',
+        liked_game_ids: (payload && Array.isArray(payload.liked_game_ids)) ? payload.liked_game_ids : [],
+        is_superuser: !!(payload && payload.is_superuser === true)
+      };
+      try {
+        localStorage.setItem('jwt_token', loginRes.access_token);
+        localStorage.setItem('user_data', JSON.stringify(userData));
+      } catch (e) { /* storage bloqueado */ }
+      return addToCartAndGoToCart(loginRes.access_token, pk, fallbackHref);
+    });
+  }
 
   document.addEventListener('click', function (ev) {
     var link = ev.target.closest && ev.target.closest('.plan-pick');
@@ -764,22 +902,94 @@
     var jwt = null;
     try { jwt = localStorage.getItem('jwt_token'); } catch (e) { /* storage bloqueado */ }
 
-    if (!pk || !jwt) {
+    if (!pk) {
       setTimeout(function () { window.location.href = fallbackHref; }, 180);
       return;
     }
 
-    fetch(CART_API, {
-      method: 'POST',
-      headers: { 'Authorization': 'Bearer ' + jwt, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ product_id: Number(pk), estado: true })
-    }).then(function (r) {
-      if (!r.ok) throw new Error('shopping-car respondió ' + r.status);
-      window.location.href = CART_URL;
-    }).catch(function () {
+    if (jwt) {
+      addToCartAndGoToCart(jwt, pk, fallbackHref);
+      return;
+    }
+
+    if (typeof window.__openGuestCheckout === 'function') {
+      window.__openGuestCheckout(pk, fallbackHref);
+    } else {
       window.location.href = fallbackHref;
-    });
+    }
   });
+
+  // ---------------- modal de checkout de invitado ----------------
+  (function () {
+    var overlay = document.getElementById('gcOverlay');
+    var form = document.getElementById('gcForm');
+    var emailInput = document.getElementById('gcEmail');
+    var errorEl = document.getElementById('gcError');
+    var submitBtn = document.getElementById('gcSubmit');
+    var cancelBtn = document.getElementById('gcCancel');
+    var pendingPk = null;
+    var pendingFallback = null;
+
+    function showError(html) {
+      errorEl.innerHTML = html;
+      errorEl.classList.add('is-visible');
+    }
+    function clearError() {
+      errorEl.innerHTML = '';
+      errorEl.classList.remove('is-visible');
+    }
+    function closeModal() {
+      overlay.classList.remove('is-open');
+      overlay.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+    function leaveToFallback() {
+      closeModal();
+      if (pendingFallback) window.location.href = pendingFallback;
+    }
+
+    window.__openGuestCheckout = function (pk, fallbackHref) {
+      pendingPk = pk;
+      pendingFallback = fallbackHref;
+      clearError();
+      emailInput.value = '';
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Continuar';
+      overlay.classList.add('is-open');
+      overlay.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+      setTimeout(function () { emailInput.focus(); }, 50);
+    };
+
+    cancelBtn.addEventListener('click', leaveToFallback);
+    overlay.addEventListener('click', function (ev) { if (ev.target === overlay) leaveToFallback(); });
+    document.addEventListener('keydown', function (ev) {
+      if (ev.key === 'Escape' && overlay.classList.contains('is-open')) leaveToFallback();
+    });
+
+    form.addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var email = emailInput.value.trim().toLowerCase();
+      if (!email || email.indexOf('@') === -1 || email.indexOf('.') === -1) {
+        showError('Escribe un correo válido.');
+        return;
+      }
+      clearError();
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Un momento…';
+
+      guestCheckout(email, pendingPk, pendingFallback).catch(function (err) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Continuar';
+        var code = err && err.code;
+        if (code === 'EMAIL_TAKEN') {
+          showError('Ya tienes una cuenta con este correo. <a href="https://www.hardcoregames.co/auth">Inicia sesión</a> y elige el plan de nuevo.');
+        } else {
+          showError('No pudimos continuar. Intenta de nuevo.');
+        }
+      });
+    });
+  })();
 
   // ---------------- header: drawer de categorías ----------------
   (function () {
