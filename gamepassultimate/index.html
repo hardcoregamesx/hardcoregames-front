@@ -628,41 +628,51 @@
   }
 
   // ---------------- planes (datos reales del catálogo) ----------------
-  // Cada duración puede tener más de una combinación (distintos pk del
-  // mismo desc_licence, o Primaria+Secundaria fundidas en "personal").
-  // Guardamos el pk con stock que usaremos si el click agrega directo al
-  // carrito (ver "carrito directo" más abajo); si ninguna tiene stock,
-  // igual guardamos uno para no romper el link de picking.
-  function bestPk(existing, row) {
-    if (!existing) return row.pk;
-    if (existing.stock <= 0 && row.stock > 0) return row.pk;
-    return existing.pk;
+  // Cada duración puede tener más de una combinación real (distintos pk
+  // del mismo desc_licence, o Primaria+Secundaria fundidas en
+  // "personal"). precio/precio_descuento/pk SIEMPRE tienen que salir de
+  // la MISMA fila — si no, la tarjeta puede mostrar un precio y el
+  // carrito agregar una combinación con otro precio distinto.
+  //
+  // Detectado en producción: entre Primaria y Secundaria con el mismo
+  // precio, Secundaria puede estar mal cargada en el catálogo (el
+  // carrito la muestra como "Producto #<pk>" genérico y sin aplicar el
+  // descuento). Primaria es la que siempre se ve bien, así que se
+  // prefiere explícitamente sobre Secundaria — no es un simple empate
+  // por precio, es evitar la fila que sabemos que está rota.
+  var LICENCE_PRIORITY = ['Primaria', 'Codigo', 'Secundaria'];
+
+  function pickRepresentative(rows) {
+    function score(r) {
+      var stockScore = r.stock > 0 ? 0 : 1;
+      var licenceScore = LICENCE_PRIORITY.indexOf(r.desc_licence);
+      if (licenceScore === -1) licenceScore = LICENCE_PRIORITY.length;
+      return stockScore * 1e9 + licenceScore * 1e6 + r.precio_descuento;
+    }
+    return rows.reduce(function (best, r) { return score(r) < score(best) ? r : best; }, rows[0]);
+  }
+
+  function groupByDuration(rows) {
+    var byDuration = {};
+    rows.forEach(function (r) {
+      var key = r.duracion_dias_alquiler;
+      if (!byDuration[key]) byDuration[key] = [];
+      byDuration[key].push(r);
+    });
+    return Object.keys(byDuration).map(function (k) {
+      var group = byDuration[k];
+      var rep = pickRepresentative(group);
+      var totalStock = group.reduce(function (s, r) { return s + r.stock; }, 0);
+      return { duracion: Number(k), precio: rep.precio, precio_descuento: rep.precio_descuento, stock: totalStock, pk: rep.pk };
+    }).sort(function (a, b) { return a.duracion - b.duracion; });
   }
 
   function groupPersonal(rows) {
-    var byDuration = {};
-    rows.filter(function (r) { return r.desc_licence === 'Primaria' || r.desc_licence === 'Secundaria'; })
-      .forEach(function (r) {
-        var key = r.duracion_dias_alquiler;
-        if (!byDuration[key]) byDuration[key] = { duracion: key, precio: r.precio, precio_descuento: r.precio_descuento, stock: 0, pk: r.pk, pkStock: 0 };
-        byDuration[key].stock += r.stock;
-        byDuration[key].pk = bestPk({ pk: byDuration[key].pk, stock: byDuration[key].pkStock }, r);
-        byDuration[key].pkStock = r.stock;
-      });
-    return Object.keys(byDuration).map(function (k) { return byDuration[k]; }).sort(function (a, b) { return a.duracion - b.duracion; });
+    return groupByDuration(rows.filter(function (r) { return r.desc_licence === 'Primaria' || r.desc_licence === 'Secundaria'; }));
   }
 
   function groupCodigo(rows) {
-    var byDuration = {};
-    rows.filter(function (r) { return r.desc_licence === 'Codigo'; })
-      .forEach(function (r) {
-        var key = r.duracion_dias_alquiler;
-        if (!byDuration[key]) byDuration[key] = { duracion: key, precio: r.precio, precio_descuento: r.precio_descuento, stock: 0, pk: r.pk, pkStock: 0 };
-        byDuration[key].stock += r.stock;
-        byDuration[key].pk = bestPk({ pk: byDuration[key].pk, stock: byDuration[key].pkStock }, r);
-        byDuration[key].pkStock = r.stock;
-      });
-    return Object.keys(byDuration).map(function (k) { return byDuration[k]; }).sort(function (a, b) { return a.duracion - b.duracion; });
+    return groupByDuration(rows.filter(function (r) { return r.desc_licence === 'Codigo'; }));
   }
 
   function planCardHTML(plan, isRecommended, badgeText, c) {
