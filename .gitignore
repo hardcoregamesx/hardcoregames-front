@@ -2,3 +2,5 @@
 *.bak.*
 *.bak_*
 node_modules/
+.claude/
+.specify/
