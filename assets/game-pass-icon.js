@@ -22,6 +22,16 @@
  * __reactFiber$…/__reactProps$…) y se reemplaza por el clon ya editado —
  * así el click cae en la navegación normal del navegador hacia el nuevo
  * href. Verificado en producción: clic en el clon navega a /gamepassultimate.
+ *
+ * Solo en móvil (viewport < 768px, breakpoint "md" de Tailwind): la fila es
+ * un carrusel horizontal ("overflow-x-auto") con "justify-content:center",
+ * así que con los 5 íconos originales el navegador reparte el desborde a
+ * ambos lados y "Game Pass" queda fuera de pantalla sin scroll manual — el
+ * usuario nunca lo ve. Para resolverlo, en mobile además: se elimina el
+ * ícono de FIFA y el clon de Game Pass se reinserta antes del de Xbox,
+ * dejando el orden Juegos / PSN / Game Pass / Xbox — así queda visible sin
+ * scroll. En desktop no hace falta (los 5 íconos entran en el ancho
+ * disponible) y se deja el orden original con Game Pass al final.
  */
 (function () {
   "use strict";
@@ -32,6 +42,9 @@
   var DONE_ATTR = "data-hc-gamepass-icon-done";
   var STYLE_ID = "hc-gamepass-icon-style";
   var ICON_CLASS = "hc-gamepass-icon-circle";
+  var MOBILE_BREAKPOINT = 768;
+  var FIFA_LABEL = "FIFA";
+  var XBOX_LABEL = "Xbox";
 
   var INFINITY_SVG =
     '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" ' +
@@ -80,10 +93,38 @@
     return document.querySelector("a[" + DONE_ATTR + "]") !== null;
   }
 
+  // Busca, entre los hijos directos de la fila, el <a> cuyo <span> tiene
+  // exactamente ese texto. Solo se usa dentro de la misma fila de accesos
+  // rápidos (ya acotada por findTarget), así que no hace falta el filtro
+  // por wrapper "rounded-full" que sí necesita findTarget.
+  function findRowSiblingByLabel(row, text) {
+    var children = row.children;
+    for (var i = 0; i < children.length; i++) {
+      var el = children[i];
+      if (el.tagName !== "A") continue;
+      var span = el.querySelector(":scope > div > span");
+      if (span && span.textContent.trim() === text) return el;
+    }
+    return null;
+  }
+
+  // Reordena la fila para que "Game Pass" quede visible sin scroll en
+  // mobile: saca a FIFA y reinserta el ícono de Game Pass justo antes del
+  // de Xbox, dejando Juegos / PSN / Game Pass / Xbox. Si alguno de los dos
+  // no aparece (cambio futuro en el nav), no hace nada — nunca lanza.
+  function reorderForMobile(row, gamePassEl) {
+    var fifa = findRowSiblingByLabel(row, FIFA_LABEL);
+    if (fifa) fifa.remove();
+    var xbox = findRowSiblingByLabel(row, XBOX_LABEL);
+    if (xbox) row.insertBefore(gamePassEl, xbox);
+  }
+
   function process() {
     var target = findTarget();
     if (!target) return;
     injectStyles();
+
+    var row = target.a.parentNode;
 
     var clone = target.a.cloneNode(true);
     clone.setAttribute(DONE_ATTR, "1");
@@ -101,6 +142,10 @@
     }
 
     target.a.replaceWith(clone);
+
+    if (row && window.innerWidth < MOBILE_BREAKPOINT) {
+      reorderForMobile(row, clone);
+    }
   }
 
   // El ícono solo existe en la home: en otras rutas no hay nada que
