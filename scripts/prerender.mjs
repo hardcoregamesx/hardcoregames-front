@@ -38,9 +38,14 @@ async function renderOne(browser, url, i, total) {
       await page.waitForFunction(
         () => {
           const main = document.querySelector("main");
-          return !!main && main.innerText.trim().length > 40;
+          const hasContent = !!main && main.innerText.trim().length > 40;
+          // seo-meta.js reintenta hasta que el heading real reemplaza el
+          // esqueleto "Cargando producto..."; esperamos lo mismo aqui para
+          // no capturar el <title>/<meta> con el placeholder todavia puesto.
+          const titleReady = !/cargando/i.test(document.title);
+          return hasContent && titleReady;
         },
-        { timeout: 10000 }
+        { timeout: 12000 }
       );
     } catch {
       // seguimos igual: mejor un snapshot parcial que ninguno
