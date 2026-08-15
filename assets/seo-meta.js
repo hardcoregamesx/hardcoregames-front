@@ -101,7 +101,11 @@
     if (!main) return false;
     var heading = main.querySelector("h1, h2");
     var name = textOf(heading);
-    if (!name) return false;
+    // "Cargando producto..." es el heading del esqueleto de carga: si lo
+    // aceptamos aqui, tryApplyProduct() devuelve true en el primer intento
+    // y el poll de mas abajo nunca vuelve a correr, dejando titulo/meta/
+    // JSON-LD pegados con ese placeholder para el resto del pageview.
+    if (!name || /^cargando/i.test(name)) return false;
 
     var priceEl = Array.prototype.find.call(
       main.querySelectorAll("*"),
