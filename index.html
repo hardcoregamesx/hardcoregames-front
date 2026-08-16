@@ -22,10 +22,17 @@
     /></noscript>
     <!-- End Meta Pixel Code -->
     <!-- Rastreo de eventos (ViewContent/AddToCart/InitiateCheckout/Purchase) -->
-    <script src="/assets/meta-pixel-tracking.js"></script>
+    <!-- ?v=2: cache-bust por unica vez. Este asset caia en el bloque
+         "immutable/1 año" de default.conf (a diferencia de seo-meta.js,
+         que ya estaba en la lista no-cache) y se modifico hoy (16/08/2026,
+         hc:track); sin el query string quien cargo el sitio antes de este
+         deploy queda pegado un año con la version vieja cacheada. Ahora
+         tambien esta en la lista no-cache de default.conf, asi que la
+         proxima edicion no necesita otro bump. -->
+    <script src="/assets/meta-pixel-tracking.js?v=2"></script>
     <!-- GA4 + conversion de Google Ads: escucha los eventos "hc:track" que
          despacha meta-pixel-tracking.js, sin volver a interceptar Bold -->
-    <script src="/assets/google-ads-tracking.js"></script>
+    <script src="/assets/google-ads-tracking.js?v=2"></script>
 
     <link rel="icon" type="image/png" href="/logo.png" sizes="any" />
     <link rel="apple-touch-icon" href="/logo.png" />
