@@ -109,4 +109,35 @@
   document.addEventListener("visibilitychange", function () {
     if (document.visibilityState === "visible") process();
   });
+
+  // Bug: el botón desaparecía al navegar dentro del sitio (ej. entrar a
+  // /filters y volver con "atrás") sin cambiar de pestaña ni recargar la
+  // página — por eso "pageshow"/"visibilitychange" de arriba no alcanzaban.
+  // El nav lo renderiza React y, al navegar entre rutas, vuelve a montar ese
+  // <a> como un nodo nuevo sin nuestro botón hermano inyectado (el botón no
+  // es parte del árbol de React, así que un re-render/remount lo descarta
+  // junto con el resto). Un MutationObserver detecta esos re-renders del
+  // nav — sin depender de recargas ni cambios de pestaña — y vuelve a
+  // insertar el botón. process() ya es seguro de repetir.
+  var scheduled = false;
+  function scheduleProcess() {
+    if (scheduled) return;
+    scheduled = true;
+    setTimeout(function () {
+      scheduled = false;
+      if (!document.querySelector(".hc-rewards-nav-btn")) process();
+    }, 150);
+  }
+
+  function startObserving() {
+    new MutationObserver(function () {
+      if (!document.querySelector(".hc-rewards-nav-btn")) scheduleProcess();
+    }).observe(document.body, { childList: true, subtree: true });
+  }
+
+  if (document.body) {
+    startObserving();
+  } else {
+    document.addEventListener("DOMContentLoaded", startObserving);
+  }
 })();
