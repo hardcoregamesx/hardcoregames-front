@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="es">
   <head>
     <meta charset="UTF-8" />
     <meta name="google-site-verification" content="nBjg_e5Wq8DGMhAOcRSGGIfHENQZpUJn9IX_dhkhiLw" />
@@ -23,6 +23,9 @@
     <!-- End Meta Pixel Code -->
     <!-- Rastreo de eventos (ViewContent/AddToCart/InitiateCheckout/Purchase) -->
     <script src="/assets/meta-pixel-tracking.js"></script>
+    <!-- GA4 + conversion de Google Ads: escucha los eventos "hc:track" que
+         despacha meta-pixel-tracking.js, sin volver a interceptar Bold -->
+    <script src="/assets/google-ads-tracking.js"></script>
 
     <link rel="icon" type="image/png" href="/logo.png" sizes="any" />
     <link rel="apple-touch-icon" href="/logo.png" />

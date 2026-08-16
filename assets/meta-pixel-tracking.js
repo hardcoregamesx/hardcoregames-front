@@ -11,6 +11,11 @@
  *   1) el script de Bold (https://checkout.bold.co/library/boldPaymentButton.js)
  *   2) el bundle de la app (/assets/index-*.js)
  * para poder interceptar window.fetch y window.BoldCheckout a tiempo.
+ *
+ * Tambien emite cada evento como CustomEvent "hc:track" en window (detail:
+ * {event, params, ...extra}) para que OTRAS integraciones (google-ads-
+ * tracking.js, etc) se enganchen sin volver a interceptar fetch/BoldCheckout
+ * — hacerlo dos veces arriesga pisar el Object.defineProperty de este script.
  */
 (function () {
   "use strict";
@@ -31,6 +36,22 @@
         console.warn("[MetaPixel] fbq error", e);
       }
     }
+  }
+
+  // Este script es el unico que intercepta window.fetch y window.BoldCheckout
+  // para capturar producto/orden reales (ver nota de cabecera). En vez de que
+  // cada integracion nueva (Google Ads, GA4, la que venga) reintercepte lo
+  // mismo — arriesgando pisar el Object.defineProperty de BoldCheckout de
+  // otro script — este emite un evento DOM generico que cualquiera puede
+  // escuchar sin tocar Bold ni fetch de nuevo.
+  function emitTrackEvent(name, params, extra) {
+    try {
+      window.dispatchEvent(
+        new CustomEvent("hc:track", {
+          detail: Object.assign({ event: name, params: params || {} }, extra || {}),
+        })
+      );
+    } catch (e) {}
   }
 
   function getCookie(name) {
@@ -65,7 +86,9 @@
       return;
     }
     if (path === "/checkout") {
-      safeFbq("track", "InitiateCheckout", buildCartParams());
+      var checkoutParams = buildCartParams();
+      safeFbq("track", "InitiateCheckout", checkoutParams);
+      emitTrackEvent("InitiateCheckout", checkoutParams);
       return;
     }
     if (path === "/success") {
@@ -141,6 +164,7 @@
       params.currency = "COP";
     }
     safeFbq("track", "ViewContent", params);
+    emitTrackEvent("ViewContent", params);
   }
 
   function buildCartParams() {
@@ -166,7 +190,9 @@
       while (el && depth < 5) {
         var text = (el.innerText || el.textContent || "").trim();
         if (text && text.length < 40 && ADD_TO_CART_RE.test(text)) {
-          safeFbq("track", "AddToCart", buildCartParams());
+          var addToCartParams = buildCartParams();
+          safeFbq("track", "AddToCart", addToCartParams);
+          emitTrackEvent("AddToCart", addToCartParams);
           break;
         }
         el = el.parentElement;
@@ -202,11 +228,15 @@
                 email: customer.email,
               };
               storeOrder(order);
-              safeFbq("track", "AddPaymentInfo", {
+              var paymentParams = {
                 value: order.amount,
                 currency: order.currency,
                 content_ids: order.orderId ? [String(order.orderId)] : undefined,
                 content_type: "product",
+              };
+              safeFbq("track", "AddPaymentInfo", paymentParams);
+              emitTrackEvent("AddPaymentInfo", paymentParams, {
+                orderId: order.orderId,
               });
             }
           } catch (e) {
@@ -256,6 +286,10 @@
     }
 
     safeFbq("track", "Purchase", params, { eventID: eventId });
+    emitTrackEvent("Purchase", params, {
+      orderId: orderId,
+      email: order && order.email,
+    });
 
     // Respaldo server-side (Conversions API). No hace nada mientras el
     // backend no tenga configurado el token de Meta — falla en silencio.

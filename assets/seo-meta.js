@@ -99,7 +99,10 @@
   function tryApplyProduct() {
     var main = document.querySelector("main");
     if (!main) return false;
-    var heading = main.querySelector("h1, h2");
+    // Preferir h1 (el titulo real del producto): un h2 puede ser una
+    // seccion estatica ("Descripcion del producto") que aparece antes en
+    // el DOM y no es el nombre del producto.
+    var heading = main.querySelector("h1") || main.querySelector("h2");
     var name = textOf(heading);
     // "Cargando producto..." es el heading del esqueleto de carga: si lo
     // aceptamos aqui, tryApplyProduct() devuelve true en el primer intento
@@ -118,9 +121,12 @@
     var platformEl = Array.prototype.find.call(
       main.querySelectorAll("*"),
       function (n) {
+        // \b...\b evita falsos positivos: "PC" suelto coincidia como
+        // subcadena dentro de "Descripcion" ("descri-PC-ion"), haciendo
+        // que esa seccion estatica se colara como "plataforma".
         return (
           n.children.length === 0 &&
-          /(PlayStation|Xbox|Nintendo|PC)/i.test(textOf(n)) &&
+          /\b(PlayStation|Xbox|Nintendo|PC)\b/i.test(textOf(n)) &&
           textOf(n).length < 40
         );
       }
