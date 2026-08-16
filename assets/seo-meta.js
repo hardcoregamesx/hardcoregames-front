@@ -96,6 +96,10 @@
     return el && el.textContent ? el.textContent.trim() : "";
   }
 
+  // Nombre visto en el ultimo tick del poll, para el debounce de abajo.
+  // Se resetea por producto en update() (ver mas abajo).
+  var pendingName = null;
+
   function tryApplyProduct() {
     var main = document.querySelector("main");
     if (!main) return false;
@@ -108,7 +112,23 @@
     // aceptamos aqui, tryApplyProduct() devuelve true en el primer intento
     // y el poll de mas abajo nunca vuelve a correr, dejando titulo/meta/
     // JSON-LD pegados con ese placeholder para el resto del pageview.
-    if (!name || /^cargando/i.test(name)) return false;
+    if (!name || /^cargando/i.test(name)) {
+      pendingName = null;
+      return false;
+    }
+
+    // Debounce: exigir el mismo heading en dos ticks seguidos (~250ms)
+    // antes de aplicarlo. Durante una navegacion SPA, un h1 ajeno (p.ej.
+    // el de una carrusel "Los mas vendidos" que vive en la misma pagina)
+    // puede montar un instante antes que el h1 real del producto; sin
+    // este debounce, ese heading de paso pasa el check de "no vacio y no
+    // cargando" y se queda pegado el resto del pageview porque el poll
+    // se detiene en el primer exito. Verificado en vivo: /product/344
+    // quedo con title "Los mas vendidos para Xbox" en vez del nombre real.
+    if (name !== pendingName) {
+      pendingName = name;
+      return false;
+    }
 
     var priceEl = Array.prototype.find.call(
       main.querySelectorAll("*"),
@@ -197,6 +217,7 @@
 
     if (/^\/product\/\d+\/?$/.test(path)) {
       productRetries = 0;
+      pendingName = null;
       var applied = tryApplyProduct();
       if (!applied) {
         var poll = setInterval(function () {
