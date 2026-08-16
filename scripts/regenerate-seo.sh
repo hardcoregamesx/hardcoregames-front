@@ -30,10 +30,19 @@ if [ "$N" -lt 200 ]; then
 fi
 
 # 2) Snapshots nuevos en un directorio aparte.
+#
+# LIMITES OBLIGATORIOS: el 16/08/2026 este paso sin limites (concurrencia 4,
+# sin cap de memoria/cpu) agoto la RAM del VPS y tumbo TODO el stack
+# (tienda, api, admin, n8n, chatwoot) durante ~5 minutos. Chromium corre en
+# la misma maquina que produccion: 1 solo worker, 2g de RAM y 1 cpu como
+# techo. Mas lento (~20-30 min) pero inofensivo. No subas la concurrencia
+# ni quites los caps sin mover el prerender a otra maquina.
 rm -rf "$SEO_DIR/prerender.next"
-docker run --rm -v "$REPO":/work -v "$SEO_DIR":/seo -w /work \
+docker run --rm --memory 2g --memory-swap 2g --cpus 1 --shm-size 512m \
+  -v "$REPO":/work -v "$SEO_DIR":/seo -w /work \
   -e PRERENDER_SITEMAP=/seo/sitemap.next.xml \
   -e PRERENDER_OUT=/seo/prerender.next \
+  -e PRERENDER_CONCURRENCY="${PRERENDER_CONCURRENCY:-1}" \
   "$IMG" node scripts/prerender.mjs
 
 H=$(find "$SEO_DIR/prerender.next" -name '*.html' | wc -l)
