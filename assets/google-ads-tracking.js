@@ -20,14 +20,13 @@
   // aqui. ADS_ID solo se usa para el gtag de conversion explicito de Ads.
   var ADS_ID = "AW-18382206101";
 
-  // Label de la accion de conversion "Compra" en Google Ads (Herramientas y
-  // configuracion > Conversiones > [accion] > Configuracion de etiquetas >
-  // "Instalar la etiqueta yo mismo" > te muestra AW-XXXXXXXXX/ESTE_LABEL).
-  // Sin este valor, GA4 SI recibe "purchase" (y puede importarse como
-  // conversion desde el enlace GA4<->Ads si esta activado), pero el gtag
-  // de conversion directo de Ads queda desactivado — falla en silencio, no
-  // rompe nada.
-  var ADS_CONVERSION_LABEL = "";
+  // Label de la accion de conversion "Compra" en Google Ads (obtenido de
+  // Objetivos > Conversiones > Compra > Administrar > "Ver fragmento de
+  // evento" el 16/08/2026). Value/currency siempre llegan reales desde el
+  // "order" que captura meta-pixel-tracking.js en el checkout de Bold, asi
+  // que el "usar COP1" que la cuenta trae por defecto no aplica en la
+  // practica.
+  var ADS_CONVERSION_LABEL = "1X68CPzkp98cEJXpqL1E";
 
   function safeGtag() {
     if (typeof window.gtag === "function") {
