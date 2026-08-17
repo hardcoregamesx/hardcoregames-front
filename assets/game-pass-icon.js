@@ -141,6 +141,20 @@
       label.style.fontWeight = "700";
     }
 
+    clone.addEventListener("click", function () {
+      if (typeof window.gtag === "function") {
+        window.gtag("event", "gamepass_button_click", {
+          event_category: "engagement",
+          event_label: "home_quick_access",
+        });
+      }
+      if (typeof window.fbq === "function") {
+        window.fbq("trackCustom", "GamePassButtonClick", {
+          content_name: "home_quick_access",
+        });
+      }
+    });
+
     target.a.replaceWith(clone);
 
     if (row && window.innerWidth < MOBILE_BREAKPOINT) {

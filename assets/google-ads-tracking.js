@@ -80,6 +80,7 @@
           currency: params.currency || "COP",
           value: params.value,
           items: [toItem(params)],
+          landing_source: params.landing_source,
         });
         if (ADS_CONVERSION_LABEL) {
           safeGtag("event", "conversion", {

@@ -59,6 +59,30 @@
     return m ? decodeURIComponent(m[1]) : null;
   }
 
+  // Atribucion simple de "compras que vienen del landing de Game Pass": si
+  // esta sesion visito /gamepassultimate en algun momento, se marca en
+  // sessionStorage y ese dato viaja en el Purchase del pixel y en el
+  // purchase de GA4 (via google-ads-tracking.js, que escucha hc:track).
+  // No es multi-touch attribution, es un flag booleano por sesion.
+  var LANDING_FLAG_KEY = "hc_landing_gamepass";
+  var LANDING_PATH = "/gamepassultimate";
+
+  function markLandingIfNeeded(path) {
+    if (path.indexOf(LANDING_PATH) === 0) {
+      try {
+        sessionStorage.setItem(LANDING_FLAG_KEY, "1");
+      } catch (e) {}
+    }
+  }
+
+  function cameFromGamepassLanding() {
+    try {
+      return sessionStorage.getItem(LANDING_FLAG_KEY) === "1";
+    } catch (e) {
+      return false;
+    }
+  }
+
   function readStoredOrder() {
     try {
       return JSON.parse(sessionStorage.getItem("mp_last_order") || "null");
@@ -80,6 +104,7 @@
   var lastPath = location.pathname;
 
   function handleRoute(path) {
+    markLandingIfNeeded(path);
     var productMatch = path.match(/^\/product\/(\d+)/);
     if (productMatch) {
       trackViewContent(productMatch[1]);
@@ -278,6 +303,9 @@
       params.value = order.amount;
       params.currency = order.currency || "COP";
       params.content_ids = order.orderId ? [String(order.orderId)] : undefined;
+    }
+    if (cameFromGamepassLanding()) {
+      params.landing_source = "gamepass_landing";
     }
 
     if (order && order.email) {
