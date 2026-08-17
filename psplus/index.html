@@ -1,0 +1,1222 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PlayStation Plus | Hardcore Games</title>
+<meta name="description" content="Elige tu plan de PlayStation Plus (Essential, Extra o Premium) en menos de un minuto. Reservas el primer abono aquí y coordinas el resto por WhatsApp.">
+<meta name="robots" content="noindex">
+<script>
+  // El checkout de invitado guarda la sesión en localStorage, que es por
+  // origen. Si alguien entra por el dominio raíz (sin "www"), esa sesión
+  // quedaría invisible para el resto del sitio (carrito, checkout), que
+  // vive en www.hardcoregames.co. El apex no redirige solo, así que se
+  // fuerza aquí, antes de que se pinte nada.
+  if (location.hostname === 'hardcoregames.co') {
+    location.replace('https://www.hardcoregames.co' + location.pathname + location.search + location.hash);
+  }
+</script>
+<style>
+  :root {
+    --background: hsl(210 65% 7%);
+    --foreground: hsl(0 0% 100%);
+    --card: hsl(210 45% 13%);
+    --card-2: hsl(210 45% 16%);
+    --primary: hsl(205 90% 52%);
+    --secondary: hsl(210 45% 18%);
+    --muted: hsl(210 35% 23%);
+    --muted-foreground: hsl(210 10% 70%);
+    --accent: hsl(199 92% 56%);
+    --accent-soft: hsl(199 92% 56% / .18);
+    --destructive: hsl(0 84.2% 60.2%);
+    --border: hsl(210 35% 23%);
+    --radius: .75rem;
+    --cta: hsl(48 95% 60%);
+    --cta-foreground: hsl(210 65% 7%);
+    --gradient-bg: linear-gradient(135deg, #001E52 0%, #003791 45%, #0070D1 100%);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  ::selection { background: var(--cta); color: var(--cta-foreground); }
+  a { color: inherit; }
+
+  h1, h2 {
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    margin: 0;
+  }
+
+  .tabular { font-variant-numeric: tabular-nums; }
+
+  .wrap { max-width: 640px; margin: 0 auto; padding: 0 20px; }
+
+  /* ---- hero ---- */
+  .hero-banner {
+    position: relative;
+    width: 100%;
+    min-height: 300px;
+    overflow: hidden;
+    display: flex;
+    align-items: flex-end;
+    background: var(--gradient-bg);
+  }
+  .hero-banner .hero-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 30%;
+    display: none;
+  }
+  .hero-banner .hero-bg.is-visible { display: block; }
+  .hero-scrim {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(90deg, hsl(210 65% 7% / .96) 0%, hsl(210 65% 7% / .82) 32%, hsl(210 65% 7% / .3) 62%, hsl(210 65% 7% / .05) 88%),
+      linear-gradient(180deg, hsl(210 65% 7% / .2) 0%, hsl(210 65% 7% / .55) 45%, hsl(210 65% 7% / .98) 100%);
+  }
+  .hero-inner { position: relative; z-index: 2; width: 100%; padding-top: 20px; padding-bottom: 26px; }
+  .hero h1, .hero .sub, .hero .price-row { text-shadow: 0 2px 16px rgba(0,0,0,.45); }
+  @media (min-width: 760px) { .hero-banner { min-height: 360px; } }
+
+  .platform-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    padding: 5px 10px;
+    border-radius: 999px;
+    margin-bottom: 16px;
+  }
+  .hero h1 { font-size: clamp(38px, 9vw, 52px); text-wrap: balance; }
+  .hero .sub { color: var(--foreground); opacity: .9; font-size: 16px; max-width: 46ch; margin: 14px 0 24px; }
+
+  .price-row { display: flex; align-items: baseline; gap: 10px; margin-bottom: 22px; flex-wrap: wrap; }
+  .price-label { font-size: 13px; color: var(--muted-foreground); text-transform: uppercase; letter-spacing: .06em; }
+  .price-value { font-weight: 800; font-size: 32px; letter-spacing: -0.01em; }
+  .price-unit { color: var(--muted-foreground); font-size: 14px; }
+
+  .cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    background: var(--cta);
+    color: var(--cta-foreground);
+    font-weight: 700;
+    font-size: 17px;
+    border: none;
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    cursor: pointer;
+    transition: filter 120ms ease, transform 120ms ease;
+  }
+  .cta:hover { filter: brightness(1.06); }
+  .cta:active { transform: scale(.98); }
+  .cta:focus-visible { outline: 2px solid var(--foreground); outline-offset: 3px; }
+
+  /* ---- trust bar ---- */
+  .trust { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+  .trust-item { background: var(--card); padding: 14px 10px; text-align: center; }
+  .trust-item .dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; margin-right: 6px; }
+  .trust-item .t { font-weight: 700; font-size: 13px; }
+  .trust-item .d { color: var(--muted-foreground); font-size: 11.5px; margin-top: 2px; }
+
+  /* ---- section rhythm ---- */
+  section { padding: 40px 0; }
+  section + section { border-top: 1px solid var(--border); }
+  .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--primary); margin-bottom: 10px; }
+  .sec-title { font-size: 26px; margin-bottom: 8px; }
+  .sec-body { color: var(--muted-foreground); max-width: 48ch; margin: 0 0 22px; }
+
+  /* ---- selector de plan (paso 1) ---- */
+  .choice-row { display: flex; flex-direction: column; gap: 10px; }
+  .choice-btn {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 16px 18px; text-align: left; color: var(--foreground); font-size: 15.5px; font-weight: 600; cursor: pointer;
+  }
+  .choice-btn .h { display: block; font-weight: 700; }
+  .choice-btn .s { display: block; color: var(--muted-foreground); font-weight: 400; font-size: 13.5px; margin-top: 2px; }
+  .choice-btn .arrow { flex: none; color: var(--muted-foreground); font-size: 20px; font-weight: 700; }
+  .choice-btn[aria-pressed="true"] { border-color: var(--cta); background: hsl(48 95% 60% / .1); }
+  .choice-btn[aria-pressed="true"] .arrow { color: var(--cta); }
+  .choice-btn:focus-visible { outline: 2px solid var(--cta); outline-offset: 2px; }
+
+  /* ---- planes (paso 2: consola dentro del plan elegido) ---- */
+  .plans { display: grid; grid-template-columns: 1fr; gap: 12px; }
+  @media (min-width: 520px) {
+    .plans.plans-2 { grid-template-columns: repeat(2, 1fr); max-width: 420px; }
+  }
+  .plan-card {
+    position: relative; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 18px 16px 16px; display: flex; flex-direction: column; gap: 10px;
+  }
+  .plan-card.is-recommended { border-color: var(--cta); background: linear-gradient(180deg, hsl(48 95% 60% / .12), var(--card) 60%); }
+  .plan-badge {
+    position: absolute; top: -11px; left: 14px; background: var(--cta); color: var(--cta-foreground);
+    font-weight: 700; font-size: 10.5px; letter-spacing: .06em; text-transform: uppercase; padding: 3px 8px; border-radius: 999px;
+  }
+  .plan-duration { font-weight: 800; font-size: 20px; }
+  .plan-price { font-weight: 800; font-size: 24px; }
+  .plan-price-old { color: var(--muted-foreground); font-size: 13px; text-decoration: line-through; margin-left: 6px; }
+  .plan-stock { font-size: 12px; color: var(--accent); }
+  .plan-stock.is-low { color: var(--destructive); }
+  .plan-stock.is-out { color: var(--destructive); font-weight: 700; }
+  .plan-card.is-sold-out { opacity: .72; }
+  .plan-card.is-sold-out .plan-price { color: var(--muted-foreground); }
+  /* Botón muerto de una tarjeta agotada: NO lleva la clase .plan-pick a
+     propósito — el handler global de click engancha por esa clase, así que
+     reusarla haría que "Agotado" siguiera agregando al carrito. */
+  .plan-off {
+    margin-top: auto; background: transparent; border: 1px dashed var(--border); color: var(--muted-foreground);
+    font-weight: 700; font-size: 13.5px; padding: 10px; border-radius: calc(var(--radius) - .25rem);
+    text-align: center; display: block; cursor: not-allowed;
+  }
+  .plan-pick {
+    margin-top: auto; background: transparent; border: 1px solid var(--border); color: var(--foreground);
+    font-weight: 700; font-size: 13.5px; padding: 10px; border-radius: calc(var(--radius) - .25rem); cursor: pointer;
+    text-decoration: none; text-align: center; display: block;
+  }
+  .plan-card.is-recommended .plan-pick { background: var(--cta); color: var(--cta-foreground); border-color: var(--cta); }
+  .plan-pick:hover { border-color: var(--cta); color: var(--cta); }
+  .plan-card.is-recommended .plan-pick:hover { filter: brightness(1.08); color: var(--cta-foreground); }
+  .plan-pick:active, .plan-pick.is-picking {
+    background: var(--cta); color: var(--cta-foreground); border-color: var(--cta); transform: scale(.97);
+  }
+  .plan-pick { transition: background 120ms ease, color 120ms ease, border-color 120ms ease, transform 100ms ease; }
+  .plan-pick:focus-visible { outline: 2px solid var(--cta); outline-offset: 2px; }
+
+  /* ---- checkout de invitado ---- */
+  .gc-overlay {
+    display: none; position: fixed; inset: 0; background: rgba(0,0,0,.6);
+    z-index: 80; align-items: center; justify-content: center; padding: 20px;
+  }
+  .gc-overlay.is-open { display: flex; }
+  .gc-dialog {
+    background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+    box-shadow: 0 20px 50px rgba(0,0,0,.5); max-width: 380px; width: 100%; padding: 24px;
+  }
+  .gc-dialog h3 { font-size: 19px; font-weight: 800; margin: 0 0 6px; }
+  .gc-sub { color: var(--muted-foreground); font-size: 13.5px; margin: 0 0 18px; }
+  .gc-field { margin-bottom: 14px; }
+  .gc-field label { display: block; font-size: 12px; font-weight: 700; color: var(--muted-foreground); margin-bottom: 6px; text-transform: uppercase; letter-spacing: .04em; }
+  .gc-field input {
+    width: 100%; background: var(--secondary); border: 1px solid var(--border); border-radius: calc(var(--radius) - .25rem);
+    color: var(--foreground); font-size: 15px; padding: 11px 12px; font-family: inherit;
+  }
+  .gc-field input:focus-visible { outline: 2px solid var(--cta); outline-offset: 1px; }
+  .gc-error { color: var(--destructive); font-size: 13px; margin: -6px 0 14px; display: none; }
+  .gc-error.is-visible { display: block; }
+  .gc-error a { color: inherit; text-decoration: underline; }
+  .gc-submit {
+    width: 100%; background: var(--cta); color: var(--cta-foreground); border: none; border-radius: calc(var(--radius) - .25rem);
+    font-weight: 800; font-size: 15px; padding: 13px; cursor: pointer; text-align: center; font-family: inherit;
+  }
+  .gc-submit:disabled { opacity: .6; cursor: default; }
+  .gc-cancel { display: block; width: 100%; text-align: center; margin-top: 10px; background: none; border: none; color: var(--muted-foreground); font-size: 13.5px; cursor: pointer; padding: 6px; font-family: inherit; }
+  .gc-note { font-size: 11.5px; color: var(--muted-foreground); margin-top: 14px; text-align: center; }
+
+  /* ---- faq ---- */
+  .faq-item { border-bottom: 1px solid var(--border); }
+  .faq-item summary {
+    cursor: pointer; padding: 16px 0; font-weight: 700; font-size: 15px; list-style: none;
+    display: flex; justify-content: space-between; align-items: center; gap: 12px;
+  }
+  .faq-item summary::-webkit-details-marker { display: none; }
+  .faq-item summary::after { content: "+"; color: var(--muted-foreground); flex: none; font-weight: 800; }
+  .faq-item[open] summary::after { content: "\2212"; }
+  .faq-item p { margin: 0 0 16px; color: var(--muted-foreground); font-size: 14px; max-width: 52ch; }
+
+  /* ---- notas (pago a cuotas / ficha completa) ---- */
+  .portal-note { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; display: flex; flex-direction: column; gap: 10px; }
+  .portal-note .t { font-weight: 700; font-size: 14.5px; }
+  .portal-note .d { color: var(--muted-foreground); font-size: 13.5px; }
+  .portal-note a { color: var(--primary); font-weight: 700; font-size: 13.5px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; }
+  .portal-note a:hover { text-decoration: underline; }
+  .payment-note { border-color: var(--accent); background: linear-gradient(180deg, var(--accent-soft), var(--card) 65%); margin-top: 16px; }
+
+  footer { padding: 30px 0 50px; text-align: center; color: var(--muted-foreground); font-size: 12px; }
+
+  /* ---- topbar: réplica del header real (mismas proporciones: dos filas
+     de 64px, buscador de 40px, nav a 16px) para que la landing se sienta
+     parte del sitio y no una página aparte ---- */
+  .site-topbar { background: var(--background); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 50; }
+  .site-topbar-row {
+    max-width: 1400px; margin: 0 auto; padding: 0 20px;
+    height: 64px; display: flex; align-items: center; gap: 18px;
+  }
+  .site-logo { display: flex; align-items: center; gap: 10px; flex: none; text-decoration: none; color: var(--foreground); }
+  .site-logo img { height: 48px; width: 48px; display: block; }
+  .site-logo span { font-weight: 800; font-size: 20px; white-space: nowrap; }
+  .site-search { flex: 1 1 auto; display: flex; align-items: center; gap: 8px; background: var(--card); border: 1px solid var(--border); border-radius: .5rem; height: 40px; padding: 0 14px; max-width: 672px; }
+  .site-search svg { flex: none; opacity: .6; }
+  .site-search input { flex: 1; background: none; border: none; outline: none; color: var(--foreground); font-size: 15px; font-family: inherit; height: 100%; }
+  .site-search input::placeholder { color: var(--muted-foreground); }
+  .site-actions { display: flex; align-items: center; gap: 10px; flex: none; margin-left: auto; }
+  .site-actions > a, .site-actions-btn { color: var(--foreground); display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: .5rem; background: none; border: none; cursor: pointer; padding: 0; }
+  .site-actions > a:hover, .site-actions-btn:hover { background: var(--card); }
+  .site-locale-wrap, .site-profile-wrap { position: relative; flex: none; }
+  .site-locale-btn {
+    display: flex; align-items: center; gap: 6px; font-size: 15px; color: var(--foreground); white-space: nowrap;
+    background: none; border: none; height: 40px; padding: 0 12px; border-radius: .5rem; cursor: pointer; font-family: inherit;
+  }
+  .site-locale-btn:hover { background: var(--card); }
+  .site-dropdown {
+    display: none; position: absolute; top: calc(100% + 6px); right: 0; min-width: 180px;
+    background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+    box-shadow: 0 12px 28px rgba(0,0,0,.4); padding: 6px; z-index: 60;
+  }
+  .site-dropdown.is-open { display: block; }
+  .site-dropdown .dd-email { padding: 8px 10px; font-size: 12px; color: var(--muted-foreground); border-bottom: 1px solid var(--border); margin-bottom: 4px; white-space: nowrap; }
+  .site-dropdown button, .site-dropdown a {
+    display: flex; align-items: center; gap: 8px; width: 100%; background: none; border: none; text-align: left;
+    color: var(--foreground); font-size: 14px; font-weight: 600; padding: 9px 10px; border-radius: .4rem; cursor: pointer;
+    text-decoration: none; font-family: inherit;
+  }
+  .site-dropdown button:hover, .site-dropdown a:hover { background: var(--secondary); }
+  .site-dropdown a.is-current { color: var(--accent); }
+
+  .site-nav-row { max-width: 1400px; margin: 0 auto; padding: 0 20px 16px; display: flex; align-items: center; gap: 26px; overflow-x: auto; scrollbar-width: none; }
+  .site-nav-row::-webkit-scrollbar { display: none; }
+  .site-nav-row a { color: var(--foreground); font-size: 16px; font-weight: 500; white-space: nowrap; text-decoration: none; opacity: .92; }
+  .site-nav-row a:hover { opacity: 1; }
+  .site-nav-row .pill {
+    display: inline-flex; align-items: center; gap: 5px; background: linear-gradient(90deg, var(--accent), var(--cta));
+    color: var(--cta-foreground); padding: 6px 16px; border-radius: 999px; font-weight: 800; opacity: 1;
+  }
+  .site-hamburger {
+    display: flex; align-items: center; gap: 8px; flex: none; background: none; border: none; color: var(--foreground);
+    font-size: 16px; font-weight: 600; padding: 8px 12px; border-radius: .5rem; cursor: pointer; font-family: inherit;
+  }
+  .site-hamburger:hover { background: var(--card); }
+
+  /* ---- drawer: réplica del menú "Categorías" del sitio real ---- */
+  .site-drawer-scrim {
+    display: none; position: fixed; inset: 0; background: rgba(0,0,0,.55); z-index: 70;
+  }
+  .site-drawer-scrim.is-open { display: block; }
+  .site-drawer {
+    position: fixed; top: 0; left: 0; bottom: 0; width: 320px; max-width: 85vw; background: var(--background);
+    border-right: 1px solid var(--border); z-index: 71; transform: translateX(-100%); transition: transform 200ms ease;
+    overflow-y: auto; padding: 20px;
+  }
+  .site-drawer.is-open { transform: translateX(0); }
+  .site-drawer-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+  .site-drawer-head h2 { font-size: 20px; }
+  .site-drawer-close { background: none; border: none; color: var(--foreground); font-size: 22px; cursor: pointer; padding: 4px; line-height: 1; }
+  .site-drawer-item {
+    display: block; color: var(--foreground); text-decoration: none; font-size: 16px; font-weight: 600;
+    padding: 12px 4px; border-bottom: 1px solid var(--border);
+  }
+  .site-drawer-item.pill-item { border-bottom: none; padding: 8px 0 14px; }
+  .site-drawer-item.pill-item .pill { display: inline-flex; align-items: center; gap: 6px; background: linear-gradient(90deg, var(--accent), var(--cta)); color: var(--cta-foreground); padding: 8px 16px; border-radius: 999px; font-weight: 800; }
+  .site-drawer-group { border-bottom: 1px solid var(--border); }
+  .site-drawer-group > summary { display: flex; align-items: center; justify-content: space-between; padding: 12px 4px; font-size: 16px; font-weight: 600; cursor: pointer; list-style: none; }
+  .site-drawer-group > summary::-webkit-details-marker { display: none; }
+  .site-drawer-group > summary::after { content: "\203a"; color: var(--muted-foreground); font-size: 18px; }
+  .site-drawer-group[open] > summary::after { content: "\2304"; }
+  .site-drawer-sub { display: flex; flex-direction: column; padding: 0 0 10px 12px; }
+  .site-drawer-sub a { color: var(--muted-foreground); text-decoration: none; font-size: 14.5px; padding: 7px 4px; }
+  .site-drawer-sub a:hover { color: var(--foreground); }
+
+  @media (max-width: 900px) {
+    .site-search { display: none; }
+  }
+  @media (max-width: 640px) {
+    .site-locale-btn span.locale-text { display: none; }
+    .site-topbar-row { padding: 0 16px; gap: 10px; }
+    .site-nav-row { padding: 0 16px 14px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+
+<header class="site-topbar">
+  <div class="site-topbar-row">
+    <a class="site-logo" href="https://hardcoregames.co/">
+      <img src="/logo.png" alt="">
+      <span>Hardcore Games</span>
+    </a>
+    <form class="site-search" action="https://hardcoregames.co/filters" method="get">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+      <input type="text" name="search" placeholder="Buscar">
+    </form>
+    <div class="site-actions">
+      <div class="site-locale-wrap">
+        <button type="button" class="site-locale-btn" id="localeToggle" aria-haspopup="true" aria-expanded="false">
+          🌐 <span class="locale-text">Español&nbsp;&nbsp;COP</span>
+        </button>
+        <div class="site-dropdown" id="localeDropdown">
+          <a href="#" class="is-current">Español</a>
+          <a href="https://hardcoregames.co/">English</a>
+        </div>
+      </div>
+      <a href="https://hardcoregames.co/cart" aria-label="Carrito">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+      </a>
+      <div class="site-profile-wrap">
+        <button type="button" class="site-actions-btn" id="profileToggle" aria-haspopup="true" aria-expanded="false" aria-label="Cuenta">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+        </button>
+        <div class="site-dropdown" id="profileDropdown"></div>
+      </div>
+    </div>
+  </div>
+  <nav class="site-nav-row">
+    <button type="button" class="site-hamburger" id="drawerToggle">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+      Categorías
+    </button>
+    <a href="https://hardcoregames.co/filters">Todas las ofertas</a>
+    <a href="https://hardcoregames.co/week-offers">Ofertas de la semana</a>
+    <a class="pill" href="https://hardcoregames.co/rewards/">🎁 Premios</a>
+    <a href="https://hardcoregames.co/filters?platforms=1,2">Juegos PlayStation</a>
+    <a href="https://hardcoregames.co/filters?platforms=4,5,3">Juegos Xbox</a>
+    <a href="https://hardcoregames.co/filters?platforms=6">Juegos PC</a>
+    <a href="https://hardcoregames.co/filters?types=3">Suscripciones</a>
+  </nav>
+</header>
+
+<div class="site-drawer-scrim" id="drawerScrim"></div>
+<aside class="site-drawer" id="siteDrawer" aria-hidden="true">
+  <div class="site-drawer-head">
+    <h2>Menú</h2>
+    <button type="button" class="site-drawer-close" id="drawerClose" aria-label="Cerrar menú">&times;</button>
+  </div>
+  <a class="site-drawer-item" href="https://hardcoregames.co/filters">Todas las ofertas</a>
+  <a class="site-drawer-item" href="https://hardcoregames.co/week-offers">Ofertas de la semana</a>
+  <div class="site-drawer-item pill-item">
+    <a class="pill" href="https://hardcoregames.co/rewards/">🎁 Premios</a>
+  </div>
+  <a class="site-drawer-item" href="https://hardcoregames.co/new-releases">Lanzamientos</a>
+  <a class="site-drawer-item" href="https://hardcoregames.co/destacados">Destacados</a>
+  <a class="site-drawer-item" href="https://hardcoregames.co/most-sold">Los más vendidos</a>
+  <details class="site-drawer-group">
+    <summary>Plataformas</summary>
+    <div class="site-drawer-sub">
+      <a href="https://hardcoregames.co/filters?platforms=1,2">PlayStation</a>
+      <a href="https://hardcoregames.co/filters?platforms=2">PS5</a>
+      <a href="https://hardcoregames.co/filters?platforms=4,5,3">Xbox</a>
+      <a href="https://hardcoregames.co/filters?platforms=6">PC</a>
+      <a href="https://hardcoregames.co/filters?platforms=7">Nintendo</a>
+    </div>
+  </details>
+  <details class="site-drawer-group">
+    <summary>Categorías</summary>
+    <div class="site-drawer-sub">
+      <a href="https://hardcoregames.co/filters?types=3">Suscripciones</a>
+      <a href="https://hardcoregames.co/filters?types=2">Juegos por suscripción</a>
+      <a href="https://hardcoregames.co/filters?types=4">Consolas y accesorios</a>
+      <a href="https://hardcoregames.co/filters?search=combo">Combos</a>
+      <a href="https://hardcoregames.co/filters?search=ps+plus">PS Plus</a>
+    </div>
+  </details>
+  <a class="site-drawer-item" href="https://hardcoregames.co/filters?maxPrice=50000">Juegos baratos</a>
+  <a class="site-drawer-item" href="https://hardcoregames.co/points">Mis puntos</a>
+</aside>
+
+<section class="hero-banner">
+  <img class="hero-bg" id="heroBanner" src="" alt="">
+  <div class="hero-scrim"></div>
+  <div class="hero hero-inner wrap">
+    <span class="platform-tag" id="v-platform_label">PS4 / PS5</span>
+    <h1 id="v-title">PlayStation Plus</h1>
+    <p class="sub" id="v-subtitle">Essential, Extra o Premium a cuotas: reservas tu cuenta hoy y coordinas el resto por WhatsApp.</p>
+
+    <div class="price-row">
+      <span class="price-label" id="v-price_label">Primer abono desde</span>
+      <span class="price-value tabular" id="v-price_amount">$29.990</span>
+      <span class="price-unit" id="v-price_unit">COP</span>
+    </div>
+
+    <button class="cta" id="v-cta_label" onclick="document.getElementById('choiceRow').scrollIntoView({behavior:'smooth', block:'center'})">Elige tu plan</button>
+  </div>
+</section>
+
+<div class="wrap">
+
+  <section style="padding-top:28px;">
+    <div class="trust" id="trustBar"></div>
+  </section>
+
+  <section>
+    <div class="eyebrow" id="v-step1_eyebrow">Paso 1</div>
+    <h2 class="sec-title" id="v-step1_title">¿Qué plan de PS Plus quieres?</h2>
+    <p class="sec-body" id="v-step1_body">Elige el nivel que más se ajuste a lo que buscas.</p>
+
+    <div class="choice-row" id="choiceRow">
+      <button class="choice-btn" data-tier="essential" aria-pressed="false">
+        <span><span class="h" id="v-tier-essential-title">PS Plus Essential</span><span class="s" id="v-tier-essential-desc">Multijugador online, descuentos y juegos mensuales gratis.</span></span>
+        <span class="arrow">&rsaquo;</span>
+      </button>
+      <button class="choice-btn" data-tier="extra" aria-pressed="true">
+        <span><span class="h" id="v-tier-extra-title">PS Plus Extra</span><span class="s" id="v-tier-extra-desc">Todo Essential + catálogo de cientos de juegos para descargar.</span></span>
+        <span class="arrow">&rsaquo;</span>
+      </button>
+      <button class="choice-btn" data-tier="premium" aria-pressed="false">
+        <span><span class="h" id="v-tier-premium-title">PS Plus Premium</span><span class="s" id="v-tier-premium-desc">Todo Extra + pruebas de juegos y catálogo de clásicos.</span></span>
+        <span class="arrow">&rsaquo;</span>
+      </button>
+    </div>
+  </section>
+
+  <section>
+    <div class="eyebrow" id="v-step2_eyebrow">Paso 2</div>
+    <h2 class="sec-title" id="v-step2_title">Elige tu consola</h2>
+    <p class="sec-body" id="plansBody">Se entrega cuenta primaria o secundaria (la que haya disponible) para PS4 o PS5.</p>
+
+    <div class="plans plans-2" id="plansGrid"></div>
+    <p class="sec-body" id="plansEmptyMsg" style="display:none; margin-top: 14px;"></p>
+
+    <div class="portal-note payment-note">
+      <div class="t" id="v-payment_note_title">Así funciona el pago a cuotas</div>
+      <div class="d" id="v-payment_note_desc">Hoy pagas el primer abono para reservar tu cuenta. El resto — ya sea en cuotas mensuales o el saldo completo de una sola vez, si prefieres pagarlo así — lo coordinas directo con nuestro asesor por WhatsApp, sin vueltas.</div>
+    </div>
+  </section>
+
+  <section>
+    <div class="eyebrow" id="v-faq_eyebrow">Antes de pagar</div>
+    <h2 class="sec-title" id="v-faq_title">Lo que suele preguntarse</h2>
+    <div id="faqList"></div>
+  </section>
+
+  <section style="padding-bottom: 10px;">
+    <div class="portal-note">
+      <div class="t" id="v-portal_title">¿Quieres ver toda la letra chica del plan?</div>
+      <div class="d" id="v-portal_desc">La ficha técnica completa, con el detalle de cuotas por consola, sigue disponible.</div>
+      <a id="v-portal_link" href="https://www.hardcoregames.co/product/88">Ver ficha completa &rsaquo;</a>
+    </div>
+  </section>
+
+  <footer id="v-footer">Hardcore Games — todos los derechos reservados.</footer>
+
+  <div class="gc-overlay" id="gcOverlay" role="dialog" aria-modal="true" aria-labelledby="gcTitle" aria-hidden="true">
+    <div class="gc-dialog">
+      <h3 id="gcTitle">Un solo dato para continuar</h3>
+      <p class="gc-sub">Ahí te llega la key de tu compra. Sin formularios largos ni contraseñas que recordar.</p>
+      <form id="gcForm" novalidate>
+        <div class="gc-field">
+          <label for="gcEmail">Correo</label>
+          <input type="email" id="gcEmail" name="email" placeholder="tu@correo.com" autocomplete="email" required>
+        </div>
+        <p class="gc-error" id="gcError"></p>
+        <button type="submit" class="gc-submit" id="gcSubmit">Continuar</button>
+        <button type="button" class="gc-cancel" id="gcCancel">Cancelar</button>
+      </form>
+      <p class="gc-note" id="gcNote">Al continuar creamos tu cuenta en Hardcore Games con este correo — y esta compra te inscribe automáticamente en los sorteos activos.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var API_BASE = 'https://admin.hardcoregames.co/products';
+  // Mismo host que usa el bundle React (Fe) para /products/<id>: es de ahí
+  // de donde sale el title/image "canónico" que el resto del sitio espera
+  // encontrar en localStorage.cart_combinations (ver más abajo).
+  var CATALOG_API_BASE = 'https://api.srv936408.hstgr.cloud';
+
+  // Los tres niveles de PS Plus son productos DISTINTOS en el catálogo
+  // (no combinaciones de un mismo producto), a diferencia de
+  // /gamepassultimate/. Los tres están cargados hoy SOLO a cuotas — no
+  // existe una combinación de "pago de contado" separada para ninguno.
+  var TIERS = [
+    { key: 'essential', productId: 87 },
+    { key: 'extra', productId: 88 },
+    { key: 'premium', productId: 155 }
+  ];
+  var TIER_BY_KEY = {};
+  TIERS.forEach(function (t) { TIER_BY_KEY[t.key] = t; });
+  var activeTier = 'extra';
+
+  // ---------------------------------------------------------------
+  // Copy por defecto. Se pinta de inmediato para que la página nunca
+  // se vea vacía; si la variable de sistema "psplus" carga bien, sus
+  // valores reemplazan estos en el sitio. Editable en
+  // /admin/products/variablessistema/ (fila "psplus", el campo
+  // "valor" es el JSON completo).
+  // ---------------------------------------------------------------
+  var CONTENT_DEFAULTS = {
+    platform_label: 'PS4 / PS5',
+    title: 'PlayStation Plus',
+    subtitle: 'Essential, Extra o Premium a cuotas: reservas tu cuenta hoy y coordinas el resto por WhatsApp.',
+    price_label: 'Primer abono desde',
+    price_amount: '$29.990',
+    price_unit: 'COP',
+    cta_label: 'Elige tu plan',
+    banner_image: 'https://image.api.playstation.com/vulcan/ap/rnd/202205/1807/VRZltVT3sjYtguFlGU5Dv2cB.png',
+    trust: [
+      { title: 'Activación con asesor', desc: 'Te contactamos por WhatsApp', tone: 'primary' },
+      { title: 'Con garantía', desc: 'Reposición si la cuenta falla', tone: 'accent' },
+      { title: 'Atención real', desc: 'Lun a sáb, 10am–7pm', tone: 'cta' }
+    ],
+    step1_eyebrow: 'Paso 1',
+    step1_title: '¿Qué plan de PS Plus quieres?',
+    step1_body: 'Elige el nivel que más se ajuste a lo que buscas.',
+    tiers: {
+      essential: {
+        title: 'PS Plus Essential',
+        desc: 'Multijugador online, descuentos y juegos mensuales gratis.',
+        step2_body: 'Se entrega cuenta primaria o secundaria (la que haya disponible) para PS4 o PS5.'
+      },
+      extra: {
+        title: 'PS Plus Extra',
+        desc: 'Todo Essential + catálogo de cientos de juegos para descargar.',
+        step2_body: 'Se entrega cuenta primaria o secundaria (la que haya disponible) para PS4 o PS5.'
+      },
+      premium: {
+        title: 'PS Plus Premium',
+        desc: 'Todo Extra + pruebas de juegos y catálogo de clásicos.',
+        step2_body: 'Se entrega cuenta primaria o secundaria (la que haya disponible) para PS4 o PS5.'
+      }
+    },
+    step2_eyebrow: 'Paso 2',
+    step2_title: 'Elige tu consola',
+    tier_empty_msg: 'Ahora mismo no tenemos cupos disponibles en este plan. Escríbenos por WhatsApp y te avisamos apenas entren, o mira otro plan de PS Plus arriba.',
+    payment_note_title: 'Así funciona el pago a cuotas',
+    payment_note_desc: 'Hoy pagas el primer abono para reservar tu cuenta. El resto — ya sea en cuotas mensuales o el saldo completo de una sola vez, si prefieres pagarlo así — lo coordinas directo con nuestro asesor por WhatsApp, sin vueltas.',
+    badge_best_price: 'Mejor precio',
+    pick_button_label: 'Elegir',
+    sold_out_label: 'Agotado',
+    sold_out_button_label: 'Sin stock',
+    stock_suffix: 'en stock',
+    low_stock_threshold: 2,
+    faq_eyebrow: 'Antes de pagar',
+    faq_title: 'Lo que suele preguntarse',
+    faq: [
+      { q: '¿El pago que hago aquí es el total del plan?', a: 'No. Es el primer abono, que reserva tu cuenta. El resto —cuotas mensuales o el saldo completo si prefieres pagarlo de una vez— lo coordinas por WhatsApp con nuestro asesor.' },
+      { q: '¿Puedo pagar todo de una sola vez en vez de a cuotas?', a: 'Sí. Después del primer abono, dile a tu asesor por WhatsApp que prefieres cancelar el saldo completo en un solo pago, sin esperar el cronograma de cuotas.' },
+      { q: '¿Cuál es la diferencia entre Essential, Extra y Premium?', a: 'Essential trae multijugador online y juegos mensuales gratis. Extra suma un catálogo de cientos de juegos para descargar. Premium agrega pruebas de juegos y catálogo de clásicos.' },
+      { q: '¿Cómo sé si elegir PS4 o PS5?', a: 'Elige la consola donde vas a jugar. La cuenta se instala mediante código QR directo en esa consola.' },
+      { q: '¿Necesito estar pendiente de algo después de pagar?', a: 'Sí, un asesor te escribe por WhatsApp para completar la activación. Atendemos de lunes a sábado, 10am a 7pm — si compras fuera de ese horario, puede tardar unas horas.' },
+      { q: '¿Qué pasa si la cuenta falla?', a: 'Tienes garantía: si algo no funciona, te la reponemos. Escríbenos por WhatsApp y lo resolvemos.' }
+    ],
+    portal_title: '¿Quieres ver toda la letra chica del plan?',
+    portal_desc: 'La ficha técnica completa, con el detalle de cuotas por consola, sigue disponible.',
+    portal_link: 'Ver ficha completa ›',
+    footer: 'Hardcore Games — todos los derechos reservados.'
+  };
+
+  // Combinaciones reales de plan (respaldo si la API no responde a tiempo).
+  // Se reemplazan en cuanto llega la respuesta en vivo de
+  // getCombinationPriceByGame, así que precio y stock siempre terminan
+  // siendo los reales del catálogo, no estos.
+  var PLANS_DEFAULTS_BY_TIER = {
+    essential: [
+      { desc_console: 'PlayStation 4', desc_licence: 'Primaria', consola: 1, licencia: 1, precio: 84990, precio_descuento: 0, stock: 1 },
+      { desc_console: 'PlayStation 5', desc_licence: 'Primaria', consola: 2, licencia: 1, precio: 84990, precio_descuento: 0, stock: 1 }
+    ],
+    extra: [
+      { desc_console: 'PlayStation 4', desc_licence: 'Secundaria', consola: 1, licencia: 2, precio: 29990, precio_descuento: 0, stock: 3 },
+      { desc_console: 'PlayStation 5', desc_licence: 'Secundaria', consola: 2, licencia: 2, precio: 29990, precio_descuento: 0, stock: 3 }
+    ],
+    premium: []
+  };
+
+  function fmtCOP(n) {
+    return '$' + Number(n).toLocaleString('es-CO');
+  }
+  // El catálogo usa precio_descuento = 0 con el sentido de "sin descuento",
+  // no "gratis". Pintar precio_descuento tal cual salvo que sea 0 o mayor
+  // que el precio de lista.
+  function planPrice(p) {
+    return (p.precio_descuento > 0 && p.precio_descuento < p.precio) ? p.precio_descuento : p.precio;
+  }
+  function isSoldOut(p) {
+    return !(p.stock > 0);
+  }
+  function shortConsole(name) {
+    if (!name) return '';
+    if (name.indexOf('4') !== -1) return 'PS4';
+    if (name.indexOf('5') !== -1) return 'PS5';
+    return name;
+  }
+  function setText(id, value) {
+    var el = document.getElementById(id);
+    if (el && value != null) el.textContent = value;
+  }
+
+  // ---------------- contenido de texto ----------------
+  function renderContent(c) {
+    c = Object.assign({}, CONTENT_DEFAULTS, c || {});
+    c.tiers = Object.assign({}, CONTENT_DEFAULTS.tiers, c.tiers || {});
+    setText('v-platform_label', c.platform_label);
+    setText('v-title', c.title);
+    setText('v-subtitle', c.subtitle);
+    setText('v-price_label', c.price_label);
+    setText('v-price_amount', c.price_amount);
+    setText('v-price_unit', c.price_unit);
+    setText('v-cta_label', c.cta_label);
+    setText('v-step1_eyebrow', c.step1_eyebrow);
+    setText('v-step1_title', c.step1_title);
+    setText('v-step1_body', c.step1_body);
+    TIERS.forEach(function (t) {
+      var tc = c.tiers[t.key] || {};
+      setText('v-tier-' + t.key + '-title', tc.title);
+      setText('v-tier-' + t.key + '-desc', tc.desc);
+    });
+    setText('v-step2_eyebrow', c.step2_eyebrow);
+    setText('v-step2_title', c.step2_title);
+    setText('v-payment_note_title', c.payment_note_title);
+    setText('v-payment_note_desc', c.payment_note_desc);
+    setText('v-faq_eyebrow', c.faq_eyebrow);
+    setText('v-faq_title', c.faq_title);
+    setText('v-portal_title', c.portal_title);
+    setText('v-portal_desc', c.portal_desc);
+    setText('v-portal_link', c.portal_link);
+    setText('v-footer', c.footer);
+
+    var portalLink = document.getElementById('v-portal_link');
+    if (portalLink) portalLink.setAttribute('href', 'https://www.hardcoregames.co/product/' + TIER_BY_KEY[activeTier].productId);
+
+    var heroImg = document.getElementById('heroBanner');
+    if (c.banner_image) {
+      heroImg.src = c.banner_image;
+      heroImg.classList.add('is-visible');
+    } else {
+      heroImg.classList.remove('is-visible');
+    }
+
+    var trustBar = document.getElementById('trustBar');
+    trustBar.innerHTML = '';
+    (c.trust || []).forEach(function (item) {
+      var el = document.createElement('div');
+      el.className = 'trust-item';
+      var dotColor = item.tone === 'accent' ? 'var(--accent)' : item.tone === 'cta' ? 'var(--cta)' : 'var(--primary)';
+      el.innerHTML =
+        '<div class="t"><span class="dot" style="background:' + dotColor + '"></span>' + item.title + '</div>' +
+        '<div class="d">' + item.desc + '</div>';
+      trustBar.appendChild(el);
+    });
+
+    var faqList = document.getElementById('faqList');
+    faqList.innerHTML = '';
+    (c.faq || []).forEach(function (item) {
+      var d = document.createElement('details');
+      d.className = 'faq-item';
+      d.innerHTML = '<summary>' + item.q + '</summary><p>' + item.a + '</p>';
+      faqList.appendChild(d);
+    });
+
+    document.getElementById('plansBody').textContent = (c.tiers[activeTier] || {}).step2_body || '';
+
+    window.__CONTENT = c;
+    renderTierPlans(activeTier);
+  }
+
+  // ---------------- planes (datos reales del catálogo) ----------------
+  // A diferencia de /gamepassultimate/, aquí no hay duración que elegir
+  // (cada nivel es un plazo fijo cargado así en el catálogo): la variable
+  // dentro de cada nivel es la consola. Tampoco se distingue por licencia
+  // (Primaria/Secundaria) — el producto se entrega "la que haya
+  // disponible", igual que el modo cuotas de gamepassultimate.
+  var LICENCE_PRIORITY = ['Primaria', 'Codigo', 'Secundaria'];
+
+  // pk (string) -> { plan, productId }. Se llena cada vez que se pinta una
+  // tarjeta y lo lee el click de "Elegir" para saber a qué producto
+  // pertenece esa combinación — hace falta para escribir
+  // cart_combinations con el title/image correctos según el nivel.
+  var PLAN_INDEX = {};
+  function registerPlan(plan, productId) {
+    PLAN_INDEX[String(plan.pk)] = { plan: plan, productId: productId };
+  }
+
+  function pickRepresentative(rows) {
+    function score(r) {
+      var stockScore = r.stock > 0 ? 0 : 1;
+      var licenceScore = LICENCE_PRIORITY.indexOf(r.desc_licence);
+      if (licenceScore === -1) licenceScore = LICENCE_PRIORITY.length;
+      return stockScore * 1e9 + licenceScore * 1e6 + planPrice(r);
+    }
+    return rows.reduce(function (best, r) { return score(r) < score(best) ? r : best; }, rows[0]);
+  }
+
+  function groupByConsole(rows) {
+    var byConsole = {};
+    rows.forEach(function (r) {
+      var key = r.desc_console;
+      if (!byConsole[key]) byConsole[key] = [];
+      byConsole[key].push(r);
+    });
+    return Object.keys(byConsole).map(function (k) {
+      var group = byConsole[k];
+      var rep = pickRepresentative(group);
+      var totalStock = group.reduce(function (s, r) { return s + r.stock; }, 0);
+      return {
+        desc_console: k, precio: rep.precio, precio_descuento: rep.precio_descuento,
+        stock: totalStock, pk: rep.pk, consola: rep.consola,
+        licencia: rep.licencia, desc_licence: rep.desc_licence
+      };
+    }).sort(function (a, b) { return (a.consola || 0) - (b.consola || 0); });
+  }
+
+  function planCardHTML(plan, productId, isRecommended, badgeText, c, labelText) {
+    var soldOut = isSoldOut(plan);
+    var stockLow = plan.stock <= (c.low_stock_threshold || 2);
+    var price = planPrice(plan);
+    var href = 'https://www.hardcoregames.co/product/' + productId;
+    // Una consola agotada se sigue mostrando (sirve de referencia de
+    // precio y de "esto existe, vuelve luego"), pero no se puede comprar:
+    // el botón deja de ser <a class="plan-pick"> — que es lo que engancha
+    // el handler de carrito — y pasa a ser un <span class="plan-off">
+    // inerte.
+    return (
+      '<div class="plan-card' + (isRecommended ? ' is-recommended' : '') + (soldOut ? ' is-sold-out' : '') + '">' +
+      (isRecommended ? '<span class="plan-badge">' + badgeText + '</span>' : '') +
+      '<div class="plan-duration">' + labelText + '</div>' +
+      '<div><span class="plan-price tabular">' + fmtCOP(price) + '</span>' +
+      (plan.precio > price ? '<span class="plan-price-old tabular">' + fmtCOP(plan.precio) + '</span>' : '') + '</div>' +
+      (soldOut
+        ? '<div class="plan-stock is-out">' + c.sold_out_label + '</div>'
+        : '<div class="plan-stock' + (stockLow ? ' is-low' : '') + '">' + plan.stock + ' ' + c.stock_suffix + '</div>') +
+      (soldOut
+        ? '<span class="plan-off" aria-disabled="true">' + c.sold_out_button_label + '</span>'
+        : '<a class="plan-pick" href="' + href + '" data-pk="' + plan.pk + '">' + c.pick_button_label + '</a>') +
+      '</div>'
+    );
+  }
+
+  // Índice del plan más barato ENTRE LOS DISPONIBLES: no tiene sentido
+  // colgarle "Mejor precio" a una tarjeta que no se puede comprar. Sin
+  // duración que comparar (a diferencia de gamepassultimate), aquí "mejor
+  // precio" es directamente el más barato entre las consolas disponibles.
+  function bestValueIndex(plans) {
+    return plans.reduce(function (bestI, p, i, arr) {
+      if (isSoldOut(p)) return bestI;
+      if (bestI === -1) return i;
+      return planPrice(p) < planPrice(arr[bestI]) ? i : bestI;
+    }, -1);
+  }
+
+  function renderAvailabilityMsg(msgEl, plans, emptyText, c) {
+    if (!msgEl) return;
+    var text = '';
+    if (!plans.length) text = emptyText || '';
+    else if (!plans.some(function (p) { return !isSoldOut(p); })) text = c.all_sold_out_msg || emptyText || '';
+    msgEl.textContent = text;
+    msgEl.style.display = text ? '' : 'none';
+  }
+
+  function renderTierPlans(tierKey) {
+    var c = window.__CONTENT || CONTENT_DEFAULTS;
+    var tier = TIER_BY_KEY[tierKey];
+    var rows = (window.__PLANS_BY_TIER || {})[tierKey] || [];
+    var plans = groupByConsole(rows);
+    var container = document.getElementById('plansGrid');
+    var emptyMsg = document.getElementById('plansEmptyMsg');
+
+    renderAvailabilityMsg(emptyMsg, plans, c.tier_empty_msg, c);
+    if (!plans.length) {
+      container.innerHTML = '';
+      return;
+    }
+
+    plans.forEach(function (p) { registerPlan(p, tier.productId); });
+    var bestIndex = bestValueIndex(plans);
+    container.innerHTML = plans.map(function (p, i) {
+      return planCardHTML(p, tier.productId, i === bestIndex && plans.length > 1, c.badge_best_price, c, shortConsole(p.desc_console));
+    }).join('');
+  }
+
+  // ---------------- selector de plan (paso 1) ----------------
+  var tierButtons = document.querySelectorAll('.choice-btn[data-tier]');
+  tierButtons.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var tierKey = btn.getAttribute('data-tier');
+      if (tierKey === activeTier) return;
+      activeTier = tierKey;
+      tierButtons.forEach(function (b) { b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'); });
+      var c = window.__CONTENT || CONTENT_DEFAULTS;
+      document.getElementById('plansBody').textContent = (c.tiers[activeTier] || {}).step2_body || '';
+      var portalLink = document.getElementById('v-portal_link');
+      if (portalLink) portalLink.setAttribute('href', 'https://www.hardcoregames.co/product/' + TIER_BY_KEY[activeTier].productId);
+      renderTierPlans(activeTier);
+    });
+  });
+
+  // ---------------- carrito directo al elegir un plan ----------------
+  // El sitio real guarda la sesión (jwt_token + user_data) en localStorage,
+  // por origen — por eso el guard de apex→www al principio del <head>.
+  // Si ya hay sesión, se agrega al carrito directo. Si no, se pide el
+  // correo (checkout de invitado: cuenta silenciosa, sin contraseña que el
+  // visitante tenga que inventar ni código de verificación) y se sigue
+  // igual. Cualquier fallo real cae al comportamiento de antes: ir a la
+  // ficha del producto a elegir ahí.
+  var CART_API = 'https://api.srv936408.hstgr.cloud/shopping-car/';
+  var CART_URL = 'https://www.hardcoregames.co/cart';
+  var AUTH_LOGIN_API = 'https://api.srv936408.hstgr.cloud/auth/login';
+  var REGISTER_API = 'https://admin.hardcoregames.co/users/register/';
+
+  function decodeJwtPayload(token) {
+    try {
+      var b64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+      var json = decodeURIComponent(atob(b64).split('').map(function (c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join(''));
+      return JSON.parse(json);
+    } catch (e) { return null; }
+  }
+
+  function randomPassword() {
+    var bytes = new Uint8Array(18);
+    crypto.getRandomValues(bytes);
+    return Array.prototype.map.call(bytes, function (b) { return b.toString(36); }).join('').slice(0, 24) + 'Aa1!';
+  }
+
+  // El sitio real (product/:id) escribe una entrada en
+  // localStorage.cart_combinations al agregar al carrito — es lo ÚNICO de
+  // donde /cart saca nombre, foto y desglose de precio de cada línea (no
+  // hay fetch de producto en esa página). Como esta landing agrega al
+  // carrito llamando directo a /shopping-car/, sin pasar por esa pantalla,
+  // hay que replicar exactamente esa misma escritura aquí.
+  function writeCartCombination(plan, productId) {
+    try {
+      var info = (window.__PRODUCT_CATALOG || {})[productId] || {};
+      var cache = JSON.parse(localStorage.getItem('cart_combinations') || '{}');
+      cache[String(plan.pk)] = {
+        id_combination: plan.pk,
+        product_id: plan.pk,
+        base_game_id: productId,
+        is_retail: true,
+        title: info.title || 'Producto',
+        image: info.image || '/placeholder.svg',
+        desc_console: plan.desc_console,
+        desc_licence: plan.desc_licence,
+        price: planPrice(plan),
+        coupon: undefined,
+        consola: plan.consola,
+        licencia: plan.licencia
+      };
+      localStorage.setItem('cart_combinations', JSON.stringify(cache));
+    } catch (e) {
+      // storage bloqueado/lleno: la compra sigue funcionando igual, /cart
+      // solo cae al "Producto #<id>" genérico como si viniera de otro
+      // dispositivo.
+    }
+  }
+
+  function addToCart(jwt, pk) {
+    return fetch(CART_API, {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + jwt, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ product_id: Number(pk), estado: true })
+    }).then(function (r) {
+      // 409 = "ya está en el carrito": no es un error, ya quedó como
+      // queríamos, así que sigue igual que un 2xx.
+      if (!r.ok && r.status !== 409) throw new Error('shopping-car respondió ' + r.status);
+      var entry = PLAN_INDEX[String(pk)];
+      if (entry) writeCartCombination(entry.plan, entry.productId);
+    });
+  }
+
+  function addToCartAndGoToCart(jwt, pk, fallbackHref) {
+    return addToCart(jwt, pk).then(function () {
+      window.location.href = CART_URL;
+    }).catch(function () {
+      window.location.href = fallbackHref;
+    });
+  }
+
+  function guestCheckout(email, pk, fallbackHref) {
+    var password = randomPassword();
+    return fetch(REGISTER_API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ first_name: '', last_name: '', email: email, password: password, phone_number: '', avatar: '', guest_checkout: true })
+    }).then(function (r) {
+      if (r.status === 400) {
+        return r.json().then(function (body) {
+          var msg = (body && body.message) || '';
+          var code = msg.indexOf('ya existe') !== -1 ? 'EMAIL_TAKEN' : 'REGISTER_FAILED';
+          return Promise.reject({ code: code });
+        });
+      }
+      if (!r.ok) return Promise.reject({ code: 'REGISTER_FAILED' });
+      return fetch(AUTH_LOGIN_API, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'username=' + encodeURIComponent(email) + '&password=' + encodeURIComponent(password)
+      });
+    }).then(function (r) {
+      if (!r.ok) return Promise.reject({ code: 'LOGIN_FAILED' });
+      return r.json();
+    }).then(function (loginRes) {
+      var payload = decodeJwtPayload(loginRes.access_token);
+      var userId = 0;
+      if (payload) {
+        if (typeof payload.user_id === 'number') userId = payload.user_id;
+        else if (!isNaN(Number(payload.sub))) userId = Number(payload.sub);
+      }
+      var userData = {
+        id: userId,
+        email: email,
+        first_name: (payload && typeof payload.first_name === 'string') ? payload.first_name : email.split('@')[0],
+        last_name: '',
+        liked_game_ids: (payload && Array.isArray(payload.liked_game_ids)) ? payload.liked_game_ids : [],
+        is_superuser: !!(payload && payload.is_superuser === true)
+      };
+      try {
+        localStorage.setItem('jwt_token', loginRes.access_token);
+        localStorage.setItem('user_data', JSON.stringify(userData));
+      } catch (e) { /* storage bloqueado */ }
+      // La cuenta ya quedó creada en este punto. Si el carrito falla,
+      // no tiene sentido bloquear al usuario en el modal — seguimos al
+      // fallback igual que hacía addToCartAndGoToCart antes, pero sin
+      // pasar por la pantalla de éxito (SILENT_REDIRECT le dice al
+      // handler del form que no muestre ningún error).
+      return addToCart(loginRes.access_token, pk).catch(function () {
+        window.location.href = fallbackHref;
+        return Promise.reject({ code: 'SILENT_REDIRECT' });
+      });
+    });
+  }
+
+  document.addEventListener('click', function (ev) {
+    var link = ev.target.closest && ev.target.closest('.plan-pick');
+    if (!link) return;
+    if (ev.button !== 0 || ev.metaKey || ev.ctrlKey || ev.shiftKey || ev.altKey) return;
+    ev.preventDefault();
+    link.classList.add('is-picking');
+
+    var fallbackHref = link.getAttribute('href');
+    var pk = link.getAttribute('data-pk');
+    var jwt = null;
+    try { jwt = localStorage.getItem('jwt_token'); } catch (e) { /* storage bloqueado */ }
+
+    if (!pk) {
+      setTimeout(function () { window.location.href = fallbackHref; }, 180);
+      return;
+    }
+
+    if (jwt) {
+      addToCartAndGoToCart(jwt, pk, fallbackHref);
+      return;
+    }
+
+    if (typeof window.__openGuestCheckout === 'function') {
+      window.__openGuestCheckout(pk, fallbackHref);
+    } else {
+      window.location.href = fallbackHref;
+    }
+  });
+
+  // ---------------- modal de checkout de invitado ----------------
+  (function () {
+    var overlay = document.getElementById('gcOverlay');
+    var form = document.getElementById('gcForm');
+    var emailInput = document.getElementById('gcEmail');
+    var errorEl = document.getElementById('gcError');
+    var submitBtn = document.getElementById('gcSubmit');
+    var cancelBtn = document.getElementById('gcCancel');
+    var noteEl = document.getElementById('gcNote');
+    var pendingPk = null;
+    var pendingFallback = null;
+
+    function resetToForm() {
+      form.style.display = '';
+      noteEl.style.display = '';
+    }
+
+    function showError(html) {
+      errorEl.innerHTML = html;
+      errorEl.classList.add('is-visible');
+    }
+    function clearError() {
+      errorEl.innerHTML = '';
+      errorEl.classList.remove('is-visible');
+    }
+    function closeModal() {
+      overlay.classList.remove('is-open');
+      overlay.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+    function leaveToFallback() {
+      closeModal();
+      if (pendingFallback) window.location.href = pendingFallback;
+    }
+
+    window.__openGuestCheckout = function (pk, fallbackHref) {
+      pendingPk = pk;
+      pendingFallback = fallbackHref;
+      clearError();
+      resetToForm();
+      emailInput.value = '';
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Continuar';
+      overlay.classList.add('is-open');
+      overlay.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+      setTimeout(function () { emailInput.focus(); }, 50);
+    };
+
+    cancelBtn.addEventListener('click', leaveToFallback);
+    overlay.addEventListener('click', function (ev) { if (ev.target === overlay) leaveToFallback(); });
+    document.addEventListener('keydown', function (ev) {
+      if (ev.key === 'Escape' && overlay.classList.contains('is-open')) leaveToFallback();
+    });
+
+    form.addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var email = emailInput.value.trim().toLowerCase();
+      if (!email || email.indexOf('@') === -1 || email.indexOf('.') === -1) {
+        showError('Escribe un correo válido.');
+        return;
+      }
+      clearError();
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Un momento…';
+
+      guestCheckout(email, pendingPk, pendingFallback).then(function () {
+        // Sin pantalla intermedia: directo al carrito real.
+        window.location.href = CART_URL;
+      }).catch(function (err) {
+        var code = err && err.code;
+        // SILENT_REDIRECT: la cuenta ya se creó pero el carrito falló;
+        // guestCheckout ya redirigió al fallback, no hay nada que mostrar.
+        if (code === 'SILENT_REDIRECT') return;
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Continuar';
+        if (code === 'EMAIL_TAKEN') {
+          showError('Ya tienes una cuenta con este correo. <a href="https://www.hardcoregames.co/auth">Inicia sesión</a> y elige el plan de nuevo.');
+        } else {
+          showError('No pudimos continuar. Intenta de nuevo.');
+        }
+      });
+    });
+  })();
+
+  // ---------------- header: drawer de categorías ----------------
+  (function () {
+    var toggle = document.getElementById('drawerToggle');
+    var drawer = document.getElementById('siteDrawer');
+    var scrim = document.getElementById('drawerScrim');
+    var closeBtn = document.getElementById('drawerClose');
+    function open() { drawer.classList.add('is-open'); scrim.classList.add('is-open'); drawer.setAttribute('aria-hidden', 'false'); document.body.style.overflow = 'hidden'; }
+    function close() { drawer.classList.remove('is-open'); scrim.classList.remove('is-open'); drawer.setAttribute('aria-hidden', 'true'); document.body.style.overflow = ''; }
+    toggle.addEventListener('click', open);
+    closeBtn.addEventListener('click', close);
+    scrim.addEventListener('click', close);
+    document.addEventListener('keydown', function (ev) { if (ev.key === 'Escape') close(); });
+  })();
+
+  // ---------------- header: dropdown de idioma y de perfil ----------------
+  (function () {
+    var localeToggle = document.getElementById('localeToggle');
+    var localeDropdown = document.getElementById('localeDropdown');
+    var profileToggle = document.getElementById('profileToggle');
+    var profileDropdown = document.getElementById('profileDropdown');
+
+    var userData = null;
+    try {
+      var raw = localStorage.getItem('user_data');
+      if (raw) userData = JSON.parse(raw);
+    } catch (e) { /* storage bloqueado o dato corrupto */ }
+
+    if (userData && userData.email) {
+      profileDropdown.innerHTML =
+        '<div class="dd-email">' + userData.email + '</div>' +
+        '<a href="https://hardcoregames.co/profile">👤 Mi Perfil</a>' +
+        '<a href="https://hardcoregames.co/liked-games">♡ Mis Favoritos</a>' +
+        '<a href="https://hardcoregames.co/points">★ Mis Puntos</a>' +
+        '<a href="https://hardcoregames.co/purchases">🛍 Mis Compras</a>' +
+        '<a href="https://hardcoregames.co/order-buy">📋 Mis Pedidos</a>';
+    } else {
+      profileDropdown.innerHTML =
+        '<a href="https://hardcoregames.co/auth">Iniciar sesión</a>' +
+        '<a href="https://hardcoregames.co/auth">Crear cuenta</a>';
+    }
+
+    function closeAll() {
+      localeDropdown.classList.remove('is-open');
+      localeToggle.setAttribute('aria-expanded', 'false');
+      profileDropdown.classList.remove('is-open');
+      profileToggle.setAttribute('aria-expanded', 'false');
+    }
+    function toggleDropdown(btn, dd) {
+      var willOpen = !dd.classList.contains('is-open');
+      closeAll();
+      if (willOpen) { dd.classList.add('is-open'); btn.setAttribute('aria-expanded', 'true'); }
+    }
+    localeToggle.addEventListener('click', function (ev) { ev.stopPropagation(); toggleDropdown(localeToggle, localeDropdown); });
+    profileToggle.addEventListener('click', function (ev) { ev.stopPropagation(); toggleDropdown(profileToggle, profileDropdown); });
+    document.addEventListener('click', closeAll);
+    document.addEventListener('keydown', function (ev) { if (ev.key === 'Escape') closeAll(); });
+  })();
+
+  // ---------------- carga inicial ----------------
+  window.__PLANS_BY_TIER = {};
+  TIERS.forEach(function (t) { window.__PLANS_BY_TIER[t.key] = PLANS_DEFAULTS_BY_TIER[t.key] || []; });
+  renderContent(CONTENT_DEFAULTS);
+
+  // Title/image "canónicos" del catálogo (mismo endpoint que usa la ficha
+  // de producto real) para los tres niveles — hacen falta para escribir
+  // cart_combinations bien.
+  window.__PRODUCT_CATALOG = {};
+  TIERS.forEach(function (t) {
+    fetch(CATALOG_API_BASE + '/products/' + t.productId)
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (res) {
+        if (res && res.data) window.__PRODUCT_CATALOG[t.productId] = { title: res.data.title, image: res.data.image };
+      })
+      .catch(function () { /* si falla, cart_combinations cae al título/imagen genéricos */ });
+  });
+
+  fetch(API_BASE + '/systemVariables/psplus')
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (res) {
+      if (res && res.data && res.data.valor) {
+        var parsed = JSON.parse(res.data.valor);
+        if (parsed && parsed.psplus) renderContent(parsed.psplus);
+      }
+    })
+    .catch(function () { /* se queda con el texto por defecto */ });
+
+  // Una respuesta con data: [] es un dato real ("no queda nada de este
+  // nivel"), no un fallo — solo un error de red/HTTP (res === null)
+  // conserva los valores por defecto de ese nivel.
+  TIERS.forEach(function (t) {
+    fetch(API_BASE + '/getCombinationPriceByGame/' + t.productId)
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (res) {
+        if (res && Array.isArray(res.data)) {
+          window.__PLANS_BY_TIER[t.key] = res.data;
+          if (t.key === activeTier) renderTierPlans(t.key);
+        }
+      })
+      .catch(function () { /* se queda con los planes por defecto de ese nivel */ });
+  });
+})();
+</script>
+
+<!-- Hardcore Rewards: widget flotante (no toca el bundle de la app) -->
+<script src="/assets/rewards-widget.js"></script>
+<!-- Hardcore Sorteos: widget flotante (no toca el bundle de la app) -->
+<script src="/assets/sorteos-widget.js"></script>
+</body>
+</html>
