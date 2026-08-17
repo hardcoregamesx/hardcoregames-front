@@ -619,6 +619,12 @@
     pick_button_label: 'Reservar',
     stock_suffix: 'en stock',
     low_stock_threshold: 2,
+    desc_primaria_ps5: 'Correo y clave, juegas en tu perfil.',
+    desc_secundaria_ps5: 'Correo y clave, juegas en el correo entregado.',
+    desc_codigo_ps5: 'El juego se activa directamente en tu correo personal (solo válido para cuentas PSN de Estados Unidos).',
+    desc_primaria_xbox: 'Correo y clave, juegas en tu perfil.',
+    desc_secundaria_xbox: 'Correo y clave, juegas en tu perfil. Conexión a internet obligatoria.',
+    desc_codigo_xbox: 'El juego se activa directamente en tu correo personal.',
     cuotas_note: '<strong>Cómo funciona el pago a cuotas:</strong> lo que pagas aquí se abona a la primera cuota. El resto se cancela por WhatsApp, en cuotas mensuales. El no pago oportuno puede generar cobros extra o la cancelación de la reserva sin derecho a reembolso — los pagos ya enviados se toman como alquiler del producto.',
     cuotas_primaria_ps5: '3 pagos de $80.000',
     cuotas_secundaria_ps5: '3 pagos de $65.000',
@@ -673,11 +679,21 @@
 
   var LICENCE_ORDER = ['Primaria', 'Secundaria', 'Codigo'];
   var LICENCE_LABEL = { Primaria: 'Primaria', Secundaria: 'Secundaria', Codigo: 'Código' };
-  var LICENCE_DESC = {
+  // El método de entrega difiere entre PS5 y Xbox para la misma licencia
+  // (p.ej. en PS5 Secundaria NO juegas en tu propio perfil, en Xbox sí pero
+  // necesita internet constante) — por eso la descripción depende de
+  // plataforma + licencia, no solo de la licencia. Claves del content:
+  // desc_<primaria|secundaria|codigo>_<ps5|xbox>.
+  var LICENCE_KEY = { Primaria: 'primaria', Secundaria: 'secundaria', Codigo: 'codigo' };
+  var LICENCE_DESC_FALLBACK = {
     Primaria: 'Correo y clave, juegas en tu perfil',
     Secundaria: 'Correo y clave, vinculado a tu cuenta',
     Codigo: 'Se activa directo en tu cuenta'
   };
+  function licenceDesc(c, licence) {
+    var key = 'desc_' + (LICENCE_KEY[licence] || licence.toLowerCase()) + '_' + state.platform;
+    return c[key] || LICENCE_DESC_FALLBACK[licence] || '';
+  }
 
   // getCombinationPriceByGame puede devolver varias filas de GameDetail
   // para la MISMA licencia (distinto pk, mismo desc_licence) — confirmado
@@ -825,7 +841,7 @@
       '<div class="plan-card' + (isRecommended ? ' is-recommended' : '') + '">' +
       (isRecommended ? '<span class="plan-badge">' + c.badge_recommended + '</span>' : '') +
       '<div class="plan-duration">' + (LICENCE_LABEL[plan.desc_licence] || plan.desc_licence) +
-        '<span class="sub">' + (LICENCE_DESC[plan.desc_licence] || '') + '</span></div>' +
+        '<span class="sub">' + licenceDesc(c, plan.desc_licence) + '</span></div>' +
       '<div><span class="plan-price tabular">' + fmtCOP(plan.precio_descuento) + '</span>' +
       (plan.precio > plan.precio_descuento ? '<span class="plan-price-old tabular">' + fmtCOP(plan.precio) + '</span>' : '') + '</div>' +
       '<div class="plan-stock' + (stockLow ? ' is-low' : '') + '">' + plan.stock + ' ' + c.stock_suffix + '</div>' +
