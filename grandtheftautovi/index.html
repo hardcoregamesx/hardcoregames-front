@@ -620,6 +620,10 @@
     stock_suffix: 'en stock',
     low_stock_threshold: 2,
     cuotas_note: '<strong>Cómo funciona el pago a cuotas:</strong> lo que pagas aquí se abona a la primera cuota. El resto se cancela por WhatsApp, en cuotas mensuales. El no pago oportuno puede generar cobros extra o la cancelación de la reserva sin derecho a reembolso — los pagos ya enviados se toman como alquiler del producto.',
+    cuotas_primaria_ps5: '3 pagos de $80.000',
+    cuotas_secundaria_ps5: '3 pagos de $65.000',
+    cuotas_primaria_xbox: '3 pagos de $75.000',
+    cuotas_secundaria_xbox: '3 pagos de $65.000',
     faq_eyebrow: 'Antes de reservar',
     faq_title: 'Lo que suele preguntarse',
     faq: [
@@ -665,13 +669,6 @@
       { desc_licence: 'Primaria', precio: 30000, precio_descuento: 20000, stock: 1, pk: null, consola: 'xbox', desc_console: 'Xbox Series' },
       { desc_licence: 'Secundaria', precio: 30000, precio_descuento: 20000, stock: 1, pk: null, consola: 'xbox', desc_console: 'Xbox Series' }
     ]
-  };
-
-  // Texto real de las cuotas por plataforma (sale de la ficha de cada
-  // producto "A CUOTAS" — los montos difieren entre PS5 y Xbox).
-  var CUOTAS_TEXT = {
-    ps5: 'PRIMARIA: 3 pagos de $80.000 · SECUNDARIA: 3 pagos de $65.000.',
-    xbox: 'PRIMARIA: 3 pagos de $75.000 · SECUNDARIA: 3 pagos de $65.000.'
   };
 
   var LICENCE_ORDER = ['Primaria', 'Secundaria', 'Codigo'];
@@ -803,7 +800,10 @@
 
     var note = document.getElementById('cuotasNote');
     if (state.edition === 'cuotas') {
-      note.innerHTML = (c.cuotas_note || '') + ' ' + (CUOTAS_TEXT[state.platform] || '');
+      var primaria = state.platform === 'xbox' ? c.cuotas_primaria_xbox : c.cuotas_primaria_ps5;
+      var secundaria = state.platform === 'xbox' ? c.cuotas_secundaria_xbox : c.cuotas_secundaria_ps5;
+      var cuotasLine = 'PRIMARIA: ' + (primaria || '—') + ' · SECUNDARIA: ' + (secundaria || '—') + '.';
+      note.innerHTML = (c.cuotas_note || '') + ' ' + cuotasLine;
       note.classList.remove('is-hidden');
     } else {
       note.classList.add('is-hidden');
