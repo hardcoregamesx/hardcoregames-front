@@ -62,6 +62,15 @@
 
     if (!email) return;
     pollFor(function () {
+      // No basta con que exista un input[type=email]: justo después del
+      // clic el input que sigue en el DOM es el del login (React aún no
+      // conmutó el panel), y precargarlo se pierde al re-renderizar. El
+      // panel de Registrarse está montado de verdad cuando existe su botón
+      // "Enviar código de verificación"; solo entonces el input es el bueno.
+      var sendBtn = Array.prototype.filter.call(document.querySelectorAll('button'), function (b) {
+        return b.textContent.indexOf('Enviar código') !== -1;
+      })[0];
+      if (!sendBtn) return null;
       return document.querySelector('input[type="email"]');
     }, 3000, function (input) {
       if (input) setNativeInputValue(input, email);
