@@ -1,0 +1,1259 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Grand Theft Auto VI | Preventa | Hardcore Games</title>
+<meta name="description" content="Reserva GRAND THEFT AUTO VI para PS5 o Xbox Series. Standard o Ultimate, pago completo o a cuotas. Lanza el 19 de noviembre de 2026. Entrega con garantía y soporte por WhatsApp.">
+<meta name="robots" content="noindex">
+<script>
+  // El checkout de invitado guarda la sesión en localStorage, que es por
+  // origen. Si alguien entra por el dominio raíz (sin "www"), esa sesión
+  // quedaría invisible para el resto del sitio (carrito, checkout), que
+  // vive en www.hardcoregames.co. El apex no redirige solo, así que se
+  // fuerza aquí, antes de que se pinte nada.
+  if (location.hostname === 'hardcoregames.co') {
+    location.replace('https://www.hardcoregames.co' + location.pathname + location.search + location.hash);
+  }
+</script>
+<style>
+  :root {
+    --background: hsl(250 25% 5%);
+    --foreground: hsl(38 30% 93%);
+    --card: hsl(250 20% 10%);
+    --card-2: hsl(250 20% 13%);
+    --primary: hsl(330 100% 62%);
+    --secondary: hsl(250 18% 15%);
+    --muted: hsl(250 12% 22%);
+    --muted-foreground: hsl(250 8% 65%);
+    --accent: hsl(330 100% 62%);
+    --destructive: hsl(0 84.2% 60.2%);
+    --border: hsl(250 18% 20%);
+    --radius: .75rem;
+    --cta: hsl(330 100% 62%);
+    --cta-foreground: hsl(0 0% 100%);
+    --ok: hsl(148 60% 52%);
+    --gradient-bg: linear-gradient(135deg, #2b0a3d 0%, #6d1b6b 55%, #ff2e88 130%);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  ::selection { background: var(--cta); color: var(--cta-foreground); }
+  a { color: inherit; }
+
+  h1, h2 {
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: .95;
+    margin: 0;
+    text-transform: uppercase;
+  }
+
+  .tabular { font-variant-numeric: tabular-nums; }
+
+  .wrap { max-width: 640px; margin: 0 auto; padding: 0 20px; }
+
+  /* ---- hero ---- */
+  .hero-banner {
+    position: relative;
+    width: 100%;
+    min-height: 420px;
+    overflow: hidden;
+    display: flex;
+    align-items: flex-end;
+    background: var(--gradient-bg);
+  }
+  .hero-banner .hero-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 20%;
+    display: none;
+  }
+  .hero-banner .hero-bg.is-visible { display: block; }
+  .hero-scrim {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(90deg, hsl(250 25% 5% / .97) 0%, hsl(250 25% 5% / .8) 34%, hsl(250 25% 5% / .25) 64%, hsl(250 25% 5% / .05) 90%),
+      linear-gradient(180deg, hsl(250 25% 5% / .1) 0%, hsl(250 25% 5% / .5) 45%, hsl(250 25% 5% / .98) 100%);
+  }
+  .hero-inner { position: relative; z-index: 2; width: 100%; padding-top: 24px; padding-bottom: 26px; }
+  .hero h1, .hero .sub, .hero .price-row { text-shadow: 0 2px 20px rgba(0,0,0,.55); }
+  @media (min-width: 760px) { .hero-banner { min-height: 520px; } }
+
+  .platform-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: hsl(330 100% 62% / .18);
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    padding: 5px 10px;
+    border-radius: 999px;
+    margin-bottom: 16px;
+  }
+  .hero h1 { font-size: clamp(40px, 11vw, 64px); text-wrap: balance; }
+  .hero .sub { color: var(--foreground); opacity: .92; font-size: 16px; max-width: 46ch; margin: 14px 0 24px; }
+
+  .price-row { display: flex; align-items: baseline; gap: 10px; margin-bottom: 22px; }
+  .price-label { font-size: 13px; color: var(--muted-foreground); text-transform: uppercase; letter-spacing: .06em; }
+  .price-value { font-weight: 800; font-size: 32px; letter-spacing: -0.01em; }
+  .price-unit { color: var(--muted-foreground); font-size: 14px; }
+
+  .cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    background: var(--cta);
+    color: var(--cta-foreground);
+    font-weight: 800;
+    font-size: 17px;
+    text-transform: uppercase;
+    letter-spacing: .02em;
+    border: none;
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    cursor: pointer;
+    transition: filter 120ms ease, transform 120ms ease;
+  }
+  .cta:hover { filter: brightness(1.08); }
+  .cta:active { transform: scale(.98); }
+  .cta:focus-visible { outline: 2px solid var(--foreground); outline-offset: 3px; }
+
+  /* ---- release strip ---- */
+  .release-strip {
+    background: var(--card); border-bottom: 1px solid var(--border);
+    padding: 10px 0; text-align: center; font-size: 13px; font-weight: 700;
+    color: var(--foreground); letter-spacing: .02em;
+  }
+  .release-strip span { color: var(--accent); }
+
+  /* ---- trust bar ---- */
+  .trust { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+  .trust-item { background: var(--card); padding: 14px 10px; text-align: center; }
+  .trust-item .dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; margin-right: 6px; }
+  .trust-item .t { font-weight: 700; font-size: 13px; }
+  .trust-item .d { color: var(--muted-foreground); font-size: 11.5px; margin-top: 2px; }
+
+  /* ---- section rhythm ---- */
+  section { padding: 40px 0; }
+  section + section { border-top: 1px solid var(--border); }
+  .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--primary); margin-bottom: 10px; }
+  .sec-title { font-size: 26px; margin-bottom: 8px; }
+  .sec-body { color: var(--muted-foreground); max-width: 48ch; margin: 0 0 22px; }
+
+  /* ---- decision helper ---- */
+  .choice-row { display: flex; flex-direction: column; gap: 10px; }
+  .choice-row.two-col { flex-direction: row; }
+  .choice-btn {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 16px 18px; text-align: left; color: var(--foreground); font-size: 15.5px; font-weight: 600; cursor: pointer;
+    flex: 1;
+  }
+  .choice-btn .h { display: block; font-weight: 700; text-transform: none; }
+  .choice-btn .s { display: block; color: var(--muted-foreground); font-weight: 400; font-size: 13.5px; margin-top: 2px; }
+  .choice-btn .arrow { flex: none; color: var(--muted-foreground); font-size: 20px; font-weight: 700; }
+  .choice-btn[aria-pressed="true"] { border-color: var(--cta); background: hsl(330 100% 62% / .1); }
+  .choice-btn[aria-pressed="true"] .arrow { color: var(--cta); }
+  .choice-btn:focus-visible { outline: 2px solid var(--cta); outline-offset: 2px; }
+  .choice-btn.is-compact { padding: 14px 16px; }
+
+  /* ---- plans ---- */
+  .plans { display: grid; grid-template-columns: 1fr; gap: 12px; }
+  @media (min-width: 520px) {
+    .plans.plans-3 { grid-template-columns: repeat(3, 1fr); }
+  }
+  .plan-card {
+    position: relative; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 18px 16px 16px; display: flex; flex-direction: column; gap: 10px;
+  }
+  .plan-card.is-recommended { border-color: var(--cta); background: linear-gradient(180deg, hsl(330 100% 62% / .14), var(--card) 60%); }
+  .plan-badge {
+    position: absolute; top: -11px; left: 14px; background: var(--cta); color: var(--cta-foreground);
+    font-weight: 700; font-size: 10.5px; letter-spacing: .06em; text-transform: uppercase; padding: 3px 8px; border-radius: 999px;
+  }
+  .plan-duration { font-weight: 800; font-size: 18px; text-transform: uppercase; }
+  .plan-duration .sub { display: block; font-weight: 500; font-size: 12px; color: var(--muted-foreground); text-transform: none; margin-top: 2px; }
+  .plan-price { font-weight: 800; font-size: 24px; }
+  .plan-price-old { color: var(--muted-foreground); font-size: 13px; text-decoration: line-through; margin-left: 6px; }
+  .plan-stock { font-size: 12px; color: var(--ok); }
+  .plan-stock.is-low { color: var(--destructive); }
+  .plan-pick {
+    margin-top: auto; background: transparent; border: 1px solid var(--border); color: var(--foreground);
+    font-weight: 700; font-size: 13.5px; padding: 10px; border-radius: calc(var(--radius) - .25rem); cursor: pointer;
+    text-decoration: none; text-align: center; display: block;
+  }
+  .plan-card.is-recommended .plan-pick { background: var(--cta); color: var(--cta-foreground); border-color: var(--cta); }
+  .plan-pick:hover { border-color: var(--cta); color: var(--cta); }
+  .plan-card.is-recommended .plan-pick:hover { filter: brightness(1.08); color: var(--cta-foreground); }
+  .plan-pick:active, .plan-pick.is-picking {
+    background: var(--cta); color: var(--cta-foreground); border-color: var(--cta); transform: scale(.97);
+  }
+  .plan-pick { transition: background 120ms ease, color 120ms ease, border-color 120ms ease, transform 100ms ease; }
+  .plan-pick:focus-visible { outline: 2px solid var(--cta); outline-offset: 2px; }
+  .plans-loading { color: var(--muted-foreground); font-size: 14px; padding: 20px 0; }
+
+  .cuotas-note { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 18px; margin-top: 14px; font-size: 13px; color: var(--muted-foreground); }
+  .cuotas-note strong { color: var(--foreground); }
+  .cuotas-note.is-hidden { display: none; }
+
+  /* ---- checkout de invitado ---- */
+  .gc-overlay {
+    display: none; position: fixed; inset: 0; background: rgba(0,0,0,.6);
+    z-index: 80; align-items: center; justify-content: center; padding: 20px;
+  }
+  .gc-overlay.is-open { display: flex; }
+  .gc-dialog {
+    background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+    box-shadow: 0 20px 50px rgba(0,0,0,.5); max-width: 380px; width: 100%; padding: 24px;
+  }
+  .gc-dialog h3 { font-size: 19px; font-weight: 800; margin: 0 0 6px; text-transform: none; }
+  .gc-sub { color: var(--muted-foreground); font-size: 13.5px; margin: 0 0 18px; }
+  .gc-field { margin-bottom: 14px; }
+  .gc-field label { display: block; font-size: 12px; font-weight: 700; color: var(--muted-foreground); margin-bottom: 6px; text-transform: uppercase; letter-spacing: .04em; }
+  .gc-field input {
+    width: 100%; background: var(--secondary); border: 1px solid var(--border); border-radius: calc(var(--radius) - .25rem);
+    color: var(--foreground); font-size: 15px; padding: 11px 12px; font-family: inherit;
+  }
+  .gc-field input:focus-visible { outline: 2px solid var(--cta); outline-offset: 1px; }
+  .gc-error { color: var(--destructive); font-size: 13px; margin: -6px 0 14px; display: none; }
+  .gc-error.is-visible { display: block; }
+  .gc-error a { color: inherit; text-decoration: underline; }
+  .gc-submit {
+    width: 100%; background: var(--cta); color: var(--cta-foreground); border: none; border-radius: calc(var(--radius) - .25rem);
+    font-weight: 800; font-size: 15px; padding: 13px; cursor: pointer; text-align: center; font-family: inherit;
+  }
+  .gc-submit:disabled { opacity: .6; cursor: default; }
+  .gc-cancel { display: block; width: 100%; text-align: center; margin-top: 10px; background: none; border: none; color: var(--muted-foreground); font-size: 13.5px; cursor: pointer; padding: 6px; font-family: inherit; }
+  .gc-note { font-size: 11.5px; color: var(--muted-foreground); margin-top: 14px; text-align: center; }
+
+  /* ---- faq ---- */
+  .faq-item { border-bottom: 1px solid var(--border); }
+  .faq-item summary {
+    cursor: pointer; padding: 16px 0; font-weight: 700; font-size: 15px; list-style: none;
+    display: flex; justify-content: space-between; align-items: center; gap: 12px;
+  }
+  .faq-item summary::-webkit-details-marker { display: none; }
+  .faq-item summary::after { content: "+"; color: var(--muted-foreground); flex: none; font-weight: 800; }
+  .faq-item[open] summary::after { content: "\2212"; }
+  .faq-item p { margin: 0 0 16px; color: var(--muted-foreground); font-size: 14px; max-width: 52ch; }
+
+  /* ---- portal note ---- */
+  .portal-note { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; display: flex; flex-direction: column; gap: 10px; }
+  .portal-note .t { font-weight: 700; font-size: 14.5px; }
+  .portal-note .d { color: var(--muted-foreground); font-size: 13.5px; }
+  .portal-note a { color: var(--primary); font-weight: 700; font-size: 13.5px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; }
+  .portal-note a:hover { text-decoration: underline; }
+
+  footer { padding: 30px 0 50px; text-align: center; color: var(--muted-foreground); font-size: 12px; }
+
+  /* ---- topbar: réplica del header real ---- */
+  .site-topbar { background: var(--background); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 50; }
+  .site-topbar-row {
+    max-width: 1400px; margin: 0 auto; padding: 0 20px;
+    height: 64px; display: flex; align-items: center; gap: 18px;
+  }
+  .site-logo { display: flex; align-items: center; gap: 10px; flex: none; text-decoration: none; color: var(--foreground); }
+  .site-logo img { height: 48px; width: 48px; display: block; }
+  .site-logo span { font-weight: 800; font-size: 20px; white-space: nowrap; text-transform: none; }
+  .site-search { flex: 1 1 auto; display: flex; align-items: center; gap: 8px; background: var(--card); border: 1px solid var(--border); border-radius: .5rem; height: 40px; padding: 0 14px; max-width: 672px; }
+  .site-search svg { flex: none; opacity: .6; }
+  .site-search input { flex: 1; background: none; border: none; outline: none; color: var(--foreground); font-size: 15px; font-family: inherit; height: 100%; }
+  .site-search input::placeholder { color: var(--muted-foreground); }
+  .site-actions { display: flex; align-items: center; gap: 10px; flex: none; margin-left: auto; }
+  .site-actions > a, .site-actions-btn { color: var(--foreground); display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: .5rem; background: none; border: none; cursor: pointer; padding: 0; }
+  .site-actions > a:hover, .site-actions-btn:hover { background: var(--card); }
+  .site-locale-wrap, .site-profile-wrap { position: relative; flex: none; }
+  .site-locale-btn {
+    display: flex; align-items: center; gap: 6px; font-size: 15px; color: var(--foreground); white-space: nowrap;
+    background: none; border: none; height: 40px; padding: 0 12px; border-radius: .5rem; cursor: pointer; font-family: inherit;
+  }
+  .site-locale-btn:hover { background: var(--card); }
+  .site-dropdown {
+    display: none; position: absolute; top: calc(100% + 6px); right: 0; min-width: 180px;
+    background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+    box-shadow: 0 12px 28px rgba(0,0,0,.4); padding: 6px; z-index: 60;
+  }
+  .site-dropdown.is-open { display: block; }
+  .site-dropdown .dd-email { padding: 8px 10px; font-size: 12px; color: var(--muted-foreground); border-bottom: 1px solid var(--border); margin-bottom: 4px; white-space: nowrap; }
+  .site-dropdown button, .site-dropdown a {
+    display: flex; align-items: center; gap: 8px; width: 100%; background: none; border: none; text-align: left;
+    color: var(--foreground); font-size: 14px; font-weight: 600; padding: 9px 10px; border-radius: .4rem; cursor: pointer;
+    text-decoration: none; font-family: inherit;
+  }
+  .site-dropdown button:hover, .site-dropdown a:hover { background: var(--secondary); }
+  .site-dropdown a.is-current { color: var(--accent); }
+
+  .site-nav-row { max-width: 1400px; margin: 0 auto; padding: 0 20px 16px; display: flex; align-items: center; gap: 26px; overflow-x: auto; scrollbar-width: none; }
+  .site-nav-row::-webkit-scrollbar { display: none; }
+  .site-nav-row a { color: var(--foreground); font-size: 16px; font-weight: 500; white-space: nowrap; text-decoration: none; opacity: .92; }
+  .site-nav-row a:hover { opacity: 1; }
+  .site-nav-row .pill {
+    display: inline-flex; align-items: center; gap: 5px; background: linear-gradient(90deg, var(--accent), var(--cta));
+    color: var(--cta-foreground); padding: 6px 16px; border-radius: 999px; font-weight: 800; opacity: 1;
+  }
+  .site-hamburger {
+    display: flex; align-items: center; gap: 8px; flex: none; background: none; border: none; color: var(--foreground);
+    font-size: 16px; font-weight: 600; padding: 8px 12px; border-radius: .5rem; cursor: pointer; font-family: inherit;
+  }
+  .site-hamburger:hover { background: var(--card); }
+
+  /* ---- drawer: réplica del menú "Categorías" del sitio real ---- */
+  .site-drawer-scrim {
+    display: none; position: fixed; inset: 0; background: rgba(0,0,0,.55); z-index: 70;
+  }
+  .site-drawer-scrim.is-open { display: block; }
+  .site-drawer {
+    position: fixed; top: 0; left: 0; bottom: 0; width: 320px; max-width: 85vw; background: var(--background);
+    border-right: 1px solid var(--border); z-index: 71; transform: translateX(-100%); transition: transform 200ms ease;
+    overflow-y: auto; padding: 20px;
+  }
+  .site-drawer.is-open { transform: translateX(0); }
+  .site-drawer-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+  .site-drawer-head h2 { font-size: 20px; text-transform: none; }
+  .site-drawer-close { background: none; border: none; color: var(--foreground); font-size: 22px; cursor: pointer; padding: 4px; line-height: 1; }
+  .site-drawer-item {
+    display: block; color: var(--foreground); text-decoration: none; font-size: 16px; font-weight: 600;
+    padding: 12px 4px; border-bottom: 1px solid var(--border);
+  }
+  .site-drawer-item.pill-item { border-bottom: none; padding: 8px 0 14px; }
+  .site-drawer-item.pill-item .pill { display: inline-flex; align-items: center; gap: 6px; background: linear-gradient(90deg, var(--accent), var(--cta)); color: var(--cta-foreground); padding: 8px 16px; border-radius: 999px; font-weight: 800; }
+  .site-drawer-group { border-bottom: 1px solid var(--border); }
+  .site-drawer-group > summary { display: flex; align-items: center; justify-content: space-between; padding: 12px 4px; font-size: 16px; font-weight: 600; cursor: pointer; list-style: none; }
+  .site-drawer-group > summary::-webkit-details-marker { display: none; }
+  .site-drawer-group > summary::after { content: "\203a"; color: var(--muted-foreground); font-size: 18px; }
+  .site-drawer-group[open] > summary::after { content: "\2304"; }
+  .site-drawer-sub { display: flex; flex-direction: column; padding: 0 0 10px 12px; }
+  .site-drawer-sub a { color: var(--muted-foreground); text-decoration: none; font-size: 14.5px; padding: 7px 4px; }
+  .site-drawer-sub a:hover { color: var(--foreground); }
+
+  @media (max-width: 900px) {
+    .site-search { display: none; }
+  }
+  @media (max-width: 640px) {
+    .site-locale-btn span.locale-text { display: none; }
+    .site-topbar-row { padding: 0 16px; gap: 10px; }
+    .site-nav-row { padding: 0 16px 14px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+
+<header class="site-topbar">
+  <div class="site-topbar-row">
+    <a class="site-logo" href="https://hardcoregames.co/">
+      <img src="/logo.png" alt="">
+      <span>Hardcore Games</span>
+    </a>
+    <form class="site-search" action="https://hardcoregames.co/filters" method="get">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+      <input type="text" name="search" placeholder="Buscar">
+    </form>
+    <div class="site-actions">
+      <div class="site-locale-wrap">
+        <button type="button" class="site-locale-btn" id="localeToggle" aria-haspopup="true" aria-expanded="false">
+          🌐 <span class="locale-text">Español&nbsp;&nbsp;COP</span>
+        </button>
+        <div class="site-dropdown" id="localeDropdown">
+          <a href="#" class="is-current">Español</a>
+          <a href="https://hardcoregames.co/">English</a>
+        </div>
+      </div>
+      <a href="https://hardcoregames.co/cart" aria-label="Carrito">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+      </a>
+      <div class="site-profile-wrap">
+        <button type="button" class="site-actions-btn" id="profileToggle" aria-haspopup="true" aria-expanded="false" aria-label="Cuenta">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+        </button>
+        <div class="site-dropdown" id="profileDropdown"></div>
+      </div>
+    </div>
+  </div>
+  <nav class="site-nav-row">
+    <button type="button" class="site-hamburger" id="drawerToggle">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+      Categorías
+    </button>
+    <a href="https://hardcoregames.co/filters">Todas las ofertas</a>
+    <a href="https://hardcoregames.co/week-offers">Ofertas de la semana</a>
+    <a class="pill" href="https://hardcoregames.co/rewards/">🎁 Premios</a>
+    <a href="https://hardcoregames.co/filters?platforms=4,5,3">Juegos Xbox</a>
+    <a href="https://hardcoregames.co/filters?platforms=6">Juegos PC</a>
+    <a href="https://hardcoregames.co/filters?platforms=1,2">Juegos PlayStation</a>
+    <a href="https://hardcoregames.co/filters?types=3">Suscripciones</a>
+  </nav>
+</header>
+
+<div class="site-drawer-scrim" id="drawerScrim"></div>
+<aside class="site-drawer" id="siteDrawer" aria-hidden="true">
+  <div class="site-drawer-head">
+    <h2>Menú</h2>
+    <button type="button" class="site-drawer-close" id="drawerClose" aria-label="Cerrar menú">&times;</button>
+  </div>
+  <a class="site-drawer-item" href="https://hardcoregames.co/filters">Todas las ofertas</a>
+  <a class="site-drawer-item" href="https://hardcoregames.co/week-offers">Ofertas de la semana</a>
+  <div class="site-drawer-item pill-item">
+    <a class="pill" href="https://hardcoregames.co/rewards/">🎁 Premios</a>
+  </div>
+  <a class="site-drawer-item" href="https://hardcoregames.co/new-releases">Lanzamientos</a>
+  <a class="site-drawer-item" href="https://hardcoregames.co/destacados">Destacados</a>
+  <a class="site-drawer-item" href="https://hardcoregames.co/most-sold">Los más vendidos</a>
+  <details class="site-drawer-group">
+    <summary>Plataformas</summary>
+    <div class="site-drawer-sub">
+      <a href="https://hardcoregames.co/filters?platforms=4,5,3">Xbox</a>
+      <a href="https://hardcoregames.co/filters?platforms=1,2">PlayStation</a>
+      <a href="https://hardcoregames.co/filters?platforms=2">PS5</a>
+      <a href="https://hardcoregames.co/filters?platforms=6">PC</a>
+      <a href="https://hardcoregames.co/filters?platforms=7">Nintendo</a>
+    </div>
+  </details>
+  <details class="site-drawer-group">
+    <summary>Categorías</summary>
+    <div class="site-drawer-sub">
+      <a href="https://hardcoregames.co/filters?types=3">Suscripciones</a>
+      <a href="https://hardcoregames.co/filters?types=2">Juegos por suscripción</a>
+      <a href="https://hardcoregames.co/filters?types=4">Consolas y accesorios</a>
+      <a href="https://hardcoregames.co/filters?search=combo">Combos</a>
+    </div>
+  </details>
+  <a class="site-drawer-item" href="https://hardcoregames.co/filters?maxPrice=50000">Juegos baratos</a>
+  <a class="site-drawer-item" href="https://hardcoregames.co/points">Mis puntos</a>
+</aside>
+
+<section class="hero-banner">
+  <img class="hero-bg is-visible" id="heroBanner" src="/grandtheftautovi/hero-1920.jpg" srcset="/grandtheftautovi/hero-900.jpg 900w, /grandtheftautovi/hero-1920.jpg 1920w" sizes="100vw" alt="" fetchpriority="high">
+  <div class="hero-scrim"></div>
+  <div class="hero hero-inner wrap">
+    <span class="platform-tag" id="v-platform_label">Preventa · PS5 y Xbox Series</span>
+    <h1 id="v-title">Grand Theft Auto VI</h1>
+    <p class="sub" id="v-subtitle">Vice City te espera. Reserva tu copia con stock limitado antes del lanzamiento.</p>
+
+    <div class="price-row">
+      <span class="price-label" id="v-price_label">Desde</span>
+      <span class="price-value tabular" id="v-price_amount">$169.990</span>
+      <span class="price-unit" id="v-price_unit">COP</span>
+    </div>
+
+    <button class="cta" id="v-cta_label" onclick="document.getElementById('choiceRowPlatform').scrollIntoView({behavior:'smooth', block:'center'})">Reservar ahora</button>
+  </div>
+</section>
+
+<div class="release-strip">Se podrá jugar el <span>19 de noviembre de 2026</span> — preventa con stock limitado</div>
+
+<div class="wrap">
+
+  <section style="padding-top:28px;">
+    <div class="trust" id="trustBar"></div>
+  </section>
+
+  <section>
+    <div class="eyebrow" id="v-step1_eyebrow">Paso 1</div>
+    <h2 class="sec-title" id="v-step1_title">¿En qué consola vas a jugar?</h2>
+    <p class="sec-body" id="v-step1_body">El código y la cuenta se preparan para tu plataforma exacta.</p>
+
+    <div class="choice-row two-col" id="choiceRowPlatform">
+      <button class="choice-btn" data-platform="ps5" aria-pressed="true">
+        <span><span class="h" id="v-platform_ps5_title">PlayStation 5</span><span class="s" id="v-platform_ps5_desc">6 disponibles</span></span>
+        <span class="arrow">&rsaquo;</span>
+      </button>
+      <button class="choice-btn" data-platform="xbox" aria-pressed="false">
+        <span><span class="h" id="v-platform_xbox_title">Xbox Series</span><span class="s" id="v-platform_xbox_desc">4 disponibles</span></span>
+        <span class="arrow">&rsaquo;</span>
+      </button>
+    </div>
+  </section>
+
+  <section>
+    <div class="eyebrow" id="v-step2_eyebrow">Paso 2</div>
+    <h2 class="sec-title" id="v-step2_title">Elige tu edición</h2>
+    <p class="sec-body" id="v-step2_body">Standard incluye la campaña completa. Ultimate suma el contenido exclusivo de lanzamiento.</p>
+
+    <div class="choice-row" id="choiceRowEdition">
+      <button class="choice-btn" data-edition="standard" aria-pressed="true">
+        <span><span class="h" id="v-edition_standard_title">Standard — pago completo</span><span class="s" id="v-edition_standard_desc">Campaña completa. Entrega el día del lanzamiento.</span></span>
+        <span class="arrow">&rsaquo;</span>
+      </button>
+      <button class="choice-btn" data-edition="cuotas" aria-pressed="false">
+        <span><span class="h" id="v-edition_cuotas_title">Standard — a cuotas</span><span class="s" id="v-edition_cuotas_desc">Reserva hoy con un abono, el resto en cuotas mensuales por WhatsApp.</span></span>
+        <span class="arrow">&rsaquo;</span>
+      </button>
+      <button class="choice-btn" data-edition="ultimate" aria-pressed="false">
+        <span><span class="h" id="v-edition_ultimate_title">Ultimate — pago completo</span><span class="s" id="v-edition_ultimate_desc">Vehículos exclusivos, trajes y diseños de armas adicionales.</span></span>
+        <span class="arrow">&rsaquo;</span>
+      </button>
+    </div>
+  </section>
+
+  <section>
+    <div class="eyebrow" id="v-step3_eyebrow">Paso 3</div>
+    <h2 class="sec-title" id="v-step3_title">Elige tu modalidad</h2>
+    <p class="sec-body" id="plansBody">Primaria y secundaria: correo y clave. Código: se activa directo en tu cuenta.</p>
+
+    <div class="plans plans-3" id="plansContainer">
+      <div class="plans-loading" id="plansLoading">Cargando disponibilidad…</div>
+    </div>
+    <div class="cuotas-note is-hidden" id="cuotasNote"></div>
+  </section>
+
+  <section>
+    <div class="eyebrow" id="v-faq_eyebrow">Antes de reservar</div>
+    <h2 class="sec-title" id="v-faq_title">Lo que suele preguntarse</h2>
+    <div id="faqList"></div>
+  </section>
+
+  <section style="padding-bottom: 10px;">
+    <div class="portal-note">
+      <div class="t" id="v-portal_title">¿Quieres ver la ficha técnica completa?</div>
+      <div class="d" id="v-portal_desc">Todas las variantes, requisitos y letra chica del producto seleccionado.</div>
+      <a id="v-portal_link" href="https://www.hardcoregames.co/product/343">Ver ficha completa &rsaquo;</a>
+    </div>
+  </section>
+
+  <footer id="v-footer">Hardcore Games — todos los derechos reservados. Grand Theft Auto VI es marca registrada de Rockstar Games / Take-Two Interactive.</footer>
+
+  <div class="gc-overlay" id="gcOverlay" role="dialog" aria-modal="true" aria-labelledby="gcTitle" aria-hidden="true">
+    <div class="gc-dialog">
+      <h3 id="gcTitle">Un solo dato para continuar</h3>
+      <p class="gc-sub">Ahí te llega la confirmación de tu reserva. Sin formularios largos ni contraseñas que recordar.</p>
+      <form id="gcForm" novalidate>
+        <div class="gc-field">
+          <label for="gcEmail">Correo</label>
+          <input type="email" id="gcEmail" name="email" placeholder="tu@correo.com" autocomplete="email" required>
+        </div>
+        <p class="gc-error" id="gcError"></p>
+        <button type="submit" class="gc-submit" id="gcSubmit">Continuar</button>
+        <button type="button" class="gc-cancel" id="gcCancel">Cancelar</button>
+      </form>
+      <p class="gc-note" id="gcNote">Al continuar creamos tu cuenta en Hardcore Games con este correo — y esta compra te inscribe automáticamente en los sorteos activos.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  // product_id (Products.pk) real de cada combinación plataforma x edición.
+  // No existe Standard-PS5 a pago completo separado de Standard-PS5 a
+  // cuotas: son productos distintos en el catálogo (343 vs 258), igual que
+  // Xbox (344 vs 260). Ultimate solo tiene combinación "Código" cargada.
+  var PRODUCT_MAP = {
+    'ps5-standard': 343,
+    'ps5-cuotas': 258,
+    'ps5-ultimate': 345,
+    'xbox-standard': 344,
+    'xbox-cuotas': 260,
+    'xbox-ultimate': 346
+  };
+
+  var API_BASE = 'https://admin.hardcoregames.co/products';
+  var CATALOG_API_BASE = 'https://api.srv936408.hstgr.cloud';
+
+  var state = { platform: 'ps5', edition: 'standard' };
+  var comboCache = {};   // productId -> combos array (respuesta ya normalizada)
+  var comboRequests = {}; // productId -> Promise, evita pedir dos veces lo mismo
+
+  // ---------------------------------------------------------------
+  // Copy por defecto. Se pinta de inmediato para que la página nunca
+  // se vea vacía; si la variable de sistema "grandtheftautovi" carga bien,
+  // sus valores reemplazan estos en el sitio. Editable en
+  // /admin/products/variablessistema/ (fila "grandtheftautovi", campo "valor" = JSON).
+  // ---------------------------------------------------------------
+  var CONTENT_DEFAULTS = {
+    platform_label: 'Preventa · PS5 y Xbox Series',
+    title: 'Grand Theft Auto VI',
+    subtitle: 'Vice City te espera. Reserva tu copia con stock limitado antes del lanzamiento.',
+    price_label: 'Desde',
+    price_amount: '$169.990',
+    price_unit: 'COP',
+    cta_label: 'Reservar ahora',
+    trust: [
+      { title: 'Preventa asegurada', desc: 'Reserva tu copia, stock muy limitado', tone: 'primary' },
+      { title: 'Pago seguro', desc: 'Visa, PSE, Nequi, Daviplata y más', tone: 'accent' },
+      { title: 'Soporte real', desc: 'Por WhatsApp', tone: 'cta' }
+    ],
+    step1_eyebrow: 'Paso 1',
+    step1_title: '¿En qué consola vas a jugar?',
+    step1_body: 'El código y la cuenta se preparan para tu plataforma exacta.',
+    platform_ps5_title: 'PlayStation 5',
+    platform_xbox_title: 'Xbox Series',
+    step2_eyebrow: 'Paso 2',
+    step2_title: 'Elige tu edición',
+    step2_body: 'Standard incluye la campaña completa. Ultimate suma el contenido exclusivo de lanzamiento.',
+    edition_standard_title: 'Standard — pago completo',
+    edition_standard_desc: 'Campaña completa. Entrega el día del lanzamiento.',
+    edition_cuotas_title: 'Standard — a cuotas',
+    edition_cuotas_desc: 'Reserva hoy con un abono, el resto en cuotas mensuales por WhatsApp.',
+    edition_ultimate_title: 'Ultimate — pago completo',
+    edition_ultimate_desc: 'Vehículos exclusivos, trajes y diseños de armas adicionales.',
+    step3_eyebrow: 'Paso 3',
+    step3_title: 'Elige tu modalidad',
+    step3_body_standard: 'Primaria y secundaria: correo y clave. Código: se activa directo en tu cuenta.',
+    step3_body_cuotas: 'Se entrega cuenta primaria o secundaria, la que haya disponible. Este pago abona la primera cuota.',
+    step3_body_ultimate: 'Incluye todo el contenido adicional de la edición Ultimate. Primaria y secundaria no lo incluyen.',
+    badge_recommended: 'Recomendado',
+    pick_button_label: 'Reservar',
+    stock_suffix: 'en stock',
+    low_stock_threshold: 2,
+    cuotas_note: '<strong>Cómo funciona el pago a cuotas:</strong> lo que pagas aquí se abona a la primera cuota. El resto se cancela por WhatsApp, en cuotas mensuales. El no pago oportuno puede generar cobros extra o la cancelación de la reserva sin derecho a reembolso — los pagos ya enviados se toman como alquiler del producto.',
+    faq_eyebrow: 'Antes de reservar',
+    faq_title: 'Lo que suele preguntarse',
+    faq: [
+      { q: '¿Cuándo puedo jugar?', a: 'GRAND THEFT AUTO VI se lanza el 19 de noviembre de 2026. El código se entrega ese día; primaria y secundaria pueden instalarse antes en algunos casos si nos das acceso a la cuenta donde quieres jugar.' },
+      { q: '¿Qué diferencia hay entre Standard y Ultimate?', a: 'Ultimate incluye todo el contenido adicional de lanzamiento (vehículos exclusivos, trajes y diseños de armas). Standard trae la campaña completa sin ese contenido extra.' },
+      { q: '¿El multijugador está incluido?', a: 'Por ahora no hay información oficial de Rockstar sobre el modo online — de momento no está incluido en ninguna edición.' },
+      { q: '¿Cuál es la diferencia entre primaria, secundaria y código?', a: 'Primaria y secundaria: te damos una cuenta con correo y clave, juegas con tu propio perfil dentro de ella. Código: se activa directo sobre tu propia cuenta, sin compartir nada con nadie.' },
+      { q: '¿Cómo funciona la reserva a cuotas?', a: 'Pagas un abono hoy que reserva tu cupo con stock limitado. El resto de la primera cuota y las siguientes se coordinan y pagan por WhatsApp, mes a mes.' },
+      { q: '¿Qué pasa si el código o la cuenta falla?', a: 'Tienes garantía: si algo no funciona, te lo reponemos. Escríbenos por WhatsApp y lo resolvemos.' }
+    ],
+    portal_title: '¿Quieres ver la ficha técnica completa?',
+    portal_desc: 'Todas las variantes, requisitos y letra chica del producto seleccionado.',
+    portal_link: 'Ver ficha completa ›',
+    footer: 'Hardcore Games — todos los derechos reservados. Grand Theft Auto VI es marca registrada de Rockstar Games / Take-Two Interactive.'
+  };
+
+  // Combinaciones reales de respaldo (capturadas en catálogo el 2026-08-16),
+  // solo para que la primera pintada no se vea vacía si la API tarda. Se
+  // reemplazan en cuanto llega getCombinationPriceByGame para el producto
+  // seleccionado, así que precio y stock reales siempre ganan.
+  var COMBO_DEFAULTS = {
+    343: [ // PS5 Standard, pago completo
+      { desc_licence: 'Primaria', precio: 299990, precio_descuento: 209990, stock: 3, pk: null, consola: 'ps5', desc_console: 'PS5' },
+      { desc_licence: 'Secundaria', precio: 269990, precio_descuento: 169990, stock: 2, pk: null, consola: 'ps5', desc_console: 'PS5' },
+      { desc_licence: 'Codigo', precio: 349990, precio_descuento: 299990, stock: 1, pk: null, consola: 'ps5', desc_console: 'PS5' }
+    ],
+    344: [ // Xbox Standard, pago completo
+      { desc_licence: 'Primaria', precio: 279000, precio_descuento: 199000, stock: 1, pk: null, consola: 'xbox', desc_console: 'Xbox Series' },
+      { desc_licence: 'Secundaria', precio: 269000, precio_descuento: 169000, stock: 2, pk: null, consola: 'xbox', desc_console: 'Xbox Series' },
+      { desc_licence: 'Codigo', precio: 349990, precio_descuento: 289990, stock: 1, pk: null, consola: 'xbox', desc_console: 'Xbox Series' }
+    ],
+    345: [ // PS5 Ultimate
+      { desc_licence: 'Codigo', precio: 499990, precio_descuento: 399990, stock: 1, pk: null, consola: 'ps5', desc_console: 'PS5' }
+    ],
+    346: [ // Xbox Ultimate
+      { desc_licence: 'Codigo', precio: 449990, precio_descuento: 389990, stock: 4, pk: null, consola: 'xbox', desc_console: 'Xbox Series' }
+    ],
+    258: [ // PS5 a cuotas (abono)
+      { desc_licence: 'Primaria', precio: 30000, precio_descuento: 20000, stock: 2, pk: null, consola: 'ps5', desc_console: 'PS5' },
+      { desc_licence: 'Secundaria', precio: 30000, precio_descuento: 20000, stock: 2, pk: null, consola: 'ps5', desc_console: 'PS5' }
+    ],
+    260: [ // Xbox a cuotas (abono)
+      { desc_licence: 'Primaria', precio: 30000, precio_descuento: 20000, stock: 1, pk: null, consola: 'xbox', desc_console: 'Xbox Series' },
+      { desc_licence: 'Secundaria', precio: 30000, precio_descuento: 20000, stock: 1, pk: null, consola: 'xbox', desc_console: 'Xbox Series' }
+    ]
+  };
+
+  // Texto real de las cuotas por plataforma (sale de la ficha de cada
+  // producto "A CUOTAS" — los montos difieren entre PS5 y Xbox).
+  var CUOTAS_TEXT = {
+    ps5: 'PRIMARIA: 3 pagos de $80.000 · SECUNDARIA: 3 pagos de $65.000.',
+    xbox: 'PRIMARIA: 3 pagos de $75.000 · SECUNDARIA: 3 pagos de $65.000.'
+  };
+
+  var LICENCE_ORDER = ['Primaria', 'Secundaria', 'Codigo'];
+  var LICENCE_LABEL = { Primaria: 'Primaria', Secundaria: 'Secundaria', Codigo: 'Código' };
+  var LICENCE_DESC = {
+    Primaria: 'Correo y clave, juegas en tu perfil',
+    Secundaria: 'Correo y clave, vinculado a tu cuenta',
+    Codigo: 'Se activa directo en tu cuenta'
+  };
+
+  // getCombinationPriceByGame puede devolver varias filas de GameDetail
+  // para la MISMA licencia (distinto pk, mismo desc_licence) — confirmado
+  // en vivo contra el producto 343 (3 filas "Primaria"). Sin agrupar, la
+  // grilla mostraba tarjetas repetidas. Se agrupa por desc_licence, se suma
+  // el stock de todas las filas y se elige una fila representativa para
+  // precio/pk (prioriza stock>0, y a igualdad de stock la primera licencia
+  // de LICENCE_ORDER) — mismo patrón que pickRepresentative/groupByDuration
+  // de la landing de gamepassultimate, adaptado a licencia en vez de
+  // duración porque estos productos no varían por duración.
+  function pickRepresentative(rows) {
+    function score(r) {
+      var stockScore = r.stock > 0 ? 0 : 1;
+      return stockScore * 1e9 + r.precio_descuento;
+    }
+    return rows.reduce(function (best, r) { return score(r) < score(best) ? r : best; }, rows[0]);
+  }
+
+  function groupByLicence(rows) {
+    var byLicence = {};
+    rows.forEach(function (r) {
+      var key = r.desc_licence;
+      if (!byLicence[key]) byLicence[key] = [];
+      byLicence[key].push(r);
+    });
+    return Object.keys(byLicence).map(function (key) {
+      var group = byLicence[key];
+      var rep = pickRepresentative(group);
+      var totalStock = group.reduce(function (s, r) { return s + r.stock; }, 0);
+      return {
+        desc_licence: key, precio: rep.precio, precio_descuento: rep.precio_descuento,
+        stock: totalStock, pk: rep.pk, consola: rep.consola, desc_console: rep.desc_console,
+        licencia: rep.licencia, duracion_dias_alquiler: rep.duracion_dias_alquiler
+      };
+    });
+  }
+
+  // pk (string) -> { plan, productId }. Lo lee el click de "Reservar" para
+  // saber a qué producto pertenece esa combinación (product_id de
+  // Products, no el pk de GameDetail) — hace falta para escribir
+  // cart_combinations con el title/image correctos.
+  var PLAN_INDEX = {};
+  function registerPlan(plan, productId) {
+    if (plan.pk == null) return; // combos de respaldo sin pk real: no son "elegibles" todavía
+    PLAN_INDEX[String(plan.pk)] = { plan: plan, productId: productId };
+  }
+
+  function fmtCOP(n) {
+    return '$' + Number(n).toLocaleString('es-CO');
+  }
+  function setText(id, value) {
+    var el = document.getElementById(id);
+    if (el && value != null) el.innerHTML = value;
+  }
+
+  // ---------------- contenido de texto ----------------
+  function renderContent(c) {
+    c = Object.assign({}, CONTENT_DEFAULTS, c || {});
+    window.__CONTENT = c;
+    setText('v-platform_label', c.platform_label);
+    setText('v-title', c.title);
+    setText('v-subtitle', c.subtitle);
+    setText('v-price_label', c.price_label);
+    setText('v-price_amount', c.price_amount);
+    setText('v-price_unit', c.price_unit);
+    setText('v-cta_label', c.cta_label);
+    setText('v-step1_eyebrow', c.step1_eyebrow);
+    setText('v-step1_title', c.step1_title);
+    setText('v-step1_body', c.step1_body);
+    setText('v-platform_ps5_title', c.platform_ps5_title);
+    setText('v-platform_xbox_title', c.platform_xbox_title);
+    setText('v-step2_eyebrow', c.step2_eyebrow);
+    setText('v-step2_title', c.step2_title);
+    setText('v-step2_body', c.step2_body);
+    setText('v-edition_standard_title', c.edition_standard_title);
+    setText('v-edition_standard_desc', c.edition_standard_desc);
+    setText('v-edition_cuotas_title', c.edition_cuotas_title);
+    setText('v-edition_cuotas_desc', c.edition_cuotas_desc);
+    setText('v-edition_ultimate_title', c.edition_ultimate_title);
+    setText('v-edition_ultimate_desc', c.edition_ultimate_desc);
+    setText('v-step3_eyebrow', c.step3_eyebrow);
+    setText('v-step3_title', c.step3_title);
+    setText('v-faq_eyebrow', c.faq_eyebrow);
+    setText('v-faq_title', c.faq_title);
+    setText('v-portal_title', c.portal_title);
+    setText('v-portal_desc', c.portal_desc);
+    setText('v-portal_link', c.portal_link);
+    setText('v-footer', c.footer);
+
+    var trustBar = document.getElementById('trustBar');
+    trustBar.innerHTML = '';
+    (c.trust || []).forEach(function (item) {
+      var el = document.createElement('div');
+      el.className = 'trust-item';
+      var dotColor = item.tone === 'accent' ? 'var(--accent)' : item.tone === 'cta' ? 'var(--cta)' : 'var(--primary)';
+      el.innerHTML =
+        '<div class="t"><span class="dot" style="background:' + dotColor + '"></span>' + item.title + '</div>' +
+        '<div class="d">' + item.desc + '</div>';
+      trustBar.appendChild(el);
+    });
+
+    var faqList = document.getElementById('faqList');
+    faqList.innerHTML = '';
+    (c.faq || []).forEach(function (item) {
+      var d = document.createElement('details');
+      d.className = 'faq-item';
+      d.innerHTML = '<summary>' + item.q + '</summary><p>' + item.a + '</p>';
+      faqList.appendChild(d);
+    });
+
+    updateStepBody();
+    updatePortalLink();
+  }
+
+  function updateStepBody() {
+    var c = window.__CONTENT || CONTENT_DEFAULTS;
+    var body = state.edition === 'cuotas' ? c.step3_body_cuotas :
+               state.edition === 'ultimate' ? c.step3_body_ultimate : c.step3_body_standard;
+    document.getElementById('plansBody').textContent = body;
+
+    var note = document.getElementById('cuotasNote');
+    if (state.edition === 'cuotas') {
+      note.innerHTML = (c.cuotas_note || '') + ' ' + (CUOTAS_TEXT[state.platform] || '');
+      note.classList.remove('is-hidden');
+    } else {
+      note.classList.add('is-hidden');
+    }
+  }
+
+  function updatePortalLink() {
+    var link = document.getElementById('v-portal_link');
+    var productId = PRODUCT_MAP[state.platform + '-' + state.edition];
+    if (link && productId) link.setAttribute('href', 'https://www.hardcoregames.co/product/' + productId);
+  }
+
+  // ---------------- planes: agrupados por licencia (sin duración) ----------------
+  function planCardHTML(plan, productId, isRecommended, c) {
+    var stockLow = plan.stock <= (c.low_stock_threshold || 2);
+    var href = 'https://www.hardcoregames.co/product/' + productId;
+    var pkAttr = plan.pk != null ? ' data-pk="' + plan.pk + '"' : '';
+    return (
+      '<div class="plan-card' + (isRecommended ? ' is-recommended' : '') + '">' +
+      (isRecommended ? '<span class="plan-badge">' + c.badge_recommended + '</span>' : '') +
+      '<div class="plan-duration">' + (LICENCE_LABEL[plan.desc_licence] || plan.desc_licence) +
+        '<span class="sub">' + (LICENCE_DESC[plan.desc_licence] || '') + '</span></div>' +
+      '<div><span class="plan-price tabular">' + fmtCOP(plan.precio_descuento) + '</span>' +
+      (plan.precio > plan.precio_descuento ? '<span class="plan-price-old tabular">' + fmtCOP(plan.precio) + '</span>' : '') + '</div>' +
+      '<div class="plan-stock' + (stockLow ? ' is-low' : '') + '">' + plan.stock + ' ' + c.stock_suffix + '</div>' +
+      '<a class="plan-pick" href="' + href + '"' + pkAttr + '>' + c.pick_button_label + '</a>' +
+      '</div>'
+    );
+  }
+
+  function renderCombos(rows, productId) {
+    var c = window.__CONTENT || CONTENT_DEFAULTS;
+    var sorted = groupByLicence(rows).sort(function (a, b) {
+      return LICENCE_ORDER.indexOf(a.desc_licence) - LICENCE_ORDER.indexOf(b.desc_licence);
+    });
+    sorted.forEach(function (p) { registerPlan(p, productId); });
+
+    var bestIndex = sorted.length > 1 ? sorted.reduce(function (bestI, p, i, arr) {
+      return p.precio_descuento < arr[bestI].precio_descuento ? i : bestI;
+    }, 0) : -1;
+
+    var container = document.getElementById('plansContainer');
+    if (!sorted.length) {
+      container.innerHTML = '<div class="plans-loading">Sin combinaciones disponibles ahora mismo. Escríbenos por WhatsApp.</div>';
+      return;
+    }
+    container.innerHTML = sorted.map(function (p, i) {
+      return planCardHTML(p, productId, i === bestIndex, c);
+    }).join('');
+  }
+
+  function loadCombos(productId) {
+    document.getElementById('plansContainer').innerHTML = '<div class="plans-loading" id="plansLoading">Cargando disponibilidad…</div>';
+
+    if (comboCache[productId]) {
+      renderCombos(comboCache[productId], productId);
+      return;
+    }
+
+    // Defaults de respaldo mientras llega la respuesta real.
+    renderCombos(COMBO_DEFAULTS[productId] || [], productId);
+
+    if (!comboRequests[productId]) {
+      comboRequests[productId] = fetch(API_BASE + '/getCombinationPriceByGame/' + productId)
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (res) {
+          var rows = (res && res.data) || [];
+          comboCache[productId] = rows.length ? rows : (COMBO_DEFAULTS[productId] || []);
+          return comboCache[productId];
+        })
+        .catch(function () {
+          comboCache[productId] = COMBO_DEFAULTS[productId] || [];
+          return comboCache[productId];
+        });
+    }
+    comboRequests[productId].then(function (rows) {
+      // Puede haber cambiado de selección mientras la respuesta viajaba.
+      if (PRODUCT_MAP[state.platform + '-' + state.edition] === productId) {
+        renderCombos(rows, productId);
+      }
+    });
+  }
+
+  function refreshSelection() {
+    document.querySelectorAll('#choiceRowPlatform .choice-btn').forEach(function (b) {
+      b.setAttribute('aria-pressed', b.getAttribute('data-platform') === state.platform ? 'true' : 'false');
+    });
+    document.querySelectorAll('#choiceRowEdition .choice-btn').forEach(function (b) {
+      b.setAttribute('aria-pressed', b.getAttribute('data-edition') === state.edition ? 'true' : 'false');
+    });
+    updateStepBody();
+    updatePortalLink();
+    var productId = PRODUCT_MAP[state.platform + '-' + state.edition];
+    loadCombos(productId);
+  }
+
+  document.querySelectorAll('#choiceRowPlatform .choice-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      state.platform = btn.getAttribute('data-platform');
+      refreshSelection();
+    });
+  });
+  document.querySelectorAll('#choiceRowEdition .choice-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      state.edition = btn.getAttribute('data-edition');
+      refreshSelection();
+    });
+  });
+
+  // ---------------- carrito directo al elegir un plan ----------------
+  // El sitio real guarda la sesión (jwt_token + user_data) en localStorage,
+  // por origen — por eso el guard de apex→www al principio del <head>.
+  // Si ya hay sesión, se agrega al carrito directo. Si no, se pide el
+  // correo (checkout de invitado: cuenta silenciosa, sin contraseña que el
+  // visitante tenga que inventar) y se sigue igual. Cualquier fallo real
+  // cae al comportamiento de antes: ir a la ficha del producto a elegir ahí.
+  var CART_API = 'https://api.srv936408.hstgr.cloud/shopping-car/';
+  var CART_URL = 'https://www.hardcoregames.co/cart';
+  var AUTH_LOGIN_API = 'https://api.srv936408.hstgr.cloud/auth/login';
+  var REGISTER_API = 'https://admin.hardcoregames.co/users/register/';
+
+  function decodeJwtPayload(token) {
+    try {
+      var b64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+      var json = decodeURIComponent(atob(b64).split('').map(function (c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join(''));
+      return JSON.parse(json);
+    } catch (e) { return null; }
+  }
+
+  function randomPassword() {
+    var bytes = new Uint8Array(18);
+    crypto.getRandomValues(bytes);
+    return Array.prototype.map.call(bytes, function (b) { return b.toString(36); }).join('').slice(0, 24) + 'Aa1!';
+  }
+
+  // El sitio real (product/:id) escribe una entrada en
+  // localStorage.cart_combinations al agregar al carrito — es lo ÚNICO de
+  // donde /cart saca nombre, foto y desglose de precio de cada línea. Como
+  // esta landing agrega al carrito llamando directo a /shopping-car/, sin
+  // pasar por esa pantalla, hay que replicar exactamente esa escritura.
+  function writeCartCombination(plan, productId) {
+    try {
+      var info = (window.__PRODUCT_CATALOG || {})[productId] || {};
+      var cache = JSON.parse(localStorage.getItem('cart_combinations') || '{}');
+      cache[String(plan.pk)] = {
+        id_combination: plan.pk,
+        product_id: plan.pk,
+        base_game_id: productId,
+        is_retail: true,
+        title: info.title || 'Grand Theft Auto VI',
+        image: info.image || '/placeholder.svg',
+        desc_console: plan.desc_console,
+        desc_licence: plan.desc_licence,
+        price: (plan.precio_descuento > 0 && plan.precio_descuento < plan.precio) ? plan.precio_descuento : plan.precio,
+        coupon: undefined,
+        consola: plan.consola,
+        licencia: plan.licencia,
+        duracion_dias_alquiler: plan.duracion_dias_alquiler
+      };
+      localStorage.setItem('cart_combinations', JSON.stringify(cache));
+    } catch (e) {
+      // storage bloqueado/lleno: la compra sigue funcionando igual, /cart
+      // solo cae al "Producto #<id>" genérico como si viniera de otro
+      // dispositivo.
+    }
+  }
+
+  function addToCart(jwt, pk) {
+    return fetch(CART_API, {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + jwt, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ product_id: Number(pk), estado: true })
+    }).then(function (r) {
+      // 409 = "ya está en el carrito": no es un error, ya quedó como
+      // queríamos, así que sigue igual que un 2xx.
+      if (!r.ok && r.status !== 409) throw new Error('shopping-car respondió ' + r.status);
+      var entry = PLAN_INDEX[String(pk)];
+      if (entry) writeCartCombination(entry.plan, entry.productId);
+    });
+  }
+
+  function addToCartAndGoToCart(jwt, pk, fallbackHref) {
+    return addToCart(jwt, pk).then(function () {
+      window.location.href = CART_URL;
+    }).catch(function () {
+      window.location.href = fallbackHref;
+    });
+  }
+
+  function guestCheckout(email, pk, fallbackHref) {
+    var password = randomPassword();
+    return fetch(REGISTER_API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ first_name: '', last_name: '', email: email, password: password, phone_number: '', avatar: '', guest_checkout: true })
+    }).then(function (r) {
+      if (r.status === 400) {
+        return r.json().then(function (body) {
+          var msg = (body && body.message) || '';
+          var code = msg.indexOf('ya existe') !== -1 ? 'EMAIL_TAKEN' : 'REGISTER_FAILED';
+          return Promise.reject({ code: code });
+        });
+      }
+      if (!r.ok) return Promise.reject({ code: 'REGISTER_FAILED' });
+      return fetch(AUTH_LOGIN_API, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'username=' + encodeURIComponent(email) + '&password=' + encodeURIComponent(password)
+      });
+    }).then(function (r) {
+      if (!r.ok) return Promise.reject({ code: 'LOGIN_FAILED' });
+      return r.json();
+    }).then(function (loginRes) {
+      var payload = decodeJwtPayload(loginRes.access_token);
+      var userId = 0;
+      if (payload) {
+        if (typeof payload.user_id === 'number') userId = payload.user_id;
+        else if (!isNaN(Number(payload.sub))) userId = Number(payload.sub);
+      }
+      var userData = {
+        id: userId,
+        email: email,
+        first_name: (payload && typeof payload.first_name === 'string') ? payload.first_name : email.split('@')[0],
+        last_name: '',
+        liked_game_ids: (payload && Array.isArray(payload.liked_game_ids)) ? payload.liked_game_ids : [],
+        is_superuser: !!(payload && payload.is_superuser === true)
+      };
+      try {
+        localStorage.setItem('jwt_token', loginRes.access_token);
+        localStorage.setItem('user_data', JSON.stringify(userData));
+      } catch (e) { /* storage bloqueado */ }
+      // La cuenta ya quedó creada en este punto. Si el carrito falla, no
+      // tiene sentido bloquear al usuario en el modal — seguimos al
+      // fallback igual, pero sin pasar por la pantalla de éxito
+      // (SILENT_REDIRECT le dice al handler del form que no muestre error).
+      return addToCart(loginRes.access_token, pk).catch(function () {
+        window.location.href = fallbackHref;
+        return Promise.reject({ code: 'SILENT_REDIRECT' });
+      });
+    });
+  }
+
+  document.addEventListener('click', function (ev) {
+    var link = ev.target.closest && ev.target.closest('.plan-pick');
+    if (!link) return;
+    if (ev.button !== 0 || ev.metaKey || ev.ctrlKey || ev.shiftKey || ev.altKey) return;
+    ev.preventDefault();
+    link.classList.add('is-picking');
+
+    var fallbackHref = link.getAttribute('href');
+    var pk = link.getAttribute('data-pk');
+    var jwt = null;
+    try { jwt = localStorage.getItem('jwt_token'); } catch (e) { /* storage bloqueado */ }
+
+    if (!pk) {
+      setTimeout(function () { window.location.href = fallbackHref; }, 180);
+      return;
+    }
+
+    if (jwt) {
+      addToCartAndGoToCart(jwt, pk, fallbackHref);
+      return;
+    }
+
+    if (typeof window.__openGuestCheckout === 'function') {
+      window.__openGuestCheckout(pk, fallbackHref);
+    } else {
+      window.location.href = fallbackHref;
+    }
+  });
+
+  // ---------------- modal de checkout de invitado ----------------
+  (function () {
+    var overlay = document.getElementById('gcOverlay');
+    var form = document.getElementById('gcForm');
+    var emailInput = document.getElementById('gcEmail');
+    var errorEl = document.getElementById('gcError');
+    var submitBtn = document.getElementById('gcSubmit');
+    var cancelBtn = document.getElementById('gcCancel');
+    var noteEl = document.getElementById('gcNote');
+    var pendingPk = null;
+    var pendingFallback = null;
+
+    function resetToForm() {
+      form.style.display = '';
+      noteEl.style.display = '';
+    }
+
+    function showError(html) {
+      errorEl.innerHTML = html;
+      errorEl.classList.add('is-visible');
+    }
+    function clearError() {
+      errorEl.innerHTML = '';
+      errorEl.classList.remove('is-visible');
+    }
+    function closeModal() {
+      overlay.classList.remove('is-open');
+      overlay.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+    function leaveToFallback() {
+      closeModal();
+      if (pendingFallback) window.location.href = pendingFallback;
+    }
+
+    window.__openGuestCheckout = function (pk, fallbackHref) {
+      pendingPk = pk;
+      pendingFallback = fallbackHref;
+      clearError();
+      resetToForm();
+      emailInput.value = '';
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Continuar';
+      overlay.classList.add('is-open');
+      overlay.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+      setTimeout(function () { emailInput.focus(); }, 50);
+    };
+
+    cancelBtn.addEventListener('click', leaveToFallback);
+    overlay.addEventListener('click', function (ev) { if (ev.target === overlay) leaveToFallback(); });
+    document.addEventListener('keydown', function (ev) {
+      if (ev.key === 'Escape' && overlay.classList.contains('is-open')) leaveToFallback();
+    });
+
+    form.addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var email = emailInput.value.trim().toLowerCase();
+      if (!email || email.indexOf('@') === -1 || email.indexOf('.') === -1) {
+        showError('Escribe un correo válido.');
+        return;
+      }
+      clearError();
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Un momento…';
+
+      guestCheckout(email, pendingPk, pendingFallback).then(function () {
+        // Sin pantalla intermedia: directo al carrito real.
+        window.location.href = CART_URL;
+      }).catch(function (err) {
+        var code = err && err.code;
+        // SILENT_REDIRECT: la cuenta ya se creó pero el carrito falló;
+        // guestCheckout ya redirigió al fallback, no hay nada que mostrar.
+        if (code === 'SILENT_REDIRECT') return;
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Continuar';
+        if (code === 'EMAIL_TAKEN') {
+          showError('Ya tienes una cuenta con este correo. <a href="https://www.hardcoregames.co/auth">Inicia sesión</a> y elige el plan de nuevo.');
+        } else {
+          showError('No pudimos continuar. Intenta de nuevo.');
+        }
+      });
+    });
+  })();
+
+  // ---------------- header: drawer de categorías ----------------
+  (function () {
+    var toggle = document.getElementById('drawerToggle');
+    var drawer = document.getElementById('siteDrawer');
+    var scrim = document.getElementById('drawerScrim');
+    var closeBtn = document.getElementById('drawerClose');
+    function open() { drawer.classList.add('is-open'); scrim.classList.add('is-open'); drawer.setAttribute('aria-hidden', 'false'); document.body.style.overflow = 'hidden'; }
+    function close() { drawer.classList.remove('is-open'); scrim.classList.remove('is-open'); drawer.setAttribute('aria-hidden', 'true'); document.body.style.overflow = ''; }
+    toggle.addEventListener('click', open);
+    closeBtn.addEventListener('click', close);
+    scrim.addEventListener('click', close);
+    document.addEventListener('keydown', function (ev) { if (ev.key === 'Escape') close(); });
+  })();
+
+  // ---------------- header: dropdown de idioma y de perfil ----------------
+  (function () {
+    var localeToggle = document.getElementById('localeToggle');
+    var localeDropdown = document.getElementById('localeDropdown');
+    var profileToggle = document.getElementById('profileToggle');
+    var profileDropdown = document.getElementById('profileDropdown');
+
+    var userData = null;
+    try {
+      var raw = localStorage.getItem('user_data');
+      if (raw) userData = JSON.parse(raw);
+    } catch (e) { /* storage bloqueado o dato corrupto */ }
+
+    if (userData && userData.email) {
+      profileDropdown.innerHTML =
+        '<div class="dd-email">' + userData.email + '</div>' +
+        '<a href="https://hardcoregames.co/profile">👤 Mi Perfil</a>' +
+        '<a href="https://hardcoregames.co/liked-games">♡ Mis Favoritos</a>' +
+        '<a href="https://hardcoregames.co/points">★ Mis Puntos</a>' +
+        '<a href="https://hardcoregames.co/purchases">🛍 Mis Compras</a>' +
+        '<a href="https://hardcoregames.co/order-buy">📋 Mis Pedidos</a>';
+    } else {
+      profileDropdown.innerHTML =
+        '<a href="https://hardcoregames.co/auth">Iniciar sesión</a>' +
+        '<a href="https://hardcoregames.co/auth">Crear cuenta</a>';
+    }
+
+    function closeAll() {
+      localeDropdown.classList.remove('is-open');
+      localeToggle.setAttribute('aria-expanded', 'false');
+      profileDropdown.classList.remove('is-open');
+      profileToggle.setAttribute('aria-expanded', 'false');
+    }
+    function toggleDropdown(btn, dd) {
+      var willOpen = !dd.classList.contains('is-open');
+      closeAll();
+      if (willOpen) { dd.classList.add('is-open'); btn.setAttribute('aria-expanded', 'true'); }
+    }
+    localeToggle.addEventListener('click', function (ev) { ev.stopPropagation(); toggleDropdown(localeToggle, localeDropdown); });
+    profileToggle.addEventListener('click', function (ev) { ev.stopPropagation(); toggleDropdown(profileToggle, profileDropdown); });
+    document.addEventListener('click', closeAll);
+    document.addEventListener('keydown', function (ev) { if (ev.key === 'Escape') closeAll(); });
+  })();
+
+  // ---------------- carga inicial ----------------
+  renderContent(CONTENT_DEFAULTS);
+  loadCombos(PRODUCT_MAP[state.platform + '-' + state.edition]);
+
+  // Title/image "canónicos" del catálogo (mismo endpoint que usa la ficha
+  // de producto real) para las seis variantes de esta landing — hacen
+  // falta para escribir cart_combinations bien. Se piden en segundo plano,
+  // no bloquean la primera pintada.
+  window.__PRODUCT_CATALOG = {};
+  Object.keys(PRODUCT_MAP).forEach(function (key) {
+    var id = PRODUCT_MAP[key];
+    fetch(CATALOG_API_BASE + '/products/' + id)
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (res) {
+        if (res && res.data) window.__PRODUCT_CATALOG[id] = { title: res.data.title, image: res.data.image };
+      })
+      .catch(function () { /* si falla, cart_combinations cae al título/imagen genéricos */ });
+  });
+
+  fetch(API_BASE + '/systemVariables/grandtheftautovi')
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (res) {
+      if (res && res.data && res.data.valor) {
+        var parsed = JSON.parse(res.data.valor);
+        if (parsed && parsed.grandtheftautovi) renderContent(parsed.grandtheftautovi);
+      }
+    })
+    .catch(function () { /* se queda con el texto por defecto */ });
+})();
+</script>
+
+<!-- Hardcore Rewards: widget flotante (no toca el bundle de la app) -->
+<script src="/assets/rewards-widget.js"></script>
+<!-- Hardcore Sorteos: widget flotante (no toca el bundle de la app) -->
+<script src="/assets/sorteos-widget.js"></script>
+</body>
+</html>
