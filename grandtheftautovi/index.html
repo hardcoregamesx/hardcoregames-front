@@ -445,7 +445,7 @@
 </aside>
 
 <section class="hero-banner">
-  <img class="hero-bg is-visible" id="heroBanner" src="/gta6/hero-1920.jpg" srcset="/gta6/hero-900.jpg 900w, /gta6/hero-1920.jpg 1920w" sizes="100vw" alt="" fetchpriority="high">
+  <img class="hero-bg is-visible" id="heroBanner" src="/grandtheftautovi/hero-1920.jpg" srcset="/grandtheftautovi/hero-900.jpg 900w, /grandtheftautovi/hero-1920.jpg 1920w" sizes="100vw" alt="" fetchpriority="high">
   <div class="hero-scrim"></div>
   <div class="hero hero-inner wrap">
     <span class="platform-tag" id="v-platform_label">Preventa · PS5 y Xbox Series</span>
@@ -579,9 +579,9 @@
 
   // ---------------------------------------------------------------
   // Copy por defecto. Se pinta de inmediato para que la página nunca
-  // se vea vacía; si la variable de sistema "gta6" carga bien, sus
-  // valores reemplazan estos en el sitio. Editable en
-  // /admin/products/variablessistema/ (fila "gta6", campo "valor" = JSON).
+  // se vea vacía; si la variable de sistema "grandtheftautovi" carga bien,
+  // sus valores reemplazan estos en el sitio. Editable en
+  // /admin/products/variablessistema/ (fila "grandtheftautovi", campo "valor" = JSON).
   // ---------------------------------------------------------------
   var CONTENT_DEFAULTS = {
     platform_label: 'Preventa · PS5 y Xbox Series',
@@ -1239,12 +1239,12 @@
       .catch(function () { /* si falla, cart_combinations cae al título/imagen genéricos */ });
   });
 
-  fetch(API_BASE + '/systemVariables/gta6')
+  fetch(API_BASE + '/systemVariables/grandtheftautovi')
     .then(function (r) { return r.ok ? r.json() : null; })
     .then(function (res) {
       if (res && res.data && res.data.valor) {
         var parsed = JSON.parse(res.data.valor);
-        if (parsed && parsed.gta6) renderContent(parsed.gta6);
+        if (parsed && parsed.grandtheftautovi) renderContent(parsed.grandtheftautovi);
       }
     })
     .catch(function () { /* se queda con el texto por defecto */ });
