@@ -533,6 +533,11 @@
       <div class="d" id="v-portal_desc">La ficha técnica completa del producto, con todas las variantes y notas, sigue disponible.</div>
       <a id="v-portal_link" href="https://www.hardcoregames.co/product/4">Ver ficha completa &rsaquo;</a>
     </div>
+    <div class="portal-note" style="margin-top: 10px;">
+      <div class="t" id="v-more_title">¿Buscas otras modalidades de Game Pass?</div>
+      <div class="d" id="v-more_desc">Mira todas las ofertas de Game Pass disponibles en la tienda.</div>
+      <a id="v-more_link" href="https://hardcoregames.co/filters?search=game%20pass">Ver todas las ofertas &rsaquo;</a>
+    </div>
   </section>
 
   <footer id="v-footer">Hardcore Games — todos los derechos reservados.</footer>
@@ -626,6 +631,10 @@
     portal_desc: 'La ficha técnica completa del producto, con todas las variantes y notas, sigue disponible.',
     portal_link: 'Ver ficha completa ›',
     portal_href: 'https://www.hardcoregames.co/product/' + PRODUCT_ID,
+    more_title: '¿Buscas otras modalidades de Game Pass?',
+    more_desc: 'Mira todas las ofertas de Game Pass disponibles en la tienda.',
+    more_link: 'Ver todas las ofertas ›',
+    more_href: 'https://hardcoregames.co/filters?search=game%20pass',
     footer: 'Hardcore Games — todos los derechos reservados.'
   };
 
@@ -699,10 +708,16 @@
     setText('v-portal_title', c.portal_title);
     setText('v-portal_desc', c.portal_desc);
     setText('v-portal_link', c.portal_link);
+    setText('v-more_title', c.more_title);
+    setText('v-more_desc', c.more_desc);
+    setText('v-more_link', c.more_link);
     setText('v-footer', c.footer);
 
     var portalLink = document.getElementById('v-portal_link');
     if (portalLink && c.portal_href) portalLink.setAttribute('href', c.portal_href);
+
+    var moreLink = document.getElementById('v-more_link');
+    if (moreLink && c.more_href) moreLink.setAttribute('href', c.more_href);
 
     var heroImg = document.getElementById('heroBanner');
     if (c.banner_image) {
