@@ -185,6 +185,17 @@
   .plan-price-old { color: var(--muted-foreground); font-size: 13px; text-decoration: line-through; margin-left: 6px; }
   .plan-stock { font-size: 12px; color: var(--accent); }
   .plan-stock.is-low { color: var(--destructive); }
+  .plan-stock.is-out { color: var(--destructive); font-weight: 700; }
+  .plan-card.is-sold-out { opacity: .72; }
+  .plan-card.is-sold-out .plan-price { color: var(--muted-foreground); }
+  /* Botón muerto de una tarjeta agotada: NO lleva la clase .plan-pick a
+     propósito — el handler global de click engancha por esa clase, así que
+     reusarla haría que "Agotado" siguiera agregando al carrito. */
+  .plan-off {
+    margin-top: auto; background: transparent; border: 1px dashed var(--border); color: var(--muted-foreground);
+    font-weight: 700; font-size: 13.5px; padding: 10px; border-radius: calc(var(--radius) - .25rem);
+    text-align: center; display: block; cursor: not-allowed;
+  }
   .plan-pick {
     margin-top: auto; background: transparent; border: 1px solid var(--border); color: var(--foreground);
     font-weight: 700; font-size: 13.5px; padding: 10px; border-radius: calc(var(--radius) - .25rem); cursor: pointer;
@@ -494,9 +505,11 @@
 
     <div class="plan-group is-active" data-group="personal">
       <div class="plans plans-2" id="plansPersonal"></div>
+      <p class="sec-body" id="personalEmptyMsg" style="display:none; margin-top: 14px;"></p>
     </div>
     <div class="plan-group" data-group="propia">
       <div class="plans" id="plansPropia"></div>
+      <p class="sec-body" id="propiaEmptyMsg" style="display:none; margin-top: 14px;"></p>
       <details class="more-durations" id="moreDurations" style="display:none;">
         <summary id="moreDurationsSummary">Ver otras duraciones</summary>
         <div class="more-plans" id="morePlansList"></div>
@@ -590,9 +603,14 @@
     step2_body_propia: 'Código sobre tu cuenta: no compartes nada, se activa directamente en tu perfil de Xbox.',
     step2_body_cuotas: 'Se entrega cuenta primaria o secundaria (la que haya disponible). Este pago reserva tu cupo; el resto de la primera cuota se coordina por WhatsApp.',
     cuotas_empty_msg: 'Estamos preparando los planes a cuotas. Escríbenos por WhatsApp mientras tanto.',
+    personal_empty_msg: 'Ahora mismo no tenemos cuentas disponibles en esta modalidad. Escríbenos por WhatsApp y te avisamos apenas entren, o mira la opción "Prefiero mi propia cuenta".',
+    propia_empty_msg: 'Ahora mismo no tenemos códigos disponibles para esta modalidad. Escríbenos por WhatsApp y te avisamos apenas entren.',
+    all_sold_out_msg: 'Todas las duraciones de esta opción están agotadas por ahora. Escríbenos por WhatsApp y te avisamos apenas entren.',
     badge_recommended: 'Recomendado',
     badge_best_price: 'Mejor precio',
     pick_button_label: 'Elegir',
+    sold_out_label: 'Agotado',
+    sold_out_button_label: 'Sin stock',
     stock_suffix: 'en stock',
     low_stock_threshold: 2,
     faq_eyebrow: 'Antes de pagar',
@@ -628,6 +646,18 @@
 
   function fmtCOP(n) {
     return '$' + Number(n).toLocaleString('es-CO');
+  }
+  // El catálogo usa precio_descuento = 0 con el sentido de "sin descuento",
+  // no "gratis" — así está cargado hoy el producto a cuotas (310):
+  // precio 10000, precio_descuento 0. Pintar precio_descuento tal cual
+  // anunciaba "$0" con $10.000 tachado al lado. Este es el mismo criterio
+  // que ya usaba writeCartCombination para decidir cuánto vale la línea del
+  // carrito, así que ahora tarjeta y carrito no pueden desincronizarse.
+  function planPrice(p) {
+    return (p.precio_descuento > 0 && p.precio_descuento < p.precio) ? p.precio_descuento : p.precio;
+  }
+  function isSoldOut(p) {
+    return !(p.stock > 0);
   }
   function monthsLabel(days) {
     var m = Math.round(days / 30);
@@ -740,7 +770,7 @@
       var stockScore = r.stock > 0 ? 0 : 1;
       var licenceScore = LICENCE_PRIORITY.indexOf(r.desc_licence);
       if (licenceScore === -1) licenceScore = LICENCE_PRIORITY.length;
-      return stockScore * 1e9 + licenceScore * 1e6 + r.precio_descuento;
+      return stockScore * 1e9 + licenceScore * 1e6 + planPrice(r);
     }
     return rows.reduce(function (best, r) { return score(r) < score(best) ? r : best; }, rows[0]);
   }
@@ -784,18 +814,55 @@
   }
 
   function planCardHTML(plan, productId, isRecommended, badgeText, c) {
+    var soldOut = isSoldOut(plan);
     var stockLow = plan.stock <= (c.low_stock_threshold || 2);
+    var price = planPrice(plan);
     var href = 'https://www.hardcoregames.co/product/' + productId;
+    // Una duración agotada se sigue mostrando (sirve de referencia de
+    // precio y de "esto existe, vuelve luego"), pero no se puede comprar:
+    // el botón deja de ser <a class="plan-pick"> — que es lo que engancha
+    // el handler de carrito — y pasa a ser un <span class="plan-off">
+    // inerte.
     return (
-      '<div class="plan-card' + (isRecommended ? ' is-recommended' : '') + '">' +
+      '<div class="plan-card' + (isRecommended ? ' is-recommended' : '') + (soldOut ? ' is-sold-out' : '') + '">' +
       (isRecommended ? '<span class="plan-badge">' + badgeText + '</span>' : '') +
       '<div class="plan-duration">' + monthsLabel(plan.duracion) + '</div>' +
-      '<div><span class="plan-price tabular">' + fmtCOP(plan.precio_descuento) + '</span>' +
-      (plan.precio > plan.precio_descuento ? '<span class="plan-price-old tabular">' + fmtCOP(plan.precio) + '</span>' : '') + '</div>' +
-      '<div class="plan-stock' + (stockLow ? ' is-low' : '') + '">' + plan.stock + ' ' + c.stock_suffix + '</div>' +
-      '<a class="plan-pick" href="' + href + '" data-pk="' + plan.pk + '">' + c.pick_button_label + '</a>' +
+      '<div><span class="plan-price tabular">' + fmtCOP(price) + '</span>' +
+      (plan.precio > price ? '<span class="plan-price-old tabular">' + fmtCOP(plan.precio) + '</span>' : '') + '</div>' +
+      (soldOut
+        ? '<div class="plan-stock is-out">' + c.sold_out_label + '</div>'
+        : '<div class="plan-stock' + (stockLow ? ' is-low' : '') + '">' + plan.stock + ' ' + c.stock_suffix + '</div>') +
+      (soldOut
+        ? '<span class="plan-off" aria-disabled="true">' + c.sold_out_button_label + '</span>'
+        : '<a class="plan-pick" href="' + href + '" data-pk="' + plan.pk + '">' + c.pick_button_label + '</a>') +
       '</div>'
     );
+  }
+
+  // Índice del plan con mejor precio por día ENTRE LOS DISPONIBLES: no
+  // tiene sentido colgarle "Mejor precio" a una tarjeta que no se puede
+  // comprar. Devuelve -1 si no queda ninguno con stock.
+  function bestValueIndex(plans) {
+    return plans.reduce(function (bestI, p, i, arr) {
+      if (isSoldOut(p)) return bestI;
+      if (bestI === -1) return i;
+      return (planPrice(p) / p.duracion) < (planPrice(arr[bestI]) / arr[bestI].duracion) ? i : bestI;
+    }, -1);
+  }
+
+  // Mensaje bajo la rejilla de cada modalidad. Antes solo existía para
+  // cuotas, así que "Solo yo, en mi consola" y "Prefiero mi propia cuenta"
+  // se quedaban en blanco cuando el catálogo no devolvía combinaciones
+  // (que es justo lo que pasa cuando se agota: la API deja de mandar esas
+  // filas) — el visitante no tenía forma de saber si estaba agotado o si
+  // la página se había roto.
+  function renderAvailabilityMsg(msgEl, plans, emptyText, c) {
+    if (!msgEl) return;
+    var text = '';
+    if (!plans.length) text = emptyText || '';
+    else if (!plans.some(function (p) { return !isSoldOut(p); })) text = c.all_sold_out_msg || '';
+    msgEl.textContent = text;
+    msgEl.style.display = text ? '' : 'none';
   }
 
   function renderPlans(rows) {
@@ -805,36 +872,53 @@
     personal.forEach(function (p) { registerPlan(p, PRODUCT_ID); });
     codigo.forEach(function (p) { registerPlan(p, PRODUCT_ID); });
 
-    var personalHTML = personal.map(function (p, i) {
-      return planCardHTML(p, PRODUCT_ID, i === personal.length - 1 && personal.length > 1, c.badge_recommended, c);
+    // "Recomendado" va a la duración más larga que de verdad se pueda
+    // comprar, no a la última de la lista aunque esté agotada.
+    var personalBadgeIndex = -1;
+    if (personal.length > 1) {
+      for (var i = personal.length - 1; i >= 0; i--) {
+        if (!isSoldOut(personal[i])) { personalBadgeIndex = i; break; }
+      }
+    }
+    document.getElementById('plansPersonal').innerHTML = personal.map(function (p, i) {
+      return planCardHTML(p, PRODUCT_ID, i === personalBadgeIndex, c.badge_recommended, c);
     }).join('');
-    document.getElementById('plansPersonal').innerHTML = personalHTML;
+    renderAvailabilityMsg(document.getElementById('personalEmptyMsg'), personal, c.personal_empty_msg, c);
 
-    var mainCodigo = codigo.slice(0, 2);
-    var restCodigo = codigo.slice(2);
-    var bestIndex = codigo.reduce(function (bestI, p, i, arr) {
-      var costPerDay = p.precio_descuento / p.duracion;
-      var bestCostPerDay = arr[bestI].precio_descuento / arr[bestI].duracion;
-      return costPerDay < bestCostPerDay ? i : bestI;
-    }, 0);
-    var best = codigo[bestIndex];
-    var shown = codigo.filter(function (p) { return p === best; }).concat(mainCodigo.filter(function (p) { return p !== best; })).slice(0, 3);
-    if (shown.indexOf(best) === -1) shown.unshift(best);
-    shown = shown.slice(0, 3).sort(function (a, b) { return a.duracion - b.duracion; });
+    var moreEl = document.getElementById('moreDurations');
+    var propiaMsgEl = document.getElementById('propiaEmptyMsg');
+    renderAvailabilityMsg(propiaMsgEl, codigo, c.propia_empty_msg, c);
 
-    var codigoHTML = shown.map(function (p) {
+    if (!codigo.length) {
+      // Sin combinaciones de código no hay nada que ordenar ni destacar.
+      // Este early return además evita un TypeError real que había aquí:
+      // el cálculo de "best" sobre una lista vacía devolvía undefined y
+      // planCardHTML reventaba sobre él, abortando el resto del render.
+      document.getElementById('plansPropia').innerHTML = '';
+      moreEl.style.display = 'none';
+      return;
+    }
+
+    var bestIndex = bestValueIndex(codigo);
+    var best = bestIndex === -1 ? null : codigo[bestIndex];
+    // El de mejor precio por día siempre entra en la vitrina; el resto
+    // completa hasta 3 por orden de duración. Sin "best" (todo agotado) se
+    // muestran las tres primeras tal cual, en vez de dejar un hueco.
+    var ordered = best ? [best].concat(codigo.filter(function (p) { return p !== best; })) : codigo.slice();
+    var shown = ordered.slice(0, 3).sort(function (a, b) { return a.duracion - b.duracion; });
+
+    document.getElementById('plansPropia').innerHTML = shown.map(function (p) {
       return planCardHTML(p, PRODUCT_ID, p === best, c.badge_best_price, c);
     }).join('');
-    document.getElementById('plansPropia').innerHTML = codigoHTML;
 
     var rest = codigo.filter(function (p) { return shown.indexOf(p) === -1; });
-    var moreEl = document.getElementById('moreDurations');
     if (rest.length) {
       moreEl.style.display = '';
       document.getElementById('moreDurationsSummary').textContent =
         'Ver ' + (rest.length === 1 ? 'otra duración' : 'otras duraciones') + ' (' + rest.map(function (p) { return monthsLabel(p.duracion); }).join(', ') + ')';
       document.getElementById('morePlansList').innerHTML = rest.map(function (p) {
-        return '<div class="mini-plan"><span>' + monthsLabel(p.duracion) + '</span><span class="p tabular">' + fmtCOP(p.precio_descuento) + '</span></div>';
+        return '<div class="mini-plan"><span>' + monthsLabel(p.duracion) + '</span><span class="p tabular">' +
+          (isSoldOut(p) ? c.sold_out_label : fmtCOP(planPrice(p))) + '</span></div>';
       }).join('');
     } else {
       moreEl.style.display = 'none';
@@ -853,20 +937,14 @@
     var container = document.getElementById('plansCuotas');
     var emptyMsg = document.getElementById('cuotasEmptyMsg');
 
+    renderAvailabilityMsg(emptyMsg, plans, c.cuotas_empty_msg, c);
     if (!plans.length) {
       container.innerHTML = '';
-      emptyMsg.textContent = c.cuotas_empty_msg || '';
-      emptyMsg.style.display = '';
       return;
     }
-    emptyMsg.style.display = 'none';
 
     plans.forEach(function (p) { registerPlan(p, PRODUCT_ID_CUOTAS); });
-    var bestIndex = plans.reduce(function (bestI, p, i, arr) {
-      var costPerDay = p.precio_descuento / p.duracion;
-      var bestCostPerDay = arr[bestI].precio_descuento / arr[bestI].duracion;
-      return costPerDay < bestCostPerDay ? i : bestI;
-    }, 0);
+    var bestIndex = bestValueIndex(plans);
     container.innerHTML = plans.map(function (p, i) {
       return planCardHTML(p, PRODUCT_ID_CUOTAS, i === bestIndex && plans.length > 1, c.badge_best_price, c);
     }).join('');
@@ -942,7 +1020,7 @@
         image: info.image || '/placeholder.svg',
         desc_console: plan.desc_console,
         desc_licence: plan.desc_licence,
-        price: (plan.precio_descuento > 0 && plan.precio_descuento < plan.precio) ? plan.precio_descuento : plan.precio,
+        price: planPrice(plan),
         coupon: undefined,
         consola: plan.consola,
         licencia: plan.licencia,
@@ -1234,10 +1312,15 @@
     })
     .catch(function () { /* se queda con el texto por defecto */ });
 
+  // Una respuesta con data: [] es un dato real ("no queda nada del
+  // catálogo"), no un fallo — antes se ignoraba por el .length y la página
+  // se quedaba mostrando PLANS_DEFAULTS, es decir, planes inventados que ya
+  // no existen. Solo un error de red/HTTP (res === null) conserva los
+  // valores por defecto.
   fetch(API_BASE + '/getCombinationPriceByGame/' + PRODUCT_ID)
     .then(function (r) { return r.ok ? r.json() : null; })
     .then(function (res) {
-      if (res && res.data && res.data.length) {
+      if (res && Array.isArray(res.data)) {
         window.__PLANS = res.data;
         renderPlans(res.data);
       }
@@ -1247,7 +1330,7 @@
   fetch(API_BASE + '/getCombinationPriceByGame/' + PRODUCT_ID_CUOTAS)
     .then(function (r) { return r.ok ? r.json() : null; })
     .then(function (res) {
-      if (res && res.data) {
+      if (res && Array.isArray(res.data)) {
         window.__PLANS_CUOTAS = res.data;
         renderCuotasPlans(res.data);
       }
