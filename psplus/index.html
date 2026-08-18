@@ -637,16 +637,23 @@
     cuotas_essential_primaria: '2 cuotas mensuales de $90.000',
     cuotas_essential_secundaria: '2 cuotas mensuales de $65.000',
     // Extra: la ficha del producto (id 88) trae bloques separados por
-    // licencia y consola. Primaria hoy solo existe en stock en PS4, y
-    // corresponde al bloque "PROMO PLAY 4, ACCESO PRINCIPAL" (3 cuotas de
-    // $50.000, sin valor de contado declarado — de ahí que Primaria no
-    // tenga contado_extra_primaria). Secundaria (PS4 y PS5) corresponde al
-    // bloque propio "SECUNDARIA PLAY 5/4" (3 cuotas de $66.000, contado
-    // $250.000). El otro bloque de la ficha ("PRIMARIA PLAY 5", 4 cuotas de
-    // $80.000 / contado $365.000) es idéntico palabra por palabra al de
-    // Premium y hoy no tiene stock de Primaria PS5 en Extra — no se usa.
-    cuotas_extra_primaria: '3 cuotas mensuales de $50.000',
-    cuotas_extra_secundaria: '3 cuotas mensuales de $66.000',
+    // licencia y consola, actualizada el 18/08/2026. Primaria hoy solo
+    // existe en stock en PS4, y corresponde al bloque "PROMO PLAY 4,
+    // ACCESO PRINCIPAL" (3 cuotas de $50.000, 9 meses de servicio, sin
+    // valor de contado declarado — de ahí que Primaria no tenga
+    // contado_extra_primaria). Ese mismo bloque aclara que el abono de acá
+    // ($29.990 ≈ $30.000) es parcial: el resto de la primera cuota (o del
+    // contado si el cliente prefiere pagar todo de una vez) se coordina
+    // por WhatsApp — ya cubierto por flex_payment_desc/payment_note_desc,
+    // que son genéricos a todo el catálogo. Secundaria (PS4 y PS5)
+    // corresponde al bloque propio "SECUNDARIA PLAY 5/4": pago inicial de
+    // $80.000 + DOS cuotas de $80.000 mensual, contado total $220.000 (la
+    // ficha anterior traía $250.000 y "3 cuotas de $66.000" — corregido).
+    // El bloque "PRIMARIA PLAY 5" (contado $300.000, inicial $100.000 + 3
+    // cuotas de $80.000) sigue sin stock de Primaria PS5 en Extra — no se
+    // usa mientras esa combinación no tenga cupos reales.
+    cuotas_extra_primaria: '3 cuotas mensuales de $50.000 (9 meses de servicio)',
+    cuotas_extra_secundaria: 'Inicial de $80.000 + 2 cuotas mensuales de $80.000',
     cuotas_premium_primaria: '4 cuotas mensuales de $80.000',
     cuotas_premium_secundaria: '3 cuotas mensuales de $66.000',
     // Pago de contado (una sola vez): valor TOTAL, no el abono. Sale
@@ -655,7 +662,7 @@
     // sí tiene stock (PROMO PLAY 4 / PS4) no declara un total de contado.
     contado_essential_primaria: '$240.000',
     contado_essential_secundaria: '$150.000',
-    contado_extra_secundaria: '$250.000',
+    contado_extra_secundaria: '$220.000',
     contado_premium_primaria: '$365.000',
     contado_premium_secundaria: '$250.000',
     badge_best_price: 'Mejor precio',
@@ -672,6 +679,8 @@
       { q: '¿Cuál es la diferencia entre Essential, Extra y Premium?', a: 'Essential trae multijugador online y juegos mensuales gratis. Extra suma un catálogo de cientos de juegos para descargar. Premium agrega pruebas de juegos y catálogo de clásicos.' },
       { q: '¿Cómo sé si elegir PS4 o PS5?', a: 'Elige la consola donde vas a jugar. La cuenta se instala mediante código QR directo en esa consola.' },
       { q: '¿Necesito estar pendiente de algo después de pagar?', a: 'Sí, un asesor te escribe por WhatsApp para completar la activación. Atendemos de lunes a sábado, 10am a 7pm — si compras fuera de ese horario, puede tardar unas horas.' },
+      { q: '¿Los juegos están en español?', a: 'El 95% del catálogo está en español (aplica para una sola consola).' },
+      { q: '¿Puedo reclamar los juegos gratis mensuales de esa cuenta?', a: 'Sí, puedes reclamarlos sin problema. Al finalizar tu suscripción puedes renovarla para conservar todo el catálogo de juegos gratis que ya reclamaste.' },
       { q: '¿Qué pasa si la cuenta falla?', a: 'Tienes garantía: si algo no funciona, te la reponemos. Escríbenos por WhatsApp y lo resolvemos.' }
     ],
     portal_title: '¿Quieres ver toda la letra chica del plan?',
