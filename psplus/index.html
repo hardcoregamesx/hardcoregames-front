@@ -636,19 +636,26 @@
     // también varía entre Primaria y Secundaria).
     cuotas_essential_primaria: '2 cuotas mensuales de $90.000',
     cuotas_essential_secundaria: '2 cuotas mensuales de $65.000',
+    // Extra: la ficha del producto (id 88) trae bloques separados por
+    // licencia y consola. Primaria hoy solo existe en stock en PS4, y
+    // corresponde al bloque "PROMO PLAY 4, ACCESO PRINCIPAL" (3 cuotas de
+    // $50.000, sin valor de contado declarado — de ahí que Primaria no
+    // tenga contado_extra_primaria). Secundaria (PS4 y PS5) corresponde al
+    // bloque propio "SECUNDARIA PLAY 5/4" (3 cuotas de $66.000, contado
+    // $250.000). El otro bloque de la ficha ("PRIMARIA PLAY 5", 4 cuotas de
+    // $80.000 / contado $365.000) es idéntico palabra por palabra al de
+    // Premium y hoy no tiene stock de Primaria PS5 en Extra — no se usa.
     cuotas_extra_primaria: '3 cuotas mensuales de $50.000',
-    cuotas_extra_secundaria: '3 cuotas mensuales de $50.000',
+    cuotas_extra_secundaria: '3 cuotas mensuales de $66.000',
     cuotas_premium_primaria: '4 cuotas mensuales de $80.000',
     cuotas_premium_secundaria: '3 cuotas mensuales de $66.000',
     // Pago de contado (una sola vez): valor TOTAL, no el abono. Sale
     // directo de la ficha del producto en el admin ("PAGO DE CONTADO
-    // TOTAL"). Extra no tiene esta clave a propósito: su ficha solo trae
-    // un bloque de contado que es un copy-paste literal de Premium
-    // ($365.000/$250.000, precios de catálogo muy distintos a los de
-    // Extra) — mostrar ese número sería inventar un dato, así que para
-    // Extra el pago de contado se confirma con el asesor por WhatsApp.
+    // TOTAL"). contado_extra_primaria no existe: el bloque de Primaria que
+    // sí tiene stock (PROMO PLAY 4 / PS4) no declara un total de contado.
     contado_essential_primaria: '$240.000',
     contado_essential_secundaria: '$150.000',
+    contado_extra_secundaria: '$250.000',
     contado_premium_primaria: '$365.000',
     contado_premium_secundaria: '$250.000',
     badge_best_price: 'Mejor precio',
@@ -716,20 +723,29 @@
   // El valor y número de cuotas cambia según el nivel Y la licencia (el
   // precio base de Primaria y Secundaria no es el mismo, salvo en Extra
   // donde sí coinciden). Se recalcula cada vez que cambia el nivel activo.
+  // Arma "Primaria X · Secundaria Y" pero omite la licencia sin dato en vez
+  // de mostrar un "—" que parece un error (pasa con contado_extra_primaria,
+  // que no existe porque esa ficha no declara un total de contado).
+  function licencePairLine(c, prefix) {
+    var parts = [];
+    var primaria = c[prefix + '_' + activeTier + '_primaria'];
+    var secundaria = c[prefix + '_' + activeTier + '_secundaria'];
+    if (primaria) parts.push('Primaria ' + primaria);
+    if (secundaria) parts.push('Secundaria ' + secundaria);
+    return parts.join(' · ');
+  }
+
   function updatePaymentNote(c) {
     var el = document.getElementById('v-payment_note_desc');
     if (!el) return;
-    var primaria = c['cuotas_' + activeTier + '_primaria'];
-    var secundaria = c['cuotas_' + activeTier + '_secundaria'];
-    var cuotasLine = 'Si eliges cuotas: Primaria ' + (primaria || '—') + ' · Secundaria ' + (secundaria || '—') + ', después del abono inicial.';
+    var cuotasPair = licencePairLine(c, 'cuotas');
+    var cuotasLine = cuotasPair ? ' Si eliges cuotas: ' + cuotasPair + ', después del abono inicial.' : '';
     // Total de contado (pago de una sola vez), no siempre disponible: ver
-    // nota junto a contado_essential_primaria más arriba (Extra no lo tiene).
-    var contadoPrimaria = c['contado_' + activeTier + '_primaria'];
-    var contadoSecundaria = c['contado_' + activeTier + '_secundaria'];
-    var contadoLine = (contadoPrimaria || contadoSecundaria)
-      ? ' Si prefieres pagar de una sola vez: Primaria ' + (contadoPrimaria || '—') + ' · Secundaria ' + (contadoSecundaria || '—') + ' en total.'
-      : '';
-    el.textContent = (c.payment_note_desc || '') + ' ' + cuotasLine + contadoLine;
+    // nota junto a contado_essential_primaria más arriba (contado_extra_primaria
+    // no existe, esa ficha no declara un total de contado para esa licencia).
+    var contadoPair = licencePairLine(c, 'contado');
+    var contadoLine = contadoPair ? ' Si prefieres pagar de una sola vez: ' + contadoPair + ' en total.' : '';
+    el.textContent = (c.payment_note_desc || '') + cuotasLine + contadoLine;
   }
 
   function renderContent(c) {
