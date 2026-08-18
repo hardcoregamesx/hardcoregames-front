@@ -644,7 +644,11 @@
     desc_primaria_xbox_ultimate: 'Recibes correo y clave, juegas con tu correo personal. No obtienes las monedas ni los demás beneficios, solo el acceso anticipado.',
     desc_secundaria_xbox_ultimate: 'Recibes correo y clave, juegas con el correo entregado. Obtienes todos los beneficios de la edición Ultimate. <strong>Conexión a internet obligatoria.</strong>',
     desc_codigo: 'Se activa directo en tu cuenta de EA Play.',
-    cuotas_note: '<strong>Cómo funciona la preventa a cuotas:</strong> los $10.000 que pagas aquí no son el total, solo reservan tu copia al precio de preventa. Tu asesor te confirma el resto por WhatsApp antes del lanzamiento. Si no completas los pagos, la reserva se retira sin reembolso ni reposición.',
+    cuotas_note: '<strong>Cómo funciona la preventa a cuotas:</strong> los $10.000 que pagas aquí no son el total, solo reservan tu copia al precio de preventa. El resto se paga en 3 cuotas mensuales por WhatsApp — tu asesor te confirma las fechas. Si no completas los pagos, la reserva se retira sin reembolso ni reposición.',
+    cuotas_ps_primaria: '3 cuotas mensuales de $60.000',
+    cuotas_ps_secundaria: '3 cuotas mensuales de $50.000',
+    cuotas_xbox_primaria: '3 cuotas mensuales de $68.000',
+    cuotas_xbox_secundaria: '3 cuotas mensuales de $68.000',
     empty_msg: 'No tenemos disponibilidad en esta edición ahora mismo. Escríbenos por WhatsApp y te avisamos apenas entre, o mira otra edición arriba.',
     badge_recommended: 'Recomendado',
     badge_best_price: 'Mejor precio',
@@ -913,7 +917,10 @@
     var ed = currentEdition();
     var note = document.getElementById('cuotasNote');
     if (ed.kind === 'cuotas') {
-      note.innerHTML = c.cuotas_note || '';
+      var primaria = c['cuotas_' + state.platform + '_primaria'];
+      var secundaria = c['cuotas_' + state.platform + '_secundaria'];
+      var cuotasLine = 'PRIMARIA: ' + (primaria || '—') + ' · SECUNDARIA: ' + (secundaria || '—') + '.';
+      note.innerHTML = (c.cuotas_note || '') + ' ' + cuotasLine;
       note.classList.remove('is-hidden');
     } else {
       note.classList.add('is-hidden');

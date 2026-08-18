@@ -631,6 +631,15 @@
     flex_payment_desc: 'El primer abono de aquí reserva tu cuenta. El resto lo coordinas por WhatsApp con tu asesor: lo pagas completo de una sola vez, o lo divides en cuotas mensuales — como te quede mejor.',
     payment_note_title: 'Así funciona el pago',
     payment_note_desc: 'Hoy pagas el primer abono para reservar tu cuenta. El resto — de una sola vez o en cuotas mensuales, como prefieras — lo coordinas directo con tu asesor por WhatsApp. Activamos de lunes a sábado, 10am–7pm; en algunos casos la entrega no es inmediata y puede tardar unas horas.',
+    // Si eliges pagar a cuotas en vez de completo: cantidad de cuotas y
+    // valor mensual, por nivel y licencia (varía porque el precio base
+    // también varía entre Primaria y Secundaria).
+    cuotas_essential_primaria: '2 cuotas mensuales de $90.000',
+    cuotas_essential_secundaria: '2 cuotas mensuales de $65.000',
+    cuotas_extra_primaria: '3 cuotas mensuales de $50.000',
+    cuotas_extra_secundaria: '3 cuotas mensuales de $50.000',
+    cuotas_premium_primaria: '4 cuotas mensuales de $80.000',
+    cuotas_premium_secundaria: '3 cuotas mensuales de $66.000',
     badge_best_price: 'Mejor precio',
     pick_button_label: 'Elegir',
     sold_out_label: 'Agotado',
@@ -693,6 +702,18 @@
   }
 
   // ---------------- contenido de texto ----------------
+  // El valor y número de cuotas cambia según el nivel Y la licencia (el
+  // precio base de Primaria y Secundaria no es el mismo, salvo en Extra
+  // donde sí coinciden). Se recalcula cada vez que cambia el nivel activo.
+  function updatePaymentNote(c) {
+    var el = document.getElementById('v-payment_note_desc');
+    if (!el) return;
+    var primaria = c['cuotas_' + activeTier + '_primaria'];
+    var secundaria = c['cuotas_' + activeTier + '_secundaria'];
+    var cuotasLine = 'Si eliges cuotas: Primaria ' + (primaria || '—') + ' · Secundaria ' + (secundaria || '—') + ', después del abono inicial.';
+    el.textContent = (c.payment_note_desc || '') + ' ' + cuotasLine;
+  }
+
   function renderContent(c) {
     c = Object.assign({}, CONTENT_DEFAULTS, c || {});
     c.tiers = Object.assign({}, CONTENT_DEFAULTS.tiers, c.tiers || {});
@@ -721,7 +742,7 @@
     setText('v-step3_eyebrow', c.step3_eyebrow);
     setText('v-step3_title', c.step3_title);
     setText('v-payment_note_title', c.payment_note_title);
-    setText('v-payment_note_desc', c.payment_note_desc);
+    updatePaymentNote(c);
     setText('v-faq_eyebrow', c.faq_eyebrow);
     setText('v-faq_title', c.faq_title);
     setText('v-portal_title', c.portal_title);
@@ -902,6 +923,7 @@
       tierButtons.forEach(function (b) { b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'); });
       var portalLink = document.getElementById('v-portal_link');
       if (portalLink) portalLink.setAttribute('href', 'https://www.hardcoregames.co/product/' + TIER_BY_KEY[activeTier].productId);
+      updatePaymentNote(window.__CONTENT || CONTENT_DEFAULTS);
       renderModalityCards();
     });
   });
