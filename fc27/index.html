@@ -626,9 +626,23 @@
     edition_codigo_desc: 'Se activa directo en tu cuenta de EA Play para PC.',
     step3_eyebrow: 'Paso 3',
     step3_title: 'Elige tu modalidad',
-    step3_body: 'Primaria y secundaria: correo y clave, juegas con tu propio perfil. Código: se activa directo en tu cuenta.',
-    desc_primaria: 'Correo y clave, juegas con tu propio perfil.',
-    desc_secundaria: 'Correo y clave, juegas con tu propio perfil.',
+    step3_body: 'Primaria y secundaria: correo y clave. Código: se activa directo en tu cuenta.',
+    // El método de entrega difiere entre PS y Xbox, y entre Standard y
+    // Ultimate para la MISMA licencia (p.ej. Xbox Secundaria Standard
+    // juega con correo propio, pero Xbox Secundaria Ultimate juega con el
+    // correo entregado) — mismo patrón que ya usa desc_<licencia>_<plataforma>
+    // en grandtheftautovi, extendido acá con la edición. La modalidad
+    // "cuotas" reserva la edición Standard, así que usa las mismas
+    // descripciones que Standard. Código (solo PC) no varía por plataforma
+    // ni edición, así que usa una sola clave (desc_codigo).
+    desc_primaria_ps_standard: 'Recibes correo y clave, juegas con tu correo personal.',
+    desc_secundaria_ps_standard: 'Recibes correo y clave, juegas con el correo entregado. <strong>Conexión a internet obligatoria.</strong>',
+    desc_primaria_ps_ultimate: 'Recibes correo y clave, juegas con tu correo personal. No obtienes las monedas ni los demás beneficios, solo el acceso anticipado.',
+    desc_secundaria_ps_ultimate: 'Recibes correo y clave, juegas con el correo entregado. Obtienes todos los beneficios de la edición Ultimate. <strong>Conexión a internet obligatoria.</strong>',
+    desc_primaria_xbox_standard: 'Recibes correo y clave, juegas con tu correo personal.',
+    desc_secundaria_xbox_standard: 'Recibes correo y clave, juegas con tu correo personal. <strong>Conexión a internet obligatoria.</strong>',
+    desc_primaria_xbox_ultimate: 'Recibes correo y clave, juegas con tu correo personal. No obtienes las monedas ni los demás beneficios, solo el acceso anticipado.',
+    desc_secundaria_xbox_ultimate: 'Recibes correo y clave, juegas con el correo entregado. Obtienes todos los beneficios de la edición Ultimate. <strong>Conexión a internet obligatoria.</strong>',
     desc_codigo: 'Se activa directo en tu cuenta de EA Play.',
     cuotas_note: '<strong>Cómo funciona la preventa a cuotas:</strong> lo que pagas aquí reserva tu copia al precio de preventa. El resto se coordina por WhatsApp antes del lanzamiento.',
     empty_msg: 'No tenemos disponibilidad en esta edición ahora mismo. Escríbenos por WhatsApp y te avisamos apenas entre, o mira otra edición arriba.',
@@ -708,8 +722,15 @@
   var LICENCE_ORDER = ['Primaria', 'Secundaria', 'Codigo'];
   var LICENCE_LABEL = { Primaria: 'Primaria', Secundaria: 'Secundaria', Codigo: 'Código' };
   var LICENCE_KEY = { Primaria: 'primaria', Secundaria: 'secundaria', Codigo: 'codigo' };
+  // Código (solo PC) no varía por plataforma/edición. Primaria y Secundaria
+  // sí: el método de entrega difiere entre PS y Xbox, y entre Standard y
+  // Ultimate (ver comentario en CONTENT_DEFAULTS). "cuotas" reserva la
+  // edición Standard, así que reusa esas mismas claves.
   function licenceDesc(c, licence) {
-    return c['desc_' + (LICENCE_KEY[licence] || licence.toLowerCase())] || '';
+    if (licence === 'Codigo') return c.desc_codigo || '';
+    var group = state.edition === 'ultimate' ? 'ultimate' : 'standard';
+    var key = 'desc_' + (LICENCE_KEY[licence] || licence.toLowerCase()) + '_' + state.platform + '_' + group;
+    return c[key] || '';
   }
 
   function groupByLicence(rows) {
