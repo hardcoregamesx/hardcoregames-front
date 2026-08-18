@@ -164,13 +164,16 @@
   .choice-btn:focus-visible { outline: 2px solid var(--cta); outline-offset: 2px; }
 
   /* ---- plans ---- */
-  .plan-group { display: none; }
-  .plan-group.is-active { display: block; }
   .plans { display: grid; grid-template-columns: 1fr; gap: 12px; }
   @media (min-width: 520px) {
     .plans { grid-template-columns: repeat(3, 1fr); }
     .plans.plans-1 { grid-template-columns: 1fr; max-width: 260px; }
+    .plans.plans-2 { grid-template-columns: repeat(2, 1fr); max-width: 420px; }
   }
+  .plans-loading { color: var(--muted-foreground); font-size: 14px; padding: 20px 0; }
+  .cuotas-note { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 18px; margin-top: 14px; font-size: 13px; color: var(--muted-foreground); }
+  .cuotas-note strong { color: var(--foreground); }
+  .cuotas-note.is-hidden { display: none; }
   .plan-card {
     position: relative; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
     padding: 18px 16px 16px; display: flex; flex-direction: column; gap: 10px;
@@ -183,6 +186,7 @@
   }
   .plan-badge.is-note { background: var(--secondary); color: var(--muted-foreground); }
   .plan-duration { font-weight: 800; font-size: 20px; }
+  .plan-duration .sub { display: block; font-weight: 500; font-size: 12px; color: var(--muted-foreground); margin-top: 2px; }
   .plan-price { font-weight: 800; font-size: 24px; }
   .plan-price-old { color: var(--muted-foreground); font-size: 13px; text-decoration: line-through; margin-left: 6px; }
   .plan-stock { font-size: 12px; color: var(--accent); }
@@ -491,20 +495,21 @@
   <section>
     <div class="eyebrow" id="v-step2_eyebrow">Paso 2</div>
     <h2 class="sec-title" id="v-step2_title">Elige tu edición</h2>
-    <p class="sec-body" id="plansBody">Standard trae el juego base. Ultimate suma acceso anticipado y contenido extra.</p>
+    <p class="sec-body" id="v-step2_body">Standard trae el juego base. Ultimate suma acceso anticipado y contenido extra.</p>
 
-    <div class="plan-group is-active" data-group="ps">
-      <div class="plans" id="plansPs"></div>
-      <p class="sec-body" id="psEmptyMsg" style="display:none; margin-top: 14px;"></p>
+    <div class="choice-row" id="choiceRowEdition"></div>
+  </section>
+
+  <section>
+    <div class="eyebrow" id="v-step3_eyebrow">Paso 3</div>
+    <h2 class="sec-title" id="v-step3_title">Elige tu modalidad</h2>
+    <p class="sec-body" id="plansBody">Primaria y secundaria: correo y clave, juegas con tu propio perfil. Código: se activa directo en tu cuenta.</p>
+
+    <div class="plans" id="plansContainer">
+      <div class="plans-loading" id="plansLoading">Cargando disponibilidad…</div>
     </div>
-    <div class="plan-group" data-group="xbox">
-      <div class="plans" id="plansXbox"></div>
-      <p class="sec-body" id="xboxEmptyMsg" style="display:none; margin-top: 14px;"></p>
-    </div>
-    <div class="plan-group" data-group="pc">
-      <div class="plans plans-1" id="plansPc"></div>
-      <p class="sec-body" id="pcEmptyMsg" style="display:none; margin-top: 14px;"></p>
-    </div>
+    <p class="sec-body" id="plansEmptyMsg" style="display:none; margin-top: 14px;"></p>
+    <div class="cuotas-note is-hidden" id="cuotasNote"></div>
   </section>
 
   <section>
@@ -579,6 +584,8 @@
   };
   var ALL_PRODUCT_IDS = [356, 359, 244, 357, 358, 243, 352];
 
+  var state = { platform: 'ps', edition: 'standard' };
+
   // ---------------------------------------------------------------
   // Copy por defecto. Se pinta de inmediato para que la página nunca
   // se vea vacía; si la variable de sistema "fc27" carga bien, sus
@@ -613,11 +620,38 @@
     step2_body_ps: 'Standard trae el juego base. Ultimate suma acceso anticipado y contenido extra. Ambas funcionan igual en PS4 y PS5.',
     step2_body_xbox: 'Standard trae el juego base. Ultimate suma acceso anticipado y contenido extra. Ambas funcionan igual en Xbox Series y Xbox One.',
     step2_body_pc: 'Se activa directo en tu cuenta de EA Play para PC.',
-    cuotas_note: 'Reserva tu copia. El resto se coordina por WhatsApp.',
-    empty_msg: 'No tenemos disponibilidad en esta modalidad ahora mismo. Escríbenos por WhatsApp y te avisamos apenas entre.',
+    edition_standard_desc: 'El juego base completo, con entrega inmediata.',
+    edition_ultimate_desc: 'Suma hasta 7 días de acceso anticipado, FC Points y contenido extra para Ultimate Team.',
+    edition_cuotas_desc: 'Reserva hoy con un abono de $10.000, el resto se coordina por WhatsApp.',
+    edition_codigo_desc: 'Se activa directo en tu cuenta de EA Play para PC.',
+    step3_eyebrow: 'Paso 3',
+    step3_title: 'Elige tu modalidad',
+    step3_body: 'Primaria y secundaria: correo y clave. Código: se activa directo en tu cuenta.',
+    // El método de entrega difiere entre PS y Xbox, y entre Standard y
+    // Ultimate para la MISMA licencia (p.ej. Xbox Secundaria Standard
+    // juega con correo propio, pero Xbox Secundaria Ultimate juega con el
+    // correo entregado) — mismo patrón que ya usa desc_<licencia>_<plataforma>
+    // en grandtheftautovi, extendido acá con la edición. La modalidad
+    // "cuotas" reserva la edición Standard, así que usa las mismas
+    // descripciones que Standard. Código (solo PC) no varía por plataforma
+    // ni edición, así que usa una sola clave (desc_codigo).
+    desc_primaria_ps_standard: 'Recibes correo y clave, juegas con tu correo personal.',
+    desc_secundaria_ps_standard: 'Recibes correo y clave, juegas con el correo entregado. <strong>Conexión a internet obligatoria.</strong>',
+    desc_primaria_ps_ultimate: 'Recibes correo y clave, juegas con tu correo personal. No obtienes las monedas ni los demás beneficios, solo el acceso anticipado.',
+    desc_secundaria_ps_ultimate: 'Recibes correo y clave, juegas con el correo entregado. Obtienes todos los beneficios de la edición Ultimate. <strong>Conexión a internet obligatoria.</strong>',
+    desc_primaria_xbox_standard: 'Recibes correo y clave, juegas con tu correo personal.',
+    desc_secundaria_xbox_standard: 'Recibes correo y clave, juegas con tu correo personal. <strong>Conexión a internet obligatoria.</strong>',
+    desc_primaria_xbox_ultimate: 'Recibes correo y clave, juegas con tu correo personal. No obtienes las monedas ni los demás beneficios, solo el acceso anticipado.',
+    desc_secundaria_xbox_ultimate: 'Recibes correo y clave, juegas con el correo entregado. Obtienes todos los beneficios de la edición Ultimate. <strong>Conexión a internet obligatoria.</strong>',
+    desc_codigo: 'Se activa directo en tu cuenta de EA Play.',
+    cuotas_note: '<strong>Cómo funciona la preventa a cuotas:</strong> los $10.000 que pagas aquí no son el total, solo reservan tu copia al precio de preventa. El resto se paga en 3 cuotas mensuales por WhatsApp — tu asesor te confirma las fechas. Si no completas los pagos, la reserva se retira sin reembolso ni reposición.',
+    cuotas_ps_primaria: '3 cuotas mensuales de $60.000',
+    cuotas_ps_secundaria: '3 cuotas mensuales de $50.000',
+    cuotas_xbox_primaria: '3 cuotas mensuales de $68.000',
+    cuotas_xbox_secundaria: '3 cuotas mensuales de $68.000',
+    empty_msg: 'No tenemos disponibilidad en esta edición ahora mismo. Escríbenos por WhatsApp y te avisamos apenas entre, o mira otra edición arriba.',
     badge_recommended: 'Recomendado',
     badge_best_price: 'Mejor precio',
-    badge_preventa: 'Preventa',
     pick_button_label: 'Elegir',
     sold_out_label: 'Agotado',
     sold_out_button_label: 'Sin stock',
@@ -673,22 +707,53 @@
     if (el && value != null) el.textContent = value;
   }
 
-  // Entre varias filas del mismo producto (p.ej. Primaria y Secundaria),
-  // el catálogo puede tener cualquiera de las dos como la más barata según
-  // el producto — no hay una regla fija de "Primaria siempre gana". Se
-  // elige por precio real ascendente, con stock primero y Primaria como
-  // desempate SOLO cuando el precio es exactamente igual (evita el caso ya
-  // detectado en producción de una Secundaria mal cargada empatando con
-  // Primaria).
-  var LICENCE_TIEBREAK = { 'Primaria': 0, 'Codigo': 1, 'Secundaria': 2 };
+  // getCombinationPriceByGame puede devolver varias filas para la MISMA
+  // licencia (mismo patrón ya visto en gamepassultimate y
+  // grandtheftautovi) — se agrupan, se suma el stock y se elige una fila
+  // representativa (prioriza stock>0, luego precio más bajo) para precio/pk.
+  // Antes esto colapsaba Primaria/Secundaria a una sola tarjeta "la más
+  // barata"; ahora cada licencia real (Primaria, Secundaria, Código) se
+  // muestra como su propia tarjeta en el paso 3, igual que en
+  // grandtheftautovi — el usuario elige, no se le decide por él.
   function pickRepresentative(rows) {
     function score(r) {
       var stockScore = r.stock > 0 ? 0 : 1;
-      var tie = LICENCE_TIEBREAK[r.desc_licence];
-      if (tie === undefined) tie = 3;
-      return stockScore * 1e12 + planPrice(r) * 10 + tie;
+      return stockScore * 1e9 + planPrice(r);
     }
     return rows.reduce(function (best, r) { return score(r) < score(best) ? r : best; }, rows[0]);
+  }
+
+  var LICENCE_ORDER = ['Primaria', 'Secundaria', 'Codigo'];
+  var LICENCE_LABEL = { Primaria: 'Primaria', Secundaria: 'Secundaria', Codigo: 'Código' };
+  var LICENCE_KEY = { Primaria: 'primaria', Secundaria: 'secundaria', Codigo: 'codigo' };
+  // Código (solo PC) no varía por plataforma/edición. Primaria y Secundaria
+  // sí: el método de entrega difiere entre PS y Xbox, y entre Standard y
+  // Ultimate (ver comentario en CONTENT_DEFAULTS). "cuotas" reserva la
+  // edición Standard, así que reusa esas mismas claves.
+  function licenceDesc(c, licence) {
+    if (licence === 'Codigo') return c.desc_codigo || '';
+    var group = state.edition === 'ultimate' ? 'ultimate' : 'standard';
+    var key = 'desc_' + (LICENCE_KEY[licence] || licence.toLowerCase()) + '_' + state.platform + '_' + group;
+    return c[key] || '';
+  }
+
+  function groupByLicence(rows) {
+    var byLicence = {};
+    rows.forEach(function (r) {
+      var key = r.desc_licence;
+      if (!byLicence[key]) byLicence[key] = [];
+      byLicence[key].push(r);
+    });
+    return Object.keys(byLicence).map(function (key) {
+      var group = byLicence[key];
+      var rep = pickRepresentative(group);
+      var totalStock = group.reduce(function (s, r) { return s + r.stock; }, 0);
+      return {
+        desc_licence: key, precio: rep.precio, precio_descuento: rep.precio_descuento,
+        stock: totalStock, pk: rep.pk, consola: rep.consola, desc_console: rep.desc_console,
+        licencia: rep.licencia, duracion_dias_alquiler: rep.duracion_dias_alquiler
+      };
+    }).sort(function (a, b) { return LICENCE_ORDER.indexOf(a.desc_licence) - LICENCE_ORDER.indexOf(b.desc_licence); });
   }
 
   // ---------------- contenido de texto ----------------
@@ -712,6 +777,8 @@
     setText('v-choice_pc_desc', c.choice_pc_desc);
     setText('v-step2_eyebrow', c.step2_eyebrow);
     setText('v-step2_title', c.step2_title);
+    setText('v-step3_eyebrow', c.step3_eyebrow);
+    setText('v-step3_title', c.step3_title);
     setText('v-faq_eyebrow', c.faq_eyebrow);
     setText('v-faq_title', c.faq_title);
     setText('v-portal_title', c.portal_title);
@@ -751,10 +818,12 @@
       faqList.appendChild(d);
     });
 
-    document.getElementById('plansBody').textContent = c.step2_body_ps;
+    setText('v-step2_body', c.step2_body_ps);
 
     window.__CONTENT = c;
-    renderAllPlatforms();
+    renderEditionButtons();
+    updateStep3Body();
+    renderModalityCards();
   }
 
   // ---------------- planes (datos reales del catálogo) ----------------
@@ -768,25 +837,25 @@
     PLAN_INDEX[String(plan.pk)] = { plan: plan, productId: productId };
   }
 
-  function planCardHTML(edition, plan, isRecommended, badgeText, isNoteBadge, c) {
+  function planCardHTML(plan, productId, isRecommended, c) {
     var soldOut = isSoldOut(plan);
     var stockLow = plan.stock <= (c.low_stock_threshold || 2);
     var price = planPrice(plan);
-    var href = 'https://www.hardcoregames.co/product/' + edition.productId;
-    // Una edición agotada se sigue mostrando (referencia de precio y "esto
+    var href = 'https://www.hardcoregames.co/product/' + productId;
+    // Una licencia agotada se sigue mostrando (referencia de precio y "esto
     // existe, vuelve luego"), pero no se puede comprar: el botón deja de
     // ser <a class="plan-pick"> — que es lo que engancha el handler de
     // carrito — y pasa a ser un <span class="plan-off"> inerte.
     return (
-      '<div class="plan-card' + (isRecommended ? ' is-recommended' : '') + (edition.kind === 'cuotas' ? ' is-cuotas' : '') + (soldOut ? ' is-sold-out' : '') + '">' +
-      (badgeText ? '<span class="plan-badge' + (isNoteBadge ? ' is-note' : '') + '">' + badgeText + '</span>' : '') +
-      '<div class="plan-duration">' + edition.title + '</div>' +
+      '<div class="plan-card' + (isRecommended ? ' is-recommended' : '') + (soldOut ? ' is-sold-out' : '') + '">' +
+      (isRecommended ? '<span class="plan-badge">' + c.badge_best_price + '</span>' : '') +
+      '<div class="plan-duration">' + (LICENCE_LABEL[plan.desc_licence] || plan.desc_licence) +
+        '<span class="sub">' + licenceDesc(c, plan.desc_licence) + '</span></div>' +
       '<div><span class="plan-price tabular">' + fmtCOP(price) + '</span>' +
       (plan.precio > price ? '<span class="plan-price-old tabular">' + fmtCOP(plan.precio) + '</span>' : '') + '</div>' +
       (soldOut
         ? '<div class="plan-stock is-out">' + c.sold_out_label + '</div>'
         : '<div class="plan-stock' + (stockLow ? ' is-low' : '') + '">' + plan.stock + ' ' + c.stock_suffix + '</div>') +
-      (edition.kind === 'cuotas' && !soldOut ? '<div class="plan-note">' + c.cuotas_note + '</div>' : '') +
       (soldOut
         ? '<span class="plan-off" aria-disabled="true">' + c.sold_out_button_label + '</span>'
         : '<a class="plan-pick" href="' + href + '" data-pk="' + plan.pk + '">' + c.pick_button_label + '</a>') +
@@ -794,76 +863,116 @@
     );
   }
 
-  // "Mejor precio" solo compite entre ediciones de compra real (Standard /
-  // Ultimate) — la tarjeta de cuotas cuesta $10.000 porque es un abono, no
-  // el precio final, así que etiquetarla "mejor precio" sería engañoso.
-  function bestValueIndex(editions, plans) {
-    return editions.reduce(function (bestI, ed, i) {
-      if (ed.kind === 'cuotas') return bestI;
-      var p = plans[ed.productId];
-      if (!p || isSoldOut(p)) return bestI;
+  // Índice del plan más barato ENTRE LOS DISPONIBLES: no tiene sentido
+  // colgarle "Mejor precio" a una tarjeta que no se puede comprar.
+  function bestValueIndex(plans) {
+    return plans.reduce(function (bestI, p, i, arr) {
+      if (isSoldOut(p)) return bestI;
       if (bestI === -1) return i;
-      var bestP = plans[editions[bestI].productId];
-      return planPrice(p) < planPrice(bestP) ? i : bestI;
+      return planPrice(p) < planPrice(arr[bestI]) ? i : bestI;
     }, -1);
   }
 
-  function renderPlatformGroup(platformKey, containerId, emptyMsgId) {
+  function currentEdition() {
+    var editions = PLATFORMS[state.platform].editions;
+    for (var i = 0; i < editions.length; i++) {
+      if (editions[i].key === state.edition) return editions[i];
+    }
+    return editions[0];
+  }
+
+  // ---------------- paso 2: edición (depende de la plataforma) ----------------
+  function renderEditionButtons() {
     var c = window.__CONTENT || CONTENT_DEFAULTS;
-    var editions = PLATFORMS[platformKey].editions;
-    var container = document.getElementById(containerId);
-    var emptyMsgEl = document.getElementById(emptyMsgId);
-
-    var plans = {};
-    var anyMissing = false;
-    editions.forEach(function (ed) {
-      var p = (window.__PLAN_DATA || {})[ed.productId] || PLAN_DEFAULTS[ed.productId];
-      if (!p) { anyMissing = true; return; }
-      plans[ed.productId] = p;
+    var editions = PLATFORMS[state.platform].editions;
+    if (!editions.some(function (e) { return e.key === state.edition; })) {
+      state.edition = editions[0].key;
+    }
+    var row = document.getElementById('choiceRowEdition');
+    row.innerHTML = editions.map(function (ed) {
+      var desc = c['edition_' + ed.key + '_desc'] || '';
+      return (
+        '<button class="choice-btn" data-edition="' + ed.key + '" aria-pressed="' + (ed.key === state.edition ? 'true' : 'false') + '">' +
+        '<span><span class="h">' + ed.title + '</span><span class="s">' + desc + '</span></span>' +
+        '<span class="arrow">&rsaquo;</span>' +
+        '</button>'
+      );
+    }).join('');
+    row.querySelectorAll('.choice-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var key = btn.getAttribute('data-edition');
+        if (key === state.edition) return;
+        state.edition = key;
+        row.querySelectorAll('.choice-btn').forEach(function (b) { b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'); });
+        updateStep3Body();
+        renderModalityCards();
+      });
     });
+  }
 
-    if (anyMissing) {
+  // ---------------- paso 3: modalidad (licencia real, todas las opciones) ----------------
+  function updateStep3Body() {
+    var c = window.__CONTENT || CONTENT_DEFAULTS;
+    document.getElementById('plansBody').textContent = c.step3_body || '';
+    var ed = currentEdition();
+    var note = document.getElementById('cuotasNote');
+    if (ed.kind === 'cuotas') {
+      var primaria = c['cuotas_' + state.platform + '_primaria'];
+      var secundaria = c['cuotas_' + state.platform + '_secundaria'];
+      var cuotasLine = 'PRIMARIA: ' + (primaria || '—') + ' · SECUNDARIA: ' + (secundaria || '—') + '.';
+      note.innerHTML = (c.cuotas_note || '') + ' ' + cuotasLine;
+      note.classList.remove('is-hidden');
+    } else {
+      note.classList.add('is-hidden');
+    }
+  }
+
+  function renderModalityCards() {
+    var c = window.__CONTENT || CONTENT_DEFAULTS;
+    var ed = currentEdition();
+    var productId = ed.productId;
+    var rows = (window.__PLAN_DATA || {})[productId] || [];
+    var plans = groupByLicence(rows);
+    var container = document.getElementById('plansContainer');
+    var emptyMsg = document.getElementById('plansEmptyMsg');
+
+    if (!plans.length) {
       container.innerHTML = '';
-      emptyMsgEl.textContent = '';
-      emptyMsgEl.style.display = 'none';
+      emptyMsg.textContent = c.empty_msg || '';
+      emptyMsg.style.display = '';
       return;
     }
+    emptyMsg.textContent = '';
+    emptyMsg.style.display = 'none';
 
-    var allSoldOut = editions.every(function (ed) { return isSoldOut(plans[ed.productId]); });
-    emptyMsgEl.textContent = allSoldOut ? c.empty_msg : '';
-    emptyMsgEl.style.display = allSoldOut ? '' : 'none';
-
-    var bestIndex = bestValueIndex(editions, plans);
-    container.innerHTML = editions.map(function (ed, i) {
-      var plan = plans[ed.productId];
-      registerPlan(plan, ed.productId);
-      if (ed.kind === 'cuotas') {
-        return planCardHTML(ed, plan, false, c.badge_preventa, true, c);
-      }
-      var isBest = i === bestIndex && editions.filter(function (e) { return e.kind !== 'cuotas'; }).length > 1;
-      return planCardHTML(ed, plan, isBest, isBest ? c.badge_best_price : null, false, c);
+    plans.forEach(function (p) { registerPlan(p, productId); });
+    // "Mejor precio" solo tiene sentido comparando compra real (Standard /
+    // Ultimate / Código) — en la modalidad "cuotas" las tarjetas cuestan
+    // $10.000 porque son un abono, no el precio final, así que etiquetar
+    // una de ellas "mejor precio" sería engañoso.
+    var bestIndex = (ed.kind !== 'cuotas' && plans.length > 1) ? bestValueIndex(plans) : -1;
+    container.className = 'plans' + (plans.length === 1 ? ' plans-1' : ' plans-2');
+    container.innerHTML = plans.map(function (p, i) {
+      return planCardHTML(p, productId, i === bestIndex, c);
     }).join('');
   }
 
-  function renderAllPlatforms() {
-    renderPlatformGroup('ps', 'plansPs', 'psEmptyMsg');
-    renderPlatformGroup('xbox', 'plansXbox', 'xboxEmptyMsg');
-    renderPlatformGroup('pc', 'plansPc', 'pcEmptyMsg');
-  }
-
-  // ---------------- selector de plataforma ----------------
-  var buttons = document.querySelectorAll('.choice-btn');
-  var groups = document.querySelectorAll('.plan-group');
-  buttons.forEach(function (btn) {
+  // ---------------- selector de plataforma (paso 1) ----------------
+  var platformButtons = document.querySelectorAll('.choice-btn[data-platform]');
+  platformButtons.forEach(function (btn) {
     btn.addEventListener('click', function () {
       var platform = btn.getAttribute('data-platform');
-      buttons.forEach(function (b) { b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'); });
-      groups.forEach(function (g) { g.classList.toggle('is-active', g.getAttribute('data-group') === platform); });
+      if (platform === state.platform) return;
+      state.platform = platform;
+      platformButtons.forEach(function (b) { b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'); });
       var c = window.__CONTENT || CONTENT_DEFAULTS;
-      document.getElementById('plansBody').textContent =
+      setText('v-step2_body',
         platform === 'ps' ? c.step2_body_ps :
         platform === 'xbox' ? c.step2_body_xbox :
-        c.step2_body_pc;
+        c.step2_body_pc);
+      renderEditionButtons();
+      updateStep3Body();
+      renderModalityCards();
     });
   });
 
@@ -1180,7 +1289,14 @@
   })();
 
   // ---------------- carga inicial ----------------
-  window.__PLAN_DATA = Object.assign({}, PLAN_DEFAULTS);
+  // window.__PLAN_DATA[productId] es siempre un ARRAY de filas (una por
+  // consola x licencia), nunca una fila representativa ya colapsada — el
+  // paso 3 necesita todas las filas para poder mostrar Primaria Y
+  // Secundaria (y Código) como tarjetas separadas.
+  window.__PLAN_DATA = {};
+  ALL_PRODUCT_IDS.forEach(function (id) {
+    window.__PLAN_DATA[id] = PLAN_DEFAULTS[id] ? [PLAN_DEFAULTS[id]] : [];
+  });
   renderContent(CONTENT_DEFAULTS);
 
   // Title/image "canónicos" del catálogo (mismo endpoint que usa la ficha
@@ -1215,8 +1331,8 @@
       .then(function (r) { return r.ok ? r.json() : null; })
       .then(function (res) {
         if (res && Array.isArray(res.data)) {
-          window.__PLAN_DATA[id] = res.data.length ? pickRepresentative(res.data) : { stock: 0, precio: (PLAN_DEFAULTS[id] || {}).precio || 0, precio_descuento: 0, pk: null };
-          renderAllPlatforms();
+          window.__PLAN_DATA[id] = res.data;
+          if (id === currentEdition().productId) renderModalityCards();
         }
       })
       .catch(function () { /* se queda con el snapshot por defecto para este producto */ });
