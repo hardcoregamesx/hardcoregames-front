@@ -645,31 +645,32 @@
     // ($29.990 ≈ $30.000) es parcial: el resto de la primera cuota (o del
     // contado si el cliente prefiere pagar todo de una vez) se coordina
     // por WhatsApp — ya cubierto por flex_payment_desc/payment_note_desc,
-    // que son genéricos a todo el catálogo. Secundaria (PS4 y PS5)
-    // corresponde al bloque propio "SECUNDARIA PLAY 5/4": pago inicial de
-    // $80.000 + DOS cuotas de $80.000 mensual, contado total $220.000 (la
-    // ficha anterior traía $250.000 y "3 cuotas de $66.000" — corregido).
-    // El bloque "PRIMARIA PLAY 5" (contado $300.000, inicial $100.000 + 3
-    // cuotas de $80.000) sigue sin stock de Primaria PS5 en Extra — no se
-    // usa mientras esa combinación no tenga cupos reales. IMPORTANTE: esta
-    // nota (`updatePaymentNote`) se arma solo por nivel (`activeTier`), NO
-    // por consola — cambiar de PS4 a PS5 en el paso 2 no la vuelve a
-    // calcular (ver el click handler de consola en renderModalityCards).
-    // Por eso el precio de Primaria acá SIEMPRE debe traer "(solo PS4)"
-    // explícito en el texto: si algún día se carga stock real de Primaria
-    // en PS5 con otro precio (el bloque "PRIMARIA PLAY 5" de arriba), esta
-    // nota seguiría mostrando el precio de PS4 sin aclararlo si se quita
-    // la etiqueta, y confundiría a cualquiera que la lea estando en PS5.
-    cuotas_extra_primaria: '3 cuotas mensuales de $50.000 (9 meses de servicio, solo PS4)',
+    // que son genéricos a todo el catálogo. Secundaria (PS4 y PS5, mismo
+    // precio en ambas) corresponde al bloque propio "SECUNDARIA PLAY 5/4":
+    // pago inicial de $80.000 + DOS cuotas de $80.000 mensual, contado
+    // total $220.000. Primaria SÍ varía por consola — de ahí las claves
+    // `_ps4`/`_ps5` (ver `licenceValue`, que las busca antes que la
+    // genérica): PS4 usa "PROMO PLAY 4, ACCESO PRINCIPAL" (sin contado
+    // declarado en la ficha) y PS5 usa "PRIMARIA PLAY 5" (contado
+    // $300.000, inicial $100.000 + 3 cuotas de $80.000). PS5 Primaria no
+    // tiene stock real hoy, pero el precio se muestra igual apenas se
+    // elige esa consola en el paso 2 — así lo pidió el usuario, no
+    // depende de que haya cupos en ese momento.
+    cuotas_extra_primaria_ps4: '3 cuotas mensuales de $50.000 (9 meses de servicio)',
+    cuotas_extra_primaria_ps5: 'Inicial de $100.000 + 3 cuotas mensuales de $80.000',
     cuotas_extra_secundaria: 'Inicial de $80.000 + 2 cuotas mensuales de $80.000',
     cuotas_premium_primaria: '4 cuotas mensuales de $80.000',
     cuotas_premium_secundaria: '3 cuotas mensuales de $66.000',
     // Pago de contado (una sola vez): valor TOTAL, no el abono. Sale
     // directo de la ficha del producto en el admin ("PAGO DE CONTADO
-    // TOTAL"). contado_extra_primaria no existe: el bloque de Primaria que
-    // sí tiene stock (PROMO PLAY 4 / PS4) no declara un total de contado.
+    // TOTAL"). contado_extra_primaria_ps4 NO existe a propósito: el bloque
+    // "PROMO PLAY 4" no declara un total de contado, solo dice que el
+    // excedente se paga por WhatsApp — mostrar un número acá sería
+    // inventado. Pendiente: pedirle al usuario el monto real si el
+    // negocio lo define más adelante.
     contado_essential_primaria: '$240.000',
     contado_essential_secundaria: '$150.000',
+    contado_extra_primaria_ps5: '$300.000',
     contado_extra_secundaria: '$220.000',
     contado_premium_primaria: '$365.000',
     contado_premium_secundaria: '$250.000',
@@ -739,14 +740,24 @@
   // ---------------- contenido de texto ----------------
   // El valor y número de cuotas cambia según el nivel Y la licencia (el
   // precio base de Primaria y Secundaria no es el mismo, salvo en Extra
-  // donde sí coinciden). Se recalcula cada vez que cambia el nivel activo.
+  // donde sí coinciden). Se recalcula cada vez que cambia el nivel activo
+  // O la consola activa (Extra Primaria tiene precio distinto en PS4 vs
+  // PS5 — ver el bloque "PROMO PLAY 4" vs "PRIMARIA PLAY 5" de la ficha
+  // del producto 88). Busca primero una clave específica por consola
+  // (`<prefix>_<tier>_<licencia>_<ps4|ps5>`) y cae al genérico
+  // (`<prefix>_<tier>_<licencia>`) si no existe — así Essential y Premium,
+  // que no varían por consola, no necesitan claves duplicadas.
   // Arma "Primaria X · Secundaria Y" pero omite la licencia sin dato en vez
-  // de mostrar un "—" que parece un error (pasa con contado_extra_primaria,
-  // que no existe porque esa ficha no declara un total de contado).
+  // de mostrar un "—" que parece un error (pasa con contado_extra_primaria_ps4,
+  // que no existe porque esa ficha no declara un total de contado ahí).
+  function licenceValue(c, prefix, licencia) {
+    return c[prefix + '_' + activeTier + '_' + licencia + '_' + activeConsole] ||
+      c[prefix + '_' + activeTier + '_' + licencia];
+  }
   function licencePairLine(c, prefix) {
     var parts = [];
-    var primaria = c[prefix + '_' + activeTier + '_primaria'];
-    var secundaria = c[prefix + '_' + activeTier + '_secundaria'];
+    var primaria = licenceValue(c, prefix, 'primaria');
+    var secundaria = licenceValue(c, prefix, 'secundaria');
     if (primaria) parts.push('Primaria ' + primaria);
     if (secundaria) parts.push('Secundaria ' + secundaria);
     return parts.join(' · ');
@@ -987,6 +998,7 @@
       if (key === activeConsole) return;
       activeConsole = key;
       consoleButtons.forEach(function (b) { b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'); });
+      updatePaymentNote(window.__CONTENT || CONTENT_DEFAULTS);
       renderModalityCards();
     });
   });
