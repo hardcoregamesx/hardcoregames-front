@@ -573,14 +573,14 @@
       editions: [
         { key: 'standard', productId: 356, title: 'Standard', kind: 'edition' },
         { key: 'ultimate', productId: 359, title: 'Ultimate', kind: 'edition' },
-        { key: 'cuotas', productId: 244, title: 'Preventa a cuotas', kind: 'cuotas' }
+        { key: 'cuotas', productId: 244, title: 'Standard - A CUOTAS', kind: 'cuotas' }
       ]
     },
     xbox: {
       editions: [
         { key: 'standard', productId: 357, title: 'Standard', kind: 'edition' },
         { key: 'ultimate', productId: 358, title: 'Ultimate', kind: 'edition' },
-        { key: 'cuotas', productId: 243, title: 'Preventa a cuotas', kind: 'cuotas' }
+        { key: 'cuotas', productId: 243, title: 'Standard - A CUOTAS', kind: 'cuotas' }
       ]
     },
     pc: {
@@ -608,10 +608,14 @@
     price_unit: 'COP',
     cta_label: 'Elige tu plataforma',
     banner_image: '/fc27/hero-fc27.jpg',
+    // "Reserva y ahorra": sale de la ficha real de los productos a cuotas
+    // (244/243, "Con la primer cuota, puedes reservar y asegurar el valor
+    // de preventa") — reservar ahora congela el precio de preventa antes
+    // de que suba. Soporte incluye tutoriales 24/7 además de WhatsApp.
     trust: [
-      { title: 'Entrega hoy', desc: 'Cuenta o código al instante', tone: 'primary' },
+      { title: 'Reserva y ahorra', desc: 'Asegura el precio de preventa', tone: 'primary' },
       { title: 'Con garantía', desc: 'Reposición si algo falla', tone: 'accent' },
-      { title: 'Soporte real', desc: 'Por WhatsApp', tone: 'cta' }
+      { title: 'Soporte real', desc: 'Tutoriales 24/7 y WhatsApp', tone: 'cta' }
     ],
     step1_eyebrow: 'Paso 1',
     step1_title: '¿Cuál es tu plataforma?',
