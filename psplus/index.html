@@ -6,6 +6,15 @@
 <title>PlayStation Plus | Hardcore Games</title>
 <meta name="description" content="Elige tu plan de PlayStation Plus (Essential, Extra o Premium) en menos de un minuto. Reservas el primer abono aquí y coordinas el resto por WhatsApp.">
 <meta name="robots" content="noindex">
+<link rel="icon" type="image/png" href="/logo.png" sizes="any" />
+<link rel="apple-touch-icon" href="/logo.png" />
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.hardcoregames.co/psplus/">
+<meta property="og:title" content="PlayStation Plus | Hardcore Games">
+<meta property="og:description" content="Elige tu plan de PlayStation Plus (Essential, Extra o Premium) en menos de un minuto. Reservas el primer abono aquí y coordinas el resto por WhatsApp.">
+<meta property="og:image" content="https://www.hardcoregames.co/psplus/hero-psplus.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.hardcoregames.co/psplus/hero-psplus.jpg">
 <script>
   // El checkout de invitado guarda la sesión en localStorage, que es por
   // origen. Si alguien entra por el dominio raíz (sin "www"), esa sesión
@@ -152,6 +161,7 @@
 
   /* ---- selector de plan (paso 1) ---- */
   .choice-row { display: flex; flex-direction: column; gap: 10px; }
+  .choice-row.two-col { flex-direction: row; }
   .choice-btn {
     display: flex; align-items: center; justify-content: space-between; gap: 12px;
     background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
@@ -179,6 +189,7 @@
     font-weight: 700; font-size: 10.5px; letter-spacing: .06em; text-transform: uppercase; padding: 3px 8px; border-radius: 999px;
   }
   .plan-duration { font-weight: 800; font-size: 20px; }
+  .plan-duration .sub { display: block; font-weight: 500; font-size: 12px; color: var(--muted-foreground); margin-top: 2px; }
   .plan-price { font-weight: 800; font-size: 24px; }
   .plan-price-old { color: var(--muted-foreground); font-size: 13px; text-decoration: line-through; margin-left: 6px; }
   .plan-stock { font-size: 12px; color: var(--accent); }
@@ -461,6 +472,10 @@
 
   <section style="padding-top:28px;">
     <div class="trust" id="trustBar"></div>
+    <div class="portal-note payment-note" style="margin-top: 14px;">
+      <div class="t" id="v-flex_payment_title">¿Pagar todo de una vez o en cuotas? Tú eliges</div>
+      <div class="d" id="v-flex_payment_desc">El primer abono de aquí reserva tu cuenta. El resto lo coordinas por WhatsApp con tu asesor: lo pagas completo de una sola vez, o lo divides en cuotas mensuales — como te quede mejor.</div>
+    </div>
   </section>
 
   <section>
@@ -487,14 +502,31 @@
   <section>
     <div class="eyebrow" id="v-step2_eyebrow">Paso 2</div>
     <h2 class="sec-title" id="v-step2_title">Elige tu consola</h2>
-    <p class="sec-body" id="plansBody">Se entrega cuenta primaria o secundaria (la que haya disponible) para PS4 o PS5.</p>
+    <p class="sec-body" id="v-step2_body">El precio y la disponibilidad de cada modalidad pueden variar entre PS4 y PS5.</p>
+
+    <div class="choice-row two-col" id="choiceRowConsole">
+      <button class="choice-btn" data-console="ps4" aria-pressed="true">
+        <span><span class="h" id="v-console_ps4_title">PlayStation 4</span></span>
+        <span class="arrow">&rsaquo;</span>
+      </button>
+      <button class="choice-btn" data-console="ps5" aria-pressed="false">
+        <span><span class="h" id="v-console_ps5_title">PlayStation 5</span></span>
+        <span class="arrow">&rsaquo;</span>
+      </button>
+    </div>
+  </section>
+
+  <section>
+    <div class="eyebrow" id="v-step3_eyebrow">Paso 3</div>
+    <h2 class="sec-title" id="v-step3_title">Elige tu modalidad</h2>
+    <p class="sec-body" id="plansBody">Primaria: correo y clave, juegas en tu propio perfil. Secundaria: correo y clave, la cuenta se comparte.</p>
 
     <div class="plans plans-2" id="plansGrid"></div>
     <p class="sec-body" id="plansEmptyMsg" style="display:none; margin-top: 14px;"></p>
 
     <div class="portal-note payment-note">
-      <div class="t" id="v-payment_note_title">Así funciona el pago a cuotas</div>
-      <div class="d" id="v-payment_note_desc">Hoy pagas el primer abono para reservar tu cuenta. El resto — ya sea en cuotas mensuales o el saldo completo de una sola vez, si prefieres pagarlo así — lo coordinas directo con nuestro asesor por WhatsApp, sin vueltas.</div>
+      <div class="t" id="v-payment_note_title">Así funciona el pago</div>
+      <div class="d" id="v-payment_note_desc">Hoy pagas el primer abono para reservar tu cuenta. El resto — de una sola vez o en cuotas mensuales, como prefieras — lo coordinas directo con tu asesor por WhatsApp. Activamos de lunes a sábado, 10am–7pm; en algunos casos la entrega no es inmediata y puede tardar unas horas.</div>
     </div>
   </section>
 
@@ -582,25 +614,74 @@
     tiers: {
       essential: {
         title: 'PS Plus Essential',
-        desc: 'Multijugador online, descuentos y juegos mensuales gratis.',
-        step2_body: 'Se entrega cuenta primaria o secundaria (la que haya disponible) para PS4 o PS5.'
+        desc: 'Multijugador online, descuentos y juegos mensuales gratis.'
       },
       extra: {
         title: 'PS Plus Extra',
-        desc: 'Todo Essential + catálogo de cientos de juegos para descargar.',
-        step2_body: 'Se entrega cuenta primaria o secundaria (la que haya disponible) para PS4 o PS5.'
+        desc: 'Todo Essential + catálogo de cientos de juegos para descargar.'
       },
       premium: {
         title: 'PS Plus Premium',
-        desc: 'Todo Extra + pruebas de juegos y catálogo de clásicos.',
-        step2_body: 'Se entrega cuenta primaria o secundaria (la que haya disponible) para PS4 o PS5.'
+        desc: 'Todo Extra + pruebas de juegos y catálogo de clásicos.'
       }
     },
     step2_eyebrow: 'Paso 2',
     step2_title: 'Elige tu consola',
-    tier_empty_msg: 'Ahora mismo no tenemos cupos disponibles en este plan. Escríbenos por WhatsApp y te avisamos apenas entren, o mira otro plan de PS Plus arriba.',
-    payment_note_title: 'Así funciona el pago a cuotas',
-    payment_note_desc: 'Hoy pagas el primer abono para reservar tu cuenta. El resto — ya sea en cuotas mensuales o el saldo completo de una sola vez, si prefieres pagarlo así — lo coordinas directo con nuestro asesor por WhatsApp, sin vueltas.',
+    step2_body: 'El precio y la disponibilidad de cada modalidad pueden variar entre PS4 y PS5.',
+    console_ps4_title: 'PlayStation 4',
+    console_ps5_title: 'PlayStation 5',
+    step3_eyebrow: 'Paso 3',
+    step3_title: 'Elige tu modalidad',
+    step3_body: 'Primaria: correo y clave, juegas en tu propio perfil. Secundaria: correo y clave, juegas con el correo entregado.',
+    desc_primaria: 'Correo y clave, juegas en tu propio perfil.',
+    desc_secundaria: 'Correo y clave, juegas con el correo entregado.',
+    tier_empty_msg: 'Ahora mismo no tenemos cupos disponibles en esta modalidad para esta consola. Escríbenos por WhatsApp y te avisamos apenas entren, o mira otro plan o consola arriba.',
+    flex_payment_title: '¿Pagar todo de una vez o en cuotas? Tú eliges',
+    flex_payment_desc: 'El primer abono de aquí reserva tu cuenta. El resto lo coordinas por WhatsApp con tu asesor: lo pagas completo de una sola vez, o lo divides en cuotas mensuales — como te quede mejor.',
+    payment_note_title: 'Así funciona el pago',
+    payment_note_desc: 'Hoy pagas el primer abono para reservar tu cuenta. El resto — de una sola vez o en cuotas mensuales, como prefieras — lo coordinas directo con tu asesor por WhatsApp. Activamos de lunes a sábado, 10am–7pm; en algunos casos la entrega no es inmediata y puede tardar unas horas.',
+    // Si eliges pagar a cuotas en vez de completo: cantidad de cuotas y
+    // valor mensual, por nivel y licencia (varía porque el precio base
+    // también varía entre Primaria y Secundaria).
+    cuotas_essential_primaria: '2 cuotas mensuales de $90.000',
+    cuotas_essential_secundaria: '2 cuotas mensuales de $65.000',
+    // Extra: la ficha del producto (id 88) trae bloques separados por
+    // licencia y consola, actualizada el 18/08/2026. Primaria hoy solo
+    // existe en stock en PS4, y corresponde al bloque "PROMO PLAY 4,
+    // ACCESO PRINCIPAL" (3 cuotas de $50.000, 9 meses de servicio, sin
+    // valor de contado declarado — de ahí que Primaria no tenga
+    // contado_extra_primaria). Ese mismo bloque aclara que el abono de acá
+    // ($29.990 ≈ $30.000) es parcial: el resto de la primera cuota (o del
+    // contado si el cliente prefiere pagar todo de una vez) se coordina
+    // por WhatsApp — ya cubierto por flex_payment_desc/payment_note_desc,
+    // que son genéricos a todo el catálogo. Secundaria (PS4 y PS5, mismo
+    // precio en ambas) corresponde al bloque propio "SECUNDARIA PLAY 5/4":
+    // pago inicial de $80.000 + DOS cuotas de $80.000 mensual, contado
+    // total $220.000. Primaria SÍ varía por consola — de ahí las claves
+    // `_ps4`/`_ps5` (ver `licenceValue`, que las busca antes que la
+    // genérica): PS4 usa "PROMO PLAY 4, ACCESO PRINCIPAL" (sin contado
+    // declarado en la ficha) y PS5 usa "PRIMARIA PLAY 5" (contado
+    // $300.000, inicial $100.000 + 3 cuotas de $80.000). PS5 Primaria no
+    // tiene stock real hoy, pero el precio se muestra igual apenas se
+    // elige esa consola en el paso 2 — así lo pidió el usuario, no
+    // depende de que haya cupos en ese momento.
+    cuotas_extra_primaria_ps4: '3 cuotas mensuales de $50.000 (9 meses de servicio)',
+    cuotas_extra_primaria_ps5: 'Inicial de $100.000 + 3 cuotas mensuales de $80.000',
+    cuotas_extra_secundaria: 'Inicial de $80.000 + 2 cuotas mensuales de $80.000',
+    cuotas_premium_primaria: '4 cuotas mensuales de $80.000',
+    cuotas_premium_secundaria: '3 cuotas mensuales de $66.000',
+    // Pago de contado (una sola vez): valor TOTAL, no el abono. Sale
+    // directo de la ficha del producto en el admin ("PAGO DE CONTADO
+    // TOTAL"), salvo contado_extra_primaria_ps4: la ficha del "PROMO PLAY
+    // 4" no lo declara (solo dice que el excedente se paga por WhatsApp);
+    // este valor lo dio el usuario directamente, no viene de la ficha.
+    contado_essential_primaria: '$240.000',
+    contado_essential_secundaria: '$150.000',
+    contado_extra_primaria_ps4: '$130.000',
+    contado_extra_primaria_ps5: '$300.000',
+    contado_extra_secundaria: '$220.000',
+    contado_premium_primaria: '$365.000',
+    contado_premium_secundaria: '$250.000',
     badge_best_price: 'Mejor precio',
     pick_button_label: 'Elegir',
     sold_out_label: 'Agotado',
@@ -615,6 +696,8 @@
       { q: '¿Cuál es la diferencia entre Essential, Extra y Premium?', a: 'Essential trae multijugador online y juegos mensuales gratis. Extra suma un catálogo de cientos de juegos para descargar. Premium agrega pruebas de juegos y catálogo de clásicos.' },
       { q: '¿Cómo sé si elegir PS4 o PS5?', a: 'Elige la consola donde vas a jugar. La cuenta se instala mediante código QR directo en esa consola.' },
       { q: '¿Necesito estar pendiente de algo después de pagar?', a: 'Sí, un asesor te escribe por WhatsApp para completar la activación. Atendemos de lunes a sábado, 10am a 7pm — si compras fuera de ese horario, puede tardar unas horas.' },
+      { q: '¿Los juegos están en español?', a: 'El 95% del catálogo está en español (aplica para una sola consola).' },
+      { q: '¿Puedo reclamar los juegos gratis mensuales de esa cuenta?', a: 'Sí, puedes reclamarlos sin problema. Al finalizar tu suscripción puedes renovarla para conservar todo el catálogo de juegos gratis que ya reclamaste.' },
       { q: '¿Qué pasa si la cuenta falla?', a: 'Tienes garantía: si algo no funciona, te la reponemos. Escríbenos por WhatsApp y lo resolvemos.' }
     ],
     portal_title: '¿Quieres ver toda la letra chica del plan?',
@@ -663,6 +746,44 @@
   }
 
   // ---------------- contenido de texto ----------------
+  // El valor y número de cuotas cambia según el nivel Y la licencia (el
+  // precio base de Primaria y Secundaria no es el mismo, salvo en Extra
+  // donde sí coinciden). Se recalcula cada vez que cambia el nivel activo
+  // O la consola activa (Extra Primaria tiene precio distinto en PS4 vs
+  // PS5 — ver el bloque "PROMO PLAY 4" vs "PRIMARIA PLAY 5" de la ficha
+  // del producto 88). Busca primero una clave específica por consola
+  // (`<prefix>_<tier>_<licencia>_<ps4|ps5>`) y cae al genérico
+  // (`<prefix>_<tier>_<licencia>`) si no existe — así Essential y Premium,
+  // que no varían por consola, no necesitan claves duplicadas.
+  // Arma "Primaria X · Secundaria Y" pero omite la licencia sin dato en vez
+  // de mostrar un "—" que parece un error (pasa con contado_extra_primaria_ps4,
+  // que no existe porque esa ficha no declara un total de contado ahí).
+  function licenceValue(c, prefix, licencia) {
+    return c[prefix + '_' + activeTier + '_' + licencia + '_' + activeConsole] ||
+      c[prefix + '_' + activeTier + '_' + licencia];
+  }
+  function licencePairLine(c, prefix) {
+    var parts = [];
+    var primaria = licenceValue(c, prefix, 'primaria');
+    var secundaria = licenceValue(c, prefix, 'secundaria');
+    if (primaria) parts.push('Primaria ' + primaria);
+    if (secundaria) parts.push('Secundaria ' + secundaria);
+    return parts.join(' · ');
+  }
+
+  function updatePaymentNote(c) {
+    var el = document.getElementById('v-payment_note_desc');
+    if (!el) return;
+    var cuotasPair = licencePairLine(c, 'cuotas');
+    var cuotasLine = cuotasPair ? ' Si eliges cuotas: ' + cuotasPair + ', después del abono inicial.' : '';
+    // Total de contado (pago de una sola vez), no siempre disponible: ver
+    // nota junto a contado_essential_primaria más arriba (contado_extra_primaria
+    // no existe, esa ficha no declara un total de contado para esa licencia).
+    var contadoPair = licencePairLine(c, 'contado');
+    var contadoLine = contadoPair ? ' Si prefieres pagar de una sola vez: ' + contadoPair + ' en total.' : '';
+    el.textContent = (c.payment_note_desc || '') + cuotasLine + contadoLine;
+  }
+
   function renderContent(c) {
     c = Object.assign({}, CONTENT_DEFAULTS, c || {});
     c.tiers = Object.assign({}, CONTENT_DEFAULTS.tiers, c.tiers || {});
@@ -676,6 +797,8 @@
     setText('v-step1_eyebrow', c.step1_eyebrow);
     setText('v-step1_title', c.step1_title);
     setText('v-step1_body', c.step1_body);
+    setText('v-flex_payment_title', c.flex_payment_title);
+    setText('v-flex_payment_desc', c.flex_payment_desc);
     TIERS.forEach(function (t) {
       var tc = c.tiers[t.key] || {};
       setText('v-tier-' + t.key + '-title', tc.title);
@@ -683,8 +806,13 @@
     });
     setText('v-step2_eyebrow', c.step2_eyebrow);
     setText('v-step2_title', c.step2_title);
+    setText('v-step2_body', c.step2_body);
+    setText('v-console_ps4_title', c.console_ps4_title);
+    setText('v-console_ps5_title', c.console_ps5_title);
+    setText('v-step3_eyebrow', c.step3_eyebrow);
+    setText('v-step3_title', c.step3_title);
     setText('v-payment_note_title', c.payment_note_title);
-    setText('v-payment_note_desc', c.payment_note_desc);
+    updatePaymentNote(c);
     setText('v-faq_eyebrow', c.faq_eyebrow);
     setText('v-faq_title', c.faq_title);
     setText('v-portal_title', c.portal_title);
@@ -724,19 +852,29 @@
       faqList.appendChild(d);
     });
 
-    document.getElementById('plansBody').textContent = (c.tiers[activeTier] || {}).step2_body || '';
+    document.getElementById('plansBody').textContent = c.step3_body || '';
 
     window.__CONTENT = c;
-    renderTierPlans(activeTier);
+    renderModalityCards();
   }
 
   // ---------------- planes (datos reales del catálogo) ----------------
-  // A diferencia de /gamepassultimate/, aquí no hay duración que elegir
-  // (cada nivel es un plazo fijo cargado así en el catálogo): la variable
-  // dentro de cada nivel es la consola. Tampoco se distingue por licencia
-  // (Primaria/Secundaria) — el producto se entrega "la que haya
-  // disponible", igual que el modo cuotas de gamepassultimate.
-  var LICENCE_PRIORITY = ['Primaria', 'Codigo', 'Secundaria'];
+  // Cada nivel (essential/extra/premium) es un producto distinto; dentro de
+  // cada uno las filas varían por consola (PS4/PS5) Y por licencia
+  // (Primaria/Secundaria) — ambas dimensiones son reales y pueden diferir
+  // en precio/stock entre sí (confirmado en vivo: Extra-PS4 tiene Primaria
+  // Y Secundaria, Extra-PS5 solo Secundaria). La consola se elige en el
+  // paso 2 y TODAS las licencias disponibles para esa combinación se
+  // muestran en el paso 3, sin colapsar a "la que haya disponible" como
+  // antes.
+  var LICENCE_ORDER = ['Primaria', 'Secundaria', 'Codigo'];
+  var LICENCE_LABEL = { Primaria: 'Primaria', Secundaria: 'Secundaria', Codigo: 'Código' };
+  var LICENCE_KEY = { Primaria: 'primaria', Secundaria: 'secundaria', Codigo: 'codigo' };
+  function licenceDesc(c, licence) {
+    return c['desc_' + (LICENCE_KEY[licence] || licence.toLowerCase())] || '';
+  }
+
+  var activeConsole = 'ps4';
 
   // pk (string) -> { plan, productId }. Se llena cada vez que se pinta una
   // tarjeta y lo lee el click de "Elegir" para saber a qué producto
@@ -747,49 +885,52 @@
     PLAN_INDEX[String(plan.pk)] = { plan: plan, productId: productId };
   }
 
+  // getCombinationPriceByGame puede devolver varias filas para la MISMA
+  // consola+licencia (mismo patrón ya visto en gamepassultimate y
+  // grandtheftautovi) — se agrupan, se suma el stock y se elige una fila
+  // representativa (prioriza stock>0, luego precio más bajo) para precio/pk.
   function pickRepresentative(rows) {
     function score(r) {
       var stockScore = r.stock > 0 ? 0 : 1;
-      var licenceScore = LICENCE_PRIORITY.indexOf(r.desc_licence);
-      if (licenceScore === -1) licenceScore = LICENCE_PRIORITY.length;
-      return stockScore * 1e9 + licenceScore * 1e6 + planPrice(r);
+      return stockScore * 1e9 + planPrice(r);
     }
     return rows.reduce(function (best, r) { return score(r) < score(best) ? r : best; }, rows[0]);
   }
 
-  function groupByConsole(rows) {
-    var byConsole = {};
+  function groupByLicence(rows) {
+    var byLicence = {};
     rows.forEach(function (r) {
-      var key = r.desc_console;
-      if (!byConsole[key]) byConsole[key] = [];
-      byConsole[key].push(r);
+      var key = r.desc_licence;
+      if (!byLicence[key]) byLicence[key] = [];
+      byLicence[key].push(r);
     });
-    return Object.keys(byConsole).map(function (k) {
-      var group = byConsole[k];
+    return Object.keys(byLicence).map(function (key) {
+      var group = byLicence[key];
       var rep = pickRepresentative(group);
       var totalStock = group.reduce(function (s, r) { return s + r.stock; }, 0);
       return {
-        desc_console: k, precio: rep.precio, precio_descuento: rep.precio_descuento,
-        stock: totalStock, pk: rep.pk, consola: rep.consola,
-        licencia: rep.licencia, desc_licence: rep.desc_licence
+        desc_licence: key, precio: rep.precio, precio_descuento: rep.precio_descuento,
+        stock: totalStock, pk: rep.pk, consola: rep.consola, desc_console: rep.desc_console,
+        licencia: rep.licencia
       };
-    }).sort(function (a, b) { return (a.consola || 0) - (b.consola || 0); });
+    }).sort(function (a, b) { return LICENCE_ORDER.indexOf(a.desc_licence) - LICENCE_ORDER.indexOf(b.desc_licence); });
   }
 
-  function planCardHTML(plan, productId, isRecommended, badgeText, c, labelText) {
+  function planCardHTML(plan, productId, isRecommended, c) {
     var soldOut = isSoldOut(plan);
     var stockLow = plan.stock <= (c.low_stock_threshold || 2);
     var price = planPrice(plan);
     var href = 'https://www.hardcoregames.co/product/' + productId;
-    // Una consola agotada se sigue mostrando (sirve de referencia de
+    // Una licencia agotada se sigue mostrando (sirve de referencia de
     // precio y de "esto existe, vuelve luego"), pero no se puede comprar:
     // el botón deja de ser <a class="plan-pick"> — que es lo que engancha
     // el handler de carrito — y pasa a ser un <span class="plan-off">
     // inerte.
     return (
       '<div class="plan-card' + (isRecommended ? ' is-recommended' : '') + (soldOut ? ' is-sold-out' : '') + '">' +
-      (isRecommended ? '<span class="plan-badge">' + badgeText + '</span>' : '') +
-      '<div class="plan-duration">' + labelText + '</div>' +
+      (isRecommended ? '<span class="plan-badge">' + c.badge_best_price + '</span>' : '') +
+      '<div class="plan-duration">' + (LICENCE_LABEL[plan.desc_licence] || plan.desc_licence) +
+        '<span class="sub">' + licenceDesc(c, plan.desc_licence) + '</span></div>' +
       '<div><span class="plan-price tabular">' + fmtCOP(price) + '</span>' +
       (plan.precio > price ? '<span class="plan-price-old tabular">' + fmtCOP(plan.precio) + '</span>' : '') + '</div>' +
       (soldOut
@@ -803,9 +944,7 @@
   }
 
   // Índice del plan más barato ENTRE LOS DISPONIBLES: no tiene sentido
-  // colgarle "Mejor precio" a una tarjeta que no se puede comprar. Sin
-  // duración que comparar (a diferencia de gamepassultimate), aquí "mejor
-  // precio" es directamente el más barato entre las consolas disponibles.
+  // colgarle "Mejor precio" a una tarjeta que no se puede comprar.
   function bestValueIndex(plans) {
     return plans.reduce(function (bestI, p, i, arr) {
       if (isSoldOut(p)) return bestI;
@@ -814,33 +953,33 @@
     }, -1);
   }
 
-  function renderAvailabilityMsg(msgEl, plans, emptyText, c) {
+  function renderAvailabilityMsg(msgEl, plans, emptyText) {
     if (!msgEl) return;
-    var text = '';
-    if (!plans.length) text = emptyText || '';
-    else if (!plans.some(function (p) { return !isSoldOut(p); })) text = c.all_sold_out_msg || emptyText || '';
+    var text = !plans.length ? (emptyText || '') : '';
     msgEl.textContent = text;
     msgEl.style.display = text ? '' : 'none';
   }
 
-  function renderTierPlans(tierKey) {
+  function renderModalityCards() {
     var c = window.__CONTENT || CONTENT_DEFAULTS;
-    var tier = TIER_BY_KEY[tierKey];
-    var rows = (window.__PLANS_BY_TIER || {})[tierKey] || [];
-    var plans = groupByConsole(rows);
+    var tier = TIER_BY_KEY[activeTier];
+    var rows = (window.__PLANS_BY_TIER || {})[activeTier] || [];
+    var targetConsole = activeConsole === 'ps4' ? 'PS4' : 'PS5';
+    var consoleRows = rows.filter(function (r) { return shortConsole(r.desc_console) === targetConsole; });
+    var plans = groupByLicence(consoleRows);
     var container = document.getElementById('plansGrid');
     var emptyMsg = document.getElementById('plansEmptyMsg');
 
-    renderAvailabilityMsg(emptyMsg, plans, c.tier_empty_msg, c);
+    renderAvailabilityMsg(emptyMsg, plans, c.tier_empty_msg);
     if (!plans.length) {
       container.innerHTML = '';
       return;
     }
 
     plans.forEach(function (p) { registerPlan(p, tier.productId); });
-    var bestIndex = bestValueIndex(plans);
+    var bestIndex = plans.length > 1 ? bestValueIndex(plans) : -1;
     container.innerHTML = plans.map(function (p, i) {
-      return planCardHTML(p, tier.productId, i === bestIndex && plans.length > 1, c.badge_best_price, c, shortConsole(p.desc_console));
+      return planCardHTML(p, tier.productId, i === bestIndex, c);
     }).join('');
   }
 
@@ -852,11 +991,23 @@
       if (tierKey === activeTier) return;
       activeTier = tierKey;
       tierButtons.forEach(function (b) { b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'); });
-      var c = window.__CONTENT || CONTENT_DEFAULTS;
-      document.getElementById('plansBody').textContent = (c.tiers[activeTier] || {}).step2_body || '';
       var portalLink = document.getElementById('v-portal_link');
       if (portalLink) portalLink.setAttribute('href', 'https://www.hardcoregames.co/product/' + TIER_BY_KEY[activeTier].productId);
-      renderTierPlans(activeTier);
+      updatePaymentNote(window.__CONTENT || CONTENT_DEFAULTS);
+      renderModalityCards();
+    });
+  });
+
+  // ---------------- selector de consola (paso 2) ----------------
+  var consoleButtons = document.querySelectorAll('.choice-btn[data-console]');
+  consoleButtons.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var key = btn.getAttribute('data-console');
+      if (key === activeConsole) return;
+      activeConsole = key;
+      consoleButtons.forEach(function (b) { b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'); });
+      updatePaymentNote(window.__CONTENT || CONTENT_DEFAULTS);
+      renderModalityCards();
     });
   });
 
@@ -1206,7 +1357,7 @@
       .then(function (res) {
         if (res && Array.isArray(res.data)) {
           window.__PLANS_BY_TIER[t.key] = res.data;
-          if (t.key === activeTier) renderTierPlans(t.key);
+          if (t.key === activeTier) renderModalityCards();
         }
       })
       .catch(function () { /* se queda con los planes por defecto de ese nivel */ });
