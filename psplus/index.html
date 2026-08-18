@@ -651,8 +651,16 @@
     // ficha anterior traía $250.000 y "3 cuotas de $66.000" — corregido).
     // El bloque "PRIMARIA PLAY 5" (contado $300.000, inicial $100.000 + 3
     // cuotas de $80.000) sigue sin stock de Primaria PS5 en Extra — no se
-    // usa mientras esa combinación no tenga cupos reales.
-    cuotas_extra_primaria: '3 cuotas mensuales de $50.000 (9 meses de servicio)',
+    // usa mientras esa combinación no tenga cupos reales. IMPORTANTE: esta
+    // nota (`updatePaymentNote`) se arma solo por nivel (`activeTier`), NO
+    // por consola — cambiar de PS4 a PS5 en el paso 2 no la vuelve a
+    // calcular (ver el click handler de consola en renderModalityCards).
+    // Por eso el precio de Primaria acá SIEMPRE debe traer "(solo PS4)"
+    // explícito en el texto: si algún día se carga stock real de Primaria
+    // en PS5 con otro precio (el bloque "PRIMARIA PLAY 5" de arriba), esta
+    // nota seguiría mostrando el precio de PS4 sin aclararlo si se quita
+    // la etiqueta, y confundiría a cualquiera que la lea estando en PS5.
+    cuotas_extra_primaria: '3 cuotas mensuales de $50.000 (9 meses de servicio, solo PS4)',
     cuotas_extra_secundaria: 'Inicial de $80.000 + 2 cuotas mensuales de $80.000',
     cuotas_premium_primaria: '4 cuotas mensuales de $80.000',
     cuotas_premium_secundaria: '3 cuotas mensuales de $66.000',
