@@ -463,6 +463,10 @@
 
   <section style="padding-top:28px;">
     <div class="trust" id="trustBar"></div>
+    <div class="portal-note payment-note" style="margin-top: 14px;">
+      <div class="t" id="v-flex_payment_title">¿Pagar todo de una vez o en cuotas? Tú eliges</div>
+      <div class="d" id="v-flex_payment_desc">El primer abono de aquí reserva tu cuenta. El resto lo coordinas por WhatsApp con tu asesor: lo pagas completo de una sola vez, o lo divides en cuotas mensuales — como te quede mejor.</div>
+    </div>
   </section>
 
   <section>
@@ -512,8 +516,8 @@
     <p class="sec-body" id="plansEmptyMsg" style="display:none; margin-top: 14px;"></p>
 
     <div class="portal-note payment-note">
-      <div class="t" id="v-payment_note_title">Así funciona el pago a cuotas</div>
-      <div class="d" id="v-payment_note_desc">Hoy pagas el primer abono para reservar tu cuenta. El resto — ya sea en cuotas mensuales o el saldo completo de una sola vez, si prefieres pagarlo así — lo coordinas directo con nuestro asesor por WhatsApp, sin vueltas.</div>
+      <div class="t" id="v-payment_note_title">Así funciona el pago</div>
+      <div class="d" id="v-payment_note_desc">Hoy pagas el primer abono para reservar tu cuenta. El resto — de una sola vez o en cuotas mensuales, como prefieras — lo coordinas directo con tu asesor por WhatsApp. Activamos de lunes a sábado, 10am–7pm; en algunos casos la entrega no es inmediata y puede tardar unas horas.</div>
     </div>
   </section>
 
@@ -623,8 +627,10 @@
     desc_primaria: 'Correo y clave, juegas en tu propio perfil.',
     desc_secundaria: 'Correo y clave, la cuenta se comparte con otros usuarios.',
     tier_empty_msg: 'Ahora mismo no tenemos cupos disponibles en esta modalidad para esta consola. Escríbenos por WhatsApp y te avisamos apenas entren, o mira otro plan o consola arriba.',
-    payment_note_title: 'Así funciona el pago a cuotas',
-    payment_note_desc: 'Hoy pagas el primer abono para reservar tu cuenta. El resto — ya sea en cuotas mensuales o el saldo completo de una sola vez, si prefieres pagarlo así — lo coordinas directo con nuestro asesor por WhatsApp, sin vueltas.',
+    flex_payment_title: '¿Pagar todo de una vez o en cuotas? Tú eliges',
+    flex_payment_desc: 'El primer abono de aquí reserva tu cuenta. El resto lo coordinas por WhatsApp con tu asesor: lo pagas completo de una sola vez, o lo divides en cuotas mensuales — como te quede mejor.',
+    payment_note_title: 'Así funciona el pago',
+    payment_note_desc: 'Hoy pagas el primer abono para reservar tu cuenta. El resto — de una sola vez o en cuotas mensuales, como prefieras — lo coordinas directo con tu asesor por WhatsApp. Activamos de lunes a sábado, 10am–7pm; en algunos casos la entrega no es inmediata y puede tardar unas horas.',
     badge_best_price: 'Mejor precio',
     pick_button_label: 'Elegir',
     sold_out_label: 'Agotado',
@@ -700,6 +706,8 @@
     setText('v-step1_eyebrow', c.step1_eyebrow);
     setText('v-step1_title', c.step1_title);
     setText('v-step1_body', c.step1_body);
+    setText('v-flex_payment_title', c.flex_payment_title);
+    setText('v-flex_payment_desc', c.flex_payment_desc);
     TIERS.forEach(function (t) {
       var tc = c.tiers[t.key] || {};
       setText('v-tier-' + t.key + '-title', tc.title);
