@@ -663,13 +663,12 @@
     cuotas_premium_secundaria: '3 cuotas mensuales de $66.000',
     // Pago de contado (una sola vez): valor TOTAL, no el abono. Sale
     // directo de la ficha del producto en el admin ("PAGO DE CONTADO
-    // TOTAL"). contado_extra_primaria_ps4 NO existe a propósito: el bloque
-    // "PROMO PLAY 4" no declara un total de contado, solo dice que el
-    // excedente se paga por WhatsApp — mostrar un número acá sería
-    // inventado. Pendiente: pedirle al usuario el monto real si el
-    // negocio lo define más adelante.
+    // TOTAL"), salvo contado_extra_primaria_ps4: la ficha del "PROMO PLAY
+    // 4" no lo declara (solo dice que el excedente se paga por WhatsApp);
+    // este valor lo dio el usuario directamente, no viene de la ficha.
     contado_essential_primaria: '$240.000',
     contado_essential_secundaria: '$150.000',
+    contado_extra_primaria_ps4: '$130.000',
     contado_extra_primaria_ps5: '$300.000',
     contado_extra_secundaria: '$220.000',
     contado_premium_primaria: '$365.000',
