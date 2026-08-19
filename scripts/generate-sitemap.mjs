@@ -23,6 +23,13 @@ const STATIC_ROUTES = [
   { path: "/new-releases", changefreq: "daily", priority: "0.8" },
   { path: "/destacados", changefreq: "daily", priority: "0.8" },
   { path: "/most-sold", changefreq: "daily", priority: "0.8" },
+  // Landings estaticas propias (carpeta fisica con su index.html, no rutas
+  // del SPA): no tenian entrada aqui y por tanto nunca las descubria el
+  // crawler via sitemap (GSC 18/08/2026).
+  { path: "/fc27", changefreq: "weekly", priority: "0.8" },
+  { path: "/gamepassultimate", changefreq: "weekly", priority: "0.8" },
+  { path: "/psplus", changefreq: "weekly", priority: "0.8" },
+  { path: "/grandtheftautovi", changefreq: "weekly", priority: "0.8" },
 ];
 
 function urlTag({ loc, lastmod, changefreq, priority }) {
