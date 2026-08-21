@@ -18,14 +18,15 @@
  *    pagando una cifra distinta de la que vio.
  */
 (function () {
-  // Gate de beta: el boton solo existe para quien lo active con ?sc=1 (queda
-  // recordado y sobrevive a la navegacion del SPA). Con ?sc=0 se apaga.
+  // Abierto a todo el publico desde el 21/08/2026. Queda un interruptor
+  // personal para depurar: ?sc=0 lo oculta en este navegador, ?sc=1 lo
+  // vuelve a mostrar. Si localStorage esta bloqueado, el boton se muestra.
   try {
     var scP = new URLSearchParams(location.search).get('sc');
-    if (scP === '1') localStorage.setItem('sc_beta', '1');
-    if (scP === '0') localStorage.removeItem('sc_beta');
-    if (localStorage.getItem('sc_beta') !== '1') return;
-  } catch (e) { return; }
+    if (scP === '0') localStorage.setItem('sc_off', '1');
+    if (scP === '1') localStorage.removeItem('sc_off');
+    if (localStorage.getItem('sc_off') === '1') return;
+  } catch (e) { /* storage bloqueado: se muestra igual */ }
 
   if (location.pathname !== '/checkout') return;
 
@@ -112,13 +113,16 @@
     return null;
   }
 
-  function readAppliedCoupon() {
-    // Solo cuenta si el checkout ya lo dio por valido (renderiza la fila de
-    // descuento); el texto tecleado sin aplicar no debe viajar.
-    if (readSummaryRow(/^Descuento cup[oó]n$/i) === null) return null;
+  // Devuelve {applied, code}. "applied" se decide por la fila de descuento
+  // que renderiza el checkout (el texto tecleado sin aplicar no cuenta), y
+  // "code" sale del propio formulario. Si hay descuento pero no se puede
+  // leer el codigo, el llamador DEBE abortar: mandar couponCode null haria
+  // que el servidor recalculara sin descuento y el cliente pagaria de mas.
+  function couponState() {
+    var applied = readSummaryRow(/^Descuento cup[oó]n$/i) !== null;
     var input = document.querySelector('input[placeholder="Ingresa tu cupón"]');
     var code = input && input.value ? input.value.trim() : '';
-    return code || null;
+    return { applied: applied, code: code || null };
   }
 
   // ---------------- boton ----------------
@@ -285,8 +289,14 @@
     // checkout esta mostrando.
     function buildOrder(cb) {
       var state = getRouterState();
-      var couponCode = readAppliedCoupon();
+      var coupon = couponState();
+      var couponCode = coupon.code;
       var domTotal = readSummaryRow(/^Total:?$/);
+
+      if (coupon.applied && !couponCode) {
+        fail('No pudimos leer tu cupón. Vuelve a aplicarlo y reintenta, o paga con tarjeta.');
+        return;
+      }
 
       if (state && state.items && state.items.length) {
         var items = state.items;
