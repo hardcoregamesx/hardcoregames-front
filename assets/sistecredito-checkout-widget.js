@@ -114,14 +114,18 @@
   }
 
   // Devuelve {applied, code}. "applied" se decide por la fila de descuento
-  // que renderiza el checkout (el texto tecleado sin aplicar no cuenta), y
-  // "code" sale del propio formulario. Si hay descuento pero no se puede
-  // leer el codigo, el llamador DEBE abortar: mandar couponCode null haria
-  // que el servidor recalculara sin descuento y el cliente pagaria de mas.
+  // que renderiza el checkout. El codigo NO se lee del <input>: en cuanto el
+  // checkout valida el cupon, reemplaza el input por una casilla verde de
+  // confirmacion (el input desaparece del DOM), que es justo el momento en
+  // que se necesita leer el codigo. Se lee de esa casilla en su lugar --
+  // clases literales de Tailwind, no hasheadas, estables entre builds.
+  // Si hay descuento pero no se puede leer el codigo, el llamador DEBE
+  // abortar: mandar couponCode null haria que el servidor recalculara sin
+  // descuento y el cliente pagaria de mas.
   function couponState() {
     var applied = readSummaryRow(/^Descuento cup[oó]n$/i) !== null;
-    var input = document.querySelector('input[placeholder="Ingresa tu cupón"]');
-    var code = input && input.value ? input.value.trim() : '';
+    var badge = document.querySelector('[class*="bg-green-500/20"][class*="border-green-500/30"]');
+    var code = badge && badge.textContent ? badge.textContent.trim() : '';
     return { applied: applied, code: code || null };
   }
 
