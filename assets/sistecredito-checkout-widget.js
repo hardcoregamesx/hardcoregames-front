@@ -38,9 +38,9 @@
   var style = document.createElement('style');
   style.textContent =
     '#' + BTN_ID + '{background:#fff!important;border:1px solid #d7dce5!important;' +
-    'color:#123a8f!important;display:flex!important;align-items:center;justify-content:center;gap:8px;}' +
+    'color:#123a8f!important;display:flex!important;align-items:center;justify-content:center;gap:8px;padding-top:12px!important;padding-bottom:12px!important;}' +
     '#' + BTN_ID + ':hover{background:#f2f4f8!important;}' +
-    '#' + BTN_ID + ' img{height:22px;width:auto;display:block;}' +
+    '#' + BTN_ID + ' img{height:24px;width:auto;max-width:78%;object-fit:contain;display:block;margin:0 auto;}' +
     '#' + BTN_ID + ' .sc-btn-text{font-weight:800;}';
   document.head.appendChild(style);
 
