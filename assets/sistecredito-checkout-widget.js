@@ -128,7 +128,7 @@
       '</style>' +
       '<div class="sc-dialog" role="dialog" aria-modal="true" aria-labelledby="scTitle">' +
       '<h3 id="scTitle">Pagar con Sistecrédito</h3>' +
-      '<p class="sc-sub">Confirma tu documento para calcular tu cupo y continuar.</p>' +
+      '<p class="sc-sub">Sistecrédito te pedirá tus datos y te enviará un código por SMS para elegir tus cuotas.</p>' +
       '<div id="scBody"><div class="sc-loading">Cargando tu carrito…</div></div>' +
       '<button type="button" class="sc-cancel" id="scCancel">Cancelar</button>' +
       '</div>';
@@ -149,10 +149,6 @@
       var fee = Math.round(subtotal * SURCHARGE_MULTIPLIER) - subtotal;
       var total = subtotal + fee;
       body.innerHTML =
-        '<div class="sc-field"><label>Tipo y número de documento</label>' +
-        '<div class="sc-row">' +
-        '<select id="scDocType"><option value="CC">CC</option><option value="CE">CE</option><option value="NIT">NIT</option></select>' +
-        '<input type="text" inputmode="numeric" id="scDocNumber" placeholder="Número de documento"></div></div>' +
         '<div class="sc-breakdown">' +
         '<div class="sc-b-row muted"><span>Subtotal</span><span>' + money(subtotal) + '</span></div>' +
         '<div class="sc-b-row fee"><span>Tarifa Sistecrédito</span><span>+' + money(fee) + '</span></div>' +
@@ -161,8 +157,6 @@
         '<p class="sc-error" id="scError"></p>' +
         '<button type="button" class="sc-submit" id="scSubmit">Continuar con Sistecrédito</button>';
 
-      var docType = body.querySelector('#scDocType');
-      var docNumber = body.querySelector('#scDocNumber');
       var errorEl = body.querySelector('#scError');
       var submitBtn = body.querySelector('#scSubmit');
 
@@ -170,8 +164,6 @@
       function clearError() { errorEl.textContent = ''; errorEl.classList.remove('is-visible'); }
 
       submitBtn.addEventListener('click', function () {
-        var document_ = docNumber.value.replace(/\D/g, '');
-        if (!document_) { showError('Escribe tu número de documento.'); return; }
         clearError();
         submitBtn.disabled = true;
         submitBtn.textContent = 'Conectando con Sistecrédito…';
@@ -185,7 +177,7 @@
         fetch(CREATE_API, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ request_transaction: requestTransaction, docType: docType.value, document: document_ })
+          body: JSON.stringify({ request_transaction: requestTransaction })
         }).then(function (r) { return r.json().then(function (data) { return { ok: r.ok, status: r.status, data: data }; }); })
           .then(function (res) {
             if (res.ok && res.data.paymentRedirectUrl) {
