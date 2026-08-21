@@ -51,11 +51,18 @@ if (!res.ok) {
 const body = await res.json();
 const products = Array.isArray(body?.data) ? body.data : [];
 
+// Huerfanos confirmados el 21/08/2026: sin ninguna fila de GameDetail (ni
+// variante, ni precio, ni stock) en la base de datos, no vendibles bajo
+// ninguna circunstancia. Google los rechazaba en la pestana de Shopping por
+// aparecer "disponibles" a $0. Quitar un ID de aqui en cuanto se le cargue
+// una variante real.
+const ORPHAN_PRODUCT_IDS = new Set([32, 60, 99, 126]);
+
 const seen = new Set();
 const productUrls = [];
 for (const p of products) {
   const id = p?.id_product;
-  if (!Number.isInteger(id) || seen.has(id)) continue;
+  if (!Number.isInteger(id) || seen.has(id) || ORPHAN_PRODUCT_IDS.has(id)) continue;
   seen.add(id);
   const lastmod = p.date_last_modified || p.date_register || null;
   productUrls.push({
