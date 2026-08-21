@@ -137,6 +137,24 @@
       }
     );
     var price = priceEl ? textOf(priceEl) : "";
+    var priceValue = price ? price.replace(/[^\d]/g, "") : "";
+
+    // "Sin stock" se renderiza junto al precio cuando no hay variante
+    // disponible, y en ese estado el precio mostrado cae a "COP $0" (bug
+    // de UI aparte, ver ficha /product/24). Sin este chequeo, ese "$0"
+    // pasaba tal cual al JSON-LD como Offer "InStock" a $0 -- precio
+    // invalido que Google Merchant Center rechaza. Tratamos "sin stock"
+    // o precio "0" igual que "no se encontro precio": no se emite Offer.
+    var outOfStockEl = Array.prototype.find.call(
+      main.querySelectorAll("*"),
+      function (n) {
+        return n.children.length === 0 && /^sin stock$/i.test(textOf(n));
+      }
+    );
+    if (outOfStockEl || priceValue === "0") {
+      price = "";
+      priceValue = "";
+    }
 
     var platformEl = Array.prototype.find.call(
       main.querySelectorAll("*"),
@@ -174,7 +192,6 @@
     setRobots("index,follow");
 
     var img = main.querySelector("img");
-    var priceValue = price ? price.replace(/[^\d]/g, "") : null;
 
     setJsonLd("seo-product-jsonld", {
       "@context": "https://schema.org",
