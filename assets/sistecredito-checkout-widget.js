@@ -12,6 +12,15 @@
  * auth/carrito reusado acá.
  */
 (function () {
+  // Gate de beta: el boton solo existe para quien lo active con ?sc=1 (queda
+  // recordado y sobrevive a la navegacion del SPA). Con ?sc=0 se apaga.
+  try {
+    var scP = new URLSearchParams(location.search).get("sc");
+    if (scP === "1") localStorage.setItem("sc_beta", "1");
+    if (scP === "0") localStorage.removeItem("sc_beta");
+    if (localStorage.getItem("sc_beta") !== "1") return;
+  } catch (e) { return; }
+
   if (location.pathname !== '/checkout') return;
 
   var CART_API = 'https://api.srv936408.hstgr.cloud/shopping-car/';
