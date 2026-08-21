@@ -96,6 +96,22 @@
     return el && el.textContent ? el.textContent.trim() : "";
   }
 
+  // El nombre del producto en la tienda a veces incluye avisos de pago
+  // ("A CUOTAS", "LEER DESCRIPCION", "DESCUENTO ANUAL") pensados para el
+  // cliente en la ficha, pero Google Shopping rechaza texto promocional en
+  // el titulo. Se limpian solo para title/description/JSON-LD -- el h1 en
+  // pantalla no se toca.
+  function cleanSeoName(name) {
+    return name
+      .replace(/-?\s*LEER\s+DESCRIPCI[OÓ]N\s*-?/gi, " ")
+      .replace(/^\s*A\s+CUOTAS\s*-?\s*/i, "")
+      .replace(/\s*[/-]\s*A\s+CUOTAS\s*$/i, "")
+      .replace(/\s*\/\s*DESCUENTO\s+ANUAL\s*$/i, "")
+      .replace(/\s{2,}/g, " ")
+      .replace(/^[\s-]+|[\s-]+$/g, "")
+      .trim();
+  }
+
   // Nombre visto en el ultimo tick del poll, para el debounce de abajo.
   // Se resetea por producto en update() (ver mas abajo).
   var pendingName = null;
@@ -129,6 +145,7 @@
       pendingName = name;
       return false;
     }
+    name = cleanSeoName(name);
 
     var priceEl = Array.prototype.find.call(
       main.querySelectorAll("*"),
