@@ -199,10 +199,29 @@
     }, 150);
   }
 
-  function startObserving() {
-    new MutationObserver(function () {
+  // El observer escucha toda mutación del body (necesario: no hay forma de
+  // acotarlo a la fila de accesos rápidos, que React puede desmontar y
+  // remontar entero). Sin este throttle, cada mutación -aunque sea en el
+  // carrito o en un filtro sin relación- dispara un querySelector síncrono;
+  // en una SPA con re-renders frecuentes eso compite con el hilo principal
+  // justo cuando el usuario interactúa (empeora INP en Core Web Vitals).
+  // rAF agrupa todas las mutaciones de un mismo frame en una sola
+  // verificación en vez de una por mutación.
+  var checkQueued = false;
+  function queueCheck() {
+    if (checkQueued) return;
+    checkQueued = true;
+    requestAnimationFrame(function () {
+      checkQueued = false;
       if (!alreadyDone()) scheduleProcess();
-    }).observe(document.body, { childList: true, subtree: true });
+    });
+  }
+
+  function startObserving() {
+    new MutationObserver(queueCheck).observe(document.body, {
+      childList: true,
+      subtree: true,
+    });
   }
 
   if (document.body) {

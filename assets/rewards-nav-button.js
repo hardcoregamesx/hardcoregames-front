@@ -129,10 +129,28 @@
     }, 150);
   }
 
-  function startObserving() {
-    new MutationObserver(function () {
+  // El observer escucha toda mutación del body (necesario: el botón no es
+  // parte del árbol de React, así que cualquier remount del nav lo
+  // descarta). Sin este throttle, cada mutación -aunque sea en el carrito o
+  // en un filtro sin relación- dispara un querySelector síncrono; en una
+  // SPA con re-renders frecuentes eso compite con el hilo principal justo
+  // cuando el usuario interactúa (empeora INP en Core Web Vitals). rAF
+  // agrupa todas las mutaciones de un mismo frame en una sola verificación.
+  var checkQueued = false;
+  function queueCheck() {
+    if (checkQueued) return;
+    checkQueued = true;
+    requestAnimationFrame(function () {
+      checkQueued = false;
       if (!document.querySelector(".hc-rewards-nav-btn")) scheduleProcess();
-    }).observe(document.body, { childList: true, subtree: true });
+    });
+  }
+
+  function startObserving() {
+    new MutationObserver(queueCheck).observe(document.body, {
+      childList: true,
+      subtree: true,
+    });
   }
 
   if (document.body) {
