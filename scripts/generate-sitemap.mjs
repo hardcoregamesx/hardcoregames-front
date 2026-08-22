@@ -56,9 +56,7 @@ const products = Array.isArray(body?.data) ? body.data : [];
 // ninguna circunstancia. Google los rechazaba en la pestana de Shopping por
 // aparecer "disponibles" a $0. Quitar un ID de aqui en cuanto se le cargue
 // una variante real.
-const ORPHAN_PRODUCT_IDS = new Set([32, 60, 99, 126, 134]);
-// 134 (Crash Team Racing) sumado el 21/08: se borraron sus 13 variantes
-// duplicadas en 0 pesos, se van a recargar con datos limpios.
+const ORPHAN_PRODUCT_IDS = new Set([32, 60, 99, 126]);
 
 const seen = new Set();
 const productUrls = [];
