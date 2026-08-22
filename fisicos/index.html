@@ -97,11 +97,36 @@
     font-weight: 600;
   }
 
-  /* ---- filtros ---- */
-  .filters {
-    background: var(--background);
+  /* ---- layout catalogo: sidebar de filtros + grid ---- */
+  .catalog-wrap { padding-top: 20px; padding-bottom: 60px; }
+  .layout { display: block; }
+  .sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding-bottom: 20px;
     border-bottom: 1px solid var(--border);
-    padding: 16px 0;
+    margin-bottom: 20px;
+  }
+  @media (min-width: 900px) {
+    .layout {
+      display: grid;
+      grid-template-columns: 250px 1fr;
+      gap: 28px;
+      align-items: start;
+    }
+    .sidebar {
+      position: sticky;
+      top: 16px;
+      padding: 16px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 0;
+      padding-bottom: 16px;
+      max-height: calc(100vh - 32px);
+      overflow-y: auto;
+    }
   }
   .search-box { position: relative; }
   .search-box input[type="search"] {
@@ -134,7 +159,9 @@
 
   .price-range { display: flex; align-items: center; gap: 8px; }
   .price-range input[type="number"] {
-    width: 120px;
+    width: 0;
+    flex: 1 1 auto;
+    min-width: 0;
     background: var(--secondary);
     border: 1px solid var(--border);
     color: var(--foreground);
@@ -238,54 +265,54 @@
   </div>
 </div>
 
-<div class="filters">
-  <div class="wrap" style="display:flex; flex-direction:column; gap:14px;">
-    <div class="search-box">
-      <span class="icon">🔍</span>
-      <input type="search" id="search-input" placeholder="Buscar por nombre (ej. PS5, Nintendo, control...)">
-    </div>
-
-    <div class="filter-group">
-      <span class="group-label">Categoría</span>
-      <div class="row" id="category-filters">
-        <button class="chip active" data-category="ALL">Todos</button>
-        <button class="chip" data-category="CONSOLA">Consolas</button>
-        <button class="chip" data-category="JUEGO">Juegos</button>
-        <button class="chip" data-category="ACCESORIO">Accesorios</button>
+<div class="wrap catalog-wrap">
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="search-box">
+        <span class="icon">🔍</span>
+        <input type="search" id="search-input" placeholder="Buscar por nombre (ej. PS5, Nintendo, control...)">
       </div>
-    </div>
 
-    <div class="filter-group">
-      <span class="group-label">Plataforma</span>
-      <div class="row" id="platform-filters">
-        <button class="chip active" data-platform="ALL">Todas</button>
+      <div class="filter-group">
+        <span class="group-label">Categoría</span>
+        <div class="row" id="category-filters">
+          <button class="chip active" data-category="ALL">Todos</button>
+          <button class="chip" data-category="CONSOLA">Consolas</button>
+          <button class="chip" data-category="JUEGO">Juegos</button>
+          <button class="chip" data-category="ACCESORIO">Accesorios</button>
+        </div>
       </div>
-    </div>
 
-    <div class="filter-group">
-      <span class="group-label">Estado</span>
-      <div class="row" id="condition-filters">
-        <button class="chip active" data-condition="ALL">Todos</button>
-        <button class="chip" data-condition="NUEVO">Nuevo</button>
-        <button class="chip" data-condition="USADO">Usado</button>
+      <div class="filter-group">
+        <span class="group-label">Plataforma</span>
+        <div class="row" id="platform-filters">
+          <button class="chip active" data-platform="ALL">Todas</button>
+        </div>
       </div>
-    </div>
 
-    <div class="filter-group">
-      <span class="group-label">Precio (efectivo)</span>
-      <div class="price-range">
-        <input type="number" id="price-min" placeholder="Desde" min="0" step="10000">
-        <span>—</span>
-        <input type="number" id="price-max" placeholder="Hasta" min="0" step="10000">
+      <div class="filter-group">
+        <span class="group-label">Estado</span>
+        <div class="row" id="condition-filters">
+          <button class="chip active" data-condition="ALL">Todos</button>
+          <button class="chip" data-condition="NUEVO">Nuevo</button>
+          <button class="chip" data-condition="USADO">Usado</button>
+        </div>
       </div>
-    </div>
 
-    <div class="results-count" id="results-count"></div>
+      <div class="filter-group">
+        <span class="group-label">Precio (efectivo)</span>
+        <div class="price-range">
+          <input type="number" id="price-min" placeholder="Desde" min="0" step="10000">
+          <span>—</span>
+          <input type="number" id="price-max" placeholder="Hasta" min="0" step="10000">
+        </div>
+      </div>
+
+      <div class="results-count" id="results-count"></div>
+    </aside>
+
+    <div id="grid" class="grid"></div>
   </div>
-</div>
-
-<div class="wrap">
-  <div id="grid" class="grid"></div>
 </div>
 
 <footer>
