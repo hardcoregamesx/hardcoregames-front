@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Productos Físicos | Hardcore Games</title>
-<meta name="description" content="Consolas, controles y juegos físicos usados y nuevos. Reserva por WhatsApp y paga en efectivo o transferencia.">
+<meta name="description" content="Consolas, controles y juegos físicos usados y nuevos. Reserva por WhatsApp y paga en efectivo, transferencia o Sistecrédito/Addi.">
 <meta name="robots" content="index, follow">
 <link rel="icon" type="image/png" href="/logo.png" sizes="any" />
 <link rel="apple-touch-icon" href="/logo.png" />
@@ -12,7 +12,7 @@
 <link rel="canonical" href="https://www.hardcoregames.co/fisicos">
 <meta property="og:url" content="https://www.hardcoregames.co/fisicos">
 <meta property="og:title" content="Productos Físicos | Hardcore Games">
-<meta property="og:description" content="Consolas, controles y juegos físicos usados y nuevos. Reserva por WhatsApp y paga en efectivo o transferencia.">
+<meta property="og:description" content="Consolas, controles y juegos físicos usados y nuevos. Reserva por WhatsApp y paga en efectivo, transferencia o Sistecrédito/Addi.">
 <meta property="og:image" content="https://www.hardcoregames.co/logo.png">
 <meta name="twitter:card" content="summary_large_image">
 <script>
@@ -54,17 +54,41 @@
   h1, h2 { font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; margin: 0; }
   .wrap { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
 
+  /* ---- topbar ---- */
+  .topbar {
+    background: hsl(262 60% 8%);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 0;
+  }
+  .topbar .wrap { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .brand { display: flex; align-items: center; gap: 8px; text-decoration: none; }
+  .brand img { height: 28px; width: 28px; border-radius: 6px; display: block; }
+  .brand span { font-weight: 800; font-size: 15px; letter-spacing: -0.01em; }
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--muted-foreground);
+    text-decoration: none;
+    padding: 6px 12px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+  }
+  .back-link:hover { color: var(--foreground); border-color: var(--muted-foreground); }
+
   .hero {
     background: var(--gradient-bg);
-    padding: 44px 0 30px;
+    padding: 34px 0 26px;
   }
-  .hero h1 { font-size: clamp(30px, 6vw, 44px); text-wrap: balance; text-shadow: 0 2px 16px rgba(0,0,0,.35); }
-  .hero p { max-width: 56ch; opacity: .95; margin: 14px 0 0; font-size: 15px; text-shadow: 0 1px 10px rgba(0,0,0,.3); }
+  .hero h1 { font-size: clamp(28px, 6vw, 40px); text-wrap: balance; text-shadow: 0 2px 16px rgba(0,0,0,.35); }
+  .hero p { max-width: 56ch; opacity: .95; margin: 12px 0 0; font-size: 15px; text-shadow: 0 1px 10px rgba(0,0,0,.3); }
   .payment-note {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    margin-top: 18px;
+    margin-top: 16px;
     background: rgba(0,0,0,.28);
     border: 1px solid rgba(255,255,255,.2);
     border-radius: 999px;
@@ -73,12 +97,32 @@
     font-weight: 600;
   }
 
+  /* ---- filtros ---- */
   .filters {
     background: var(--background);
     border-bottom: 1px solid var(--border);
-    padding: 14px 0;
+    padding: 16px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
   }
-  .filters .row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .search-box { position: relative; }
+  .search-box input[type="search"] {
+    width: 100%;
+    background: var(--secondary);
+    border: 1px solid var(--border);
+    color: var(--foreground);
+    font-size: 14px;
+    font-family: inherit;
+    padding: 10px 14px 10px 36px;
+    border-radius: var(--radius);
+  }
+  .search-box input[type="search"]::placeholder { color: var(--muted-foreground); }
+  .search-box .icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 14px; opacity: .7; }
+
+  .filter-group { display: flex; flex-direction: column; gap: 6px; }
+  .filter-group .group-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--muted-foreground); }
+  .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
   .chip {
     background: var(--secondary);
     border: 1px solid var(--border);
@@ -90,6 +134,21 @@
     cursor: pointer;
   }
   .chip.active { background: var(--primary); border-color: var(--primary); }
+
+  .price-range { display: flex; align-items: center; gap: 8px; }
+  .price-range input[type="number"] {
+    width: 120px;
+    background: var(--secondary);
+    border: 1px solid var(--border);
+    color: var(--foreground);
+    font-size: 13px;
+    font-family: inherit;
+    padding: 8px 10px;
+    border-radius: var(--radius);
+  }
+  .price-range span { color: var(--muted-foreground); font-size: 13px; }
+
+  .results-count { font-size: 12.5px; color: var(--muted-foreground); }
 
   .grid {
     display: grid;
@@ -164,19 +223,67 @@
 </head>
 <body>
 
+<div class="topbar">
+  <div class="wrap">
+    <a class="brand" href="https://www.hardcoregames.co/">
+      <img src="/logo.png" alt="Hardcore Games">
+      <span>Hardcore Games</span>
+    </a>
+    <a class="back-link" href="https://www.hardcoregames.co/">← Volver a la tienda</a>
+  </div>
+</div>
+
 <div class="hero">
   <div class="wrap">
     <h1>Productos Físicos</h1>
     <p>Consolas, controles y juegos físicos — usados y nuevos, revisados antes de entregarlos. Reservas por WhatsApp y coordinas la entrega y el pago directo con tu asesor.</p>
-    <div class="payment-note">💵 Solo pago en efectivo o transferencia — sin pasarela ni cuotas</div>
+    <div class="payment-note">💵 Efectivo, transferencia o Sistecrédito/Addi — sin carrito, coordinado por WhatsApp</div>
   </div>
 </div>
 
 <div class="filters">
-  <div class="wrap">
-    <div class="row" id="platform-filters">
-      <button class="chip active" data-platform="ALL">Todos</button>
+  <div class="wrap" style="display:flex; flex-direction:column; gap:14px;">
+    <div class="search-box">
+      <span class="icon">🔍</span>
+      <input type="search" id="search-input" placeholder="Buscar por nombre (ej. PS5, Nintendo, control...)">
     </div>
+
+    <div class="filter-group">
+      <span class="group-label">Categoría</span>
+      <div class="row" id="category-filters">
+        <button class="chip active" data-category="ALL">Todos</button>
+        <button class="chip" data-category="CONSOLA">Consolas</button>
+        <button class="chip" data-category="JUEGO">Juegos</button>
+        <button class="chip" data-category="ACCESORIO">Accesorios</button>
+      </div>
+    </div>
+
+    <div class="filter-group">
+      <span class="group-label">Plataforma</span>
+      <div class="row" id="platform-filters">
+        <button class="chip active" data-platform="ALL">Todas</button>
+      </div>
+    </div>
+
+    <div class="filter-group">
+      <span class="group-label">Estado</span>
+      <div class="row" id="condition-filters">
+        <button class="chip active" data-condition="ALL">Todos</button>
+        <button class="chip" data-condition="NUEVO">Nuevo</button>
+        <button class="chip" data-condition="USADO">Usado</button>
+      </div>
+    </div>
+
+    <div class="filter-group">
+      <span class="group-label">Precio (efectivo)</span>
+      <div class="price-range">
+        <input type="number" id="price-min" placeholder="Desde" min="0" step="10000">
+        <span>—</span>
+        <input type="number" id="price-max" placeholder="Hasta" min="0" step="10000">
+      </div>
+    </div>
+
+    <div class="results-count" id="results-count"></div>
   </div>
 </div>
 
@@ -196,10 +303,16 @@
   var API_URL = 'https://api.hardcoregames.co/products/physical';
   var WHATSAPP_NUMBER = '573167431812';
   var grid = document.getElementById('grid');
-  var filtersRow = document.getElementById('platform-filters');
+  var resultsCount = document.getElementById('results-count');
+  var searchInput = document.getElementById('search-input');
+  var categoryFilters = document.getElementById('category-filters');
+  var platformFilters = document.getElementById('platform-filters');
+  var conditionFilters = document.getElementById('condition-filters');
+  var priceMin = document.getElementById('price-min');
+  var priceMax = document.getElementById('price-max');
 
   var allProducts = [];
-  var currentFilter = 'ALL';
+  var state = { search: '', category: 'ALL', platform: 'ALL', condition: 'ALL' };
 
   function money(n) {
     return '$' + Math.round(n).toLocaleString('es-CO');
@@ -213,10 +326,16 @@
     return 'https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent(text);
   }
 
-  function conditionBadgeClass(condition) {
-    if (!condition) return '';
+  function conditionBucket(condition) {
+    if (!condition) return 'USADO';
     var c = condition.toUpperCase();
-    return (c.indexOf('NUEVO') !== -1 || c.indexOf('NUEVA') !== -1) ? 'new' : '';
+    return (c.indexOf('NUEVO') !== -1 || c.indexOf('NUEVA') !== -1) ? 'NUEVO' : 'USADO';
+  }
+
+  function escapeHtml(str) {
+    var div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
   }
 
   function renderCard(p) {
@@ -225,11 +344,14 @@
       : '<div class="fallback">Sin imagen</div>';
 
     var badges = '';
-    if (p.condition) badges += '<span class="badge ' + conditionBadgeClass(p.condition) + '">' + escapeHtml(p.condition) + '</span>';
+    if (p.condition) badges += '<span class="badge ' + (conditionBucket(p.condition) === 'NUEVO' ? 'new' : '') + '">' + escapeHtml(p.condition) + '</span>';
     if (p.platform) badges += '<span class="badge">' + escapeHtml(p.platform) + '</span>';
 
     var transferLine = (p.price_transfer !== null)
       ? '<div class="price-line"><span class="label">Transferencia</span><span class="value">' + money(p.price_transfer) + '</span></div>'
+      : '';
+    var sistecreditoLine = (p.price_sistecredito !== null)
+      ? '<div class="price-line"><span class="label">Sistecrédito / Addi</span><span class="value">' + money(p.price_sistecredito) + '</span></div>'
       : '';
 
     var card = document.createElement('div');
@@ -243,16 +365,11 @@
         '<div class="prices">' +
           '<div class="price-line cash"><span class="label">Efectivo</span><span class="value">' + money(p.price_cash) + '</span></div>' +
           transferLine +
+          sistecreditoLine +
         '</div>' +
         '<a class="cta" target="_blank" rel="noopener" href="' + waLink(p, 'Efectivo', p.price_cash) + '">Reservar por WhatsApp</a>' +
       '</div>';
     return card;
-  }
-
-  function escapeHtml(str) {
-    var div = document.createElement('div');
-    div.textContent = str;
-    return div.innerHTML;
   }
 
   function renderPlatformFilters(products) {
@@ -262,29 +379,54 @@
       btn.className = 'chip';
       btn.dataset.platform = platform;
       btn.textContent = platform.charAt(0) + platform.slice(1).toLowerCase();
-      filtersRow.appendChild(btn);
+      platformFilters.appendChild(btn);
     });
-    filtersRow.addEventListener('click', function (e) {
+  }
+
+  function setupChipGroup(container, stateKey, dataAttr) {
+    container.addEventListener('click', function (e) {
       var btn = e.target.closest('.chip');
       if (!btn) return;
-      currentFilter = btn.dataset.platform;
-      Array.from(filtersRow.children).forEach(function (c) { c.classList.remove('active'); });
+      state[stateKey] = btn.dataset[dataAttr];
+      Array.from(container.children).forEach(function (c) { c.classList.remove('active'); });
       btn.classList.add('active');
       renderGrid();
     });
   }
 
+  function matchesFilters(p) {
+    if (state.category !== 'ALL' && p.category !== state.category) return false;
+    if (state.platform !== 'ALL' && p.platform !== state.platform) return false;
+    if (state.condition !== 'ALL' && conditionBucket(p.condition) !== state.condition) return false;
+    if (state.search && p.name.toLowerCase().indexOf(state.search) === -1) return false;
+    var min = priceMin.value ? Number(priceMin.value) : null;
+    var max = priceMax.value ? Number(priceMax.value) : null;
+    if (min !== null && (p.price_cash === null || p.price_cash < min)) return false;
+    if (max !== null && (p.price_cash === null || p.price_cash > max)) return false;
+    return true;
+  }
+
   function renderGrid() {
     grid.innerHTML = '';
-    var list = allProducts.filter(function (p) {
-      return currentFilter === 'ALL' || p.platform === currentFilter;
-    });
+    var list = allProducts.filter(matchesFilters);
+    resultsCount.textContent = list.length + (list.length === 1 ? ' producto encontrado' : ' productos encontrados');
     if (list.length === 0) {
-      grid.innerHTML = '<div class="state">No hay productos en esta categoría por ahora.</div>';
+      grid.innerHTML = '<div class="state">No hay productos que coincidan con estos filtros.</div>';
       return;
     }
     list.forEach(function (p) { grid.appendChild(renderCard(p)); });
   }
+
+  setupChipGroup(categoryFilters, 'category', 'category');
+  setupChipGroup(platformFilters, 'platform', 'platform');
+  setupChipGroup(conditionFilters, 'condition', 'condition');
+
+  searchInput.addEventListener('input', function () {
+    state.search = searchInput.value.trim().toLowerCase();
+    renderGrid();
+  });
+  priceMin.addEventListener('input', renderGrid);
+  priceMax.addEventListener('input', renderGrid);
 
   grid.innerHTML = '<div class="state">Cargando catálogo…</div>';
 
