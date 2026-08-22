@@ -1,16 +1,31 @@
 User-agent: Googlebot
 Allow: /
+Disallow: /usuario/
+Disallow: /dashboard
+Disallow: /autenticacion
 
 User-agent: Bingbot
 Allow: /
+Disallow: /usuario/
+Disallow: /dashboard
+Disallow: /autenticacion
 
 User-agent: Twitterbot
 Allow: /
+Disallow: /usuario/
+Disallow: /dashboard
+Disallow: /autenticacion
 
 User-agent: facebookexternalhit
 Allow: /
+Disallow: /usuario/
+Disallow: /dashboard
+Disallow: /autenticacion
 
 User-agent: *
 Allow: /
+Disallow: /usuario/
+Disallow: /dashboard
+Disallow: /autenticacion
 
 Sitemap: https://www.hardcoregames.co/sitemap.xml
