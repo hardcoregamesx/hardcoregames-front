@@ -12,7 +12,13 @@
  * reales de la página, después de recargar ya logueado.
  */
 (function () {
-  if (location.pathname.indexOf('/product/') !== 0) return;
+  // Esto es una SPA: si el cliente llega a la ficha navegando desde el
+  // catalogo (sin recarga), comprobar la ruta una sola vez al cargar el
+  // script dejaba el interceptor sin instalar y el boton mandaba a /auth.
+  // La ruta se comprueba en el momento del clic, no al cargar.
+  function onProductPage() {
+    return location.pathname.indexOf('/product/') === 0;
+  }
 
   var REGISTER_API = 'https://admin.hardcoregames.co/users/register/';
   var AUTH_LOGIN_API = 'https://api.srv936408.hstgr.cloud/auth/login';
@@ -242,6 +248,7 @@
 
   // ---------------- interceptar el click cuando no hay sesión ----------------
   document.addEventListener('click', function (ev) {
+    if (!onProductPage()) return;
     var btn = ev.target.closest && ev.target.closest('button');
     if (!btn) return;
     var label = btn.textContent.trim();
@@ -261,6 +268,7 @@
 
   // ---------------- retomar la acción pendiente tras el reload ----------------
   (function tryResumePendingAction() {
+    if (!onProductPage()) return;
     var raw;
     try { raw = sessionStorage.getItem(PENDING_KEY); } catch (e) { return; }
     if (!raw) return;
