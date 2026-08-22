@@ -28,8 +28,6 @@
     if (localStorage.getItem('sc_off') === '1') return;
   } catch (e) { /* storage bloqueado: se muestra igual */ }
 
-  if (location.pathname !== '/checkout') return;
-
   var CART_API = 'https://api.srv936408.hstgr.cloud/shopping-car/';
   var CREATE_API = 'https://admin.hardcoregames.co/products/sistecreditoCreate/';
   var LOGO_URL = '/assets/sistecredito-logo.png';
@@ -162,10 +160,49 @@
   // React puede reemplazar por completo esta tarjeta y pisar el boton
   // insertado -- se observa todo el documento porque un remount real cambia
   // el nodo padre y un observer atado a el dejaria de ver nada.
-  function watchAndEnsure() {
+  var observer = null;
+
+  function startWatching() {
+    if (observer) return;
     pollFor(findPayButton, 8000, function () { ensureButton(); });
-    var observer = new MutationObserver(function () { ensureButton(); });
+    observer = new MutationObserver(function () { ensureButton(); });
     observer.observe(document.body, { childList: true, subtree: true });
+  }
+
+  function stopWatching() {
+    if (observer) { observer.disconnect(); observer = null; }
+    var existing = document.getElementById(BTN_ID);
+    if (existing) existing.remove();
+  }
+
+  // Esto es una SPA: llegar al checkout desde "Comprar ahora" o desde el
+  // carrito NO recarga la pagina, asi que comprobar la ruta una sola vez al
+  // cargar el script dejaba el boton sin instalar hasta que el cliente
+  // recargara a mano. Se sigue la navegacion de React Router
+  // (pushState/replaceState/popstate) y se activa el observer solo mientras
+  // la ruta sea /checkout, para no escanear el DOM del sitio entero.
+  function syncWithRoute() {
+    if (location.pathname === '/checkout') startWatching();
+    else stopWatching();
+  }
+
+  function watchRouteChanges(onChange) {
+    var lastPath = location.pathname;
+    function fire() {
+      if (location.pathname === lastPath) return;
+      lastPath = location.pathname;
+      onChange();
+    }
+    ['pushState', 'replaceState'].forEach(function (method) {
+      var original = history[method];
+      if (typeof original !== 'function') return;
+      history[method] = function () {
+        var result = original.apply(this, arguments);
+        setTimeout(fire, 0);
+        return result;
+      };
+    });
+    window.addEventListener('popstate', function () { setTimeout(fire, 0); });
   }
 
   // ---------------- modal ----------------
@@ -348,5 +385,6 @@
     ensureModal().open();
   }
 
-  watchAndEnsure();
+  watchRouteChanges(syncWithRoute);
+  syncWithRoute();
 })();
