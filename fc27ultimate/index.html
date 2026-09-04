@@ -497,11 +497,11 @@
 
     <div class="choice-row" id="choiceRow">
       <button class="choice-btn" data-platform="ps" aria-pressed="true">
-        <span><span class="h" id="v-choice_ps_title">PlayStation</span><span class="s" id="v-choice_ps_desc">PS5 y PS4 — edición Ultimate con entrega inmediata.</span></span>
+        <span><span class="h" id="v-choice_ps_title">PlayStation</span><span class="s" id="v-choice_ps_desc">PS5 y PS4 — edición Ultimate, con cuenta o código.</span></span>
         <span class="arrow">&rsaquo;</span>
       </button>
       <button class="choice-btn" data-platform="xbox" aria-pressed="false">
-        <span><span class="h" id="v-choice_xbox_title">Xbox</span><span class="s" id="v-choice_xbox_desc">Series X|S y Xbox One — edición Ultimate con entrega inmediata.</span></span>
+        <span><span class="h" id="v-choice_xbox_title">Xbox</span><span class="s" id="v-choice_xbox_desc">Series X|S y Xbox One — edición Ultimate, con cuenta o código.</span></span>
         <span class="arrow">&rsaquo;</span>
       </button>
     </div>
@@ -621,9 +621,9 @@
     step1_title: '¿Cuál es tu plataforma?',
     step1_body: 'Elige tu consola para ver el stock y precio real de la edición Ultimate ahora mismo.',
     choice_ps_title: 'PlayStation',
-    choice_ps_desc: 'PS5 y PS4 — edición Ultimate con entrega inmediata.',
+    choice_ps_desc: 'PS5 y PS4 — edición Ultimate, con cuenta o código.',
     choice_xbox_title: 'Xbox',
-    choice_xbox_desc: 'Series X|S y Xbox One — edición Ultimate con entrega inmediata.',
+    choice_xbox_desc: 'Series X|S y Xbox One — edición Ultimate, con cuenta o código.',
     step2_eyebrow: 'Paso 2',
     step2_title: 'Tu edición: Ultimate',
     step2_body_ps: 'Hasta 7 días de acceso anticipado, FC Points y contenido extra para Ultimate Team y los modos Carrera y Clubes. Igual en PS4 y PS5.',
@@ -631,16 +631,20 @@
     edition_ultimate_desc: 'Suma hasta 7 días de acceso anticipado, FC Points y contenido extra para Ultimate Team.',
     step3_eyebrow: 'Paso 3',
     step3_title: 'Elige tu modalidad',
-    step3_body: 'Primaria y secundaria: correo y clave. Las dos te dan acceso completo a la edición Ultimate.',
+    step3_body: 'Primaria y secundaria: correo y clave. Código: se activa directo en tu cuenta.',
     // El método de entrega difiere entre PS y Xbox para la MISMA licencia
     // (p.ej. Xbox Secundaria juega con correo propio, PS Secundaria juega
     // con el correo entregado) — mismo patrón que usa desc_<licencia>_<plataforma>
     // en grandtheftautovi/fc27 (Standard), acá fijo siempre en el grupo
-    // "ultimate" porque esta landing no tiene otra edición.
+    // "ultimate" porque esta landing no tiene otra edición. Código sí
+    // apareció para PS/Xbox Ultimate (04/09/2026, antes solo lo tenía PC) —
+    // no varía por plataforma, así que usa una sola clave (desc_codigo),
+    // igual que en fc27/index.html (Standard).
     desc_primaria_ps_ultimate: 'Recibes correo y clave, juegas con tu correo personal. No obtienes las monedas ni los demás beneficios, solo el acceso anticipado.',
     desc_secundaria_ps_ultimate: 'Recibes correo y clave, juegas con el correo entregado. Obtienes todos los beneficios de la edición Ultimate. <strong>Conexión a internet obligatoria.</strong>',
     desc_primaria_xbox_ultimate: 'Recibes correo y clave, juegas con tu correo personal. No obtienes las monedas ni los demás beneficios, solo el acceso anticipado.',
     desc_secundaria_xbox_ultimate: 'Recibes correo y clave, juegas con el correo entregado. Obtienes todos los beneficios de la edición Ultimate. <strong>Conexión a internet obligatoria.</strong>',
+    desc_codigo: 'Se activa directo en tu cuenta de EA Play.',
     empty_msg: 'No tenemos disponibilidad en esta edición ahora mismo. Escríbenos por WhatsApp y te avisamos apenas entre, o mira otra plataforma arriba.',
     badge_recommended: 'Recomendado',
     badge_best_price: 'Mejor precio',
