@@ -217,6 +217,7 @@
     margin-top: auto; background: transparent; border: 1px solid var(--border); color: var(--foreground);
     font-weight: 700; font-size: 13.5px; padding: 10px; border-radius: calc(var(--radius) - .25rem); cursor: pointer;
     text-decoration: none; text-align: center; display: block;
+    touch-action: manipulation;
   }
   .plan-card.is-recommended .plan-pick { background: var(--cta); color: var(--cta-foreground); border-color: var(--cta); }
   .plan-pick:hover { border-color: var(--cta); color: var(--cta); }
@@ -1200,11 +1201,18 @@
     });
   }
 
+  // Captura en fase de captura (no burbuja) y detiene la propagación de
+  // inmediato: en móvil (Safari/iOS confirmado) el clic delegado en fase
+  // de burbuja llegaba tarde y el navegador ya había arrancado la
+  // navegación nativa del <a href="/product/...">, mandando al usuario a
+  // la ficha del producto en vez de agregar al carrito. En fase de
+  // captura el handler corre antes que cualquier otra cosa.
   document.addEventListener('click', function (ev) {
     var link = ev.target.closest && ev.target.closest('.plan-pick');
     if (!link) return;
     if (ev.button !== 0 || ev.metaKey || ev.ctrlKey || ev.shiftKey || ev.altKey) return;
     ev.preventDefault();
+    ev.stopPropagation();
     link.classList.add('is-picking');
 
     var fallbackHref = link.getAttribute('href');
@@ -1227,7 +1235,7 @@
     } else {
       window.location.href = fallbackHref;
     }
-  });
+  }, true);
 
   // ---------------- modal de checkout de invitado ----------------
   (function () {
