@@ -3,16 +3,16 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>EA SPORTS FC 27 | Hardcore Games</title>
-<meta name="description" content="EA SPORTS FC 27 para PS5, PS4, Xbox Series, Xbox One o PC. Entrega inmediata, garantía y soporte por WhatsApp.">
+<title>EA SPORTS FC 27 Ultimate | Hardcore Games</title>
+<meta name="description" content="EA SPORTS FC 27 edición Ultimate para PS5, PS4, Xbox Series y Xbox One. Acceso anticipado, FC Points y contenido extra. Entrega inmediata, garantía y soporte por WhatsApp.">
 <meta name="robots" content="index, follow">
 <link rel="icon" type="image/png" href="/logo.png" sizes="any" />
 <link rel="apple-touch-icon" href="/logo.png" />
 <meta property="og:type" content="website">
-<link rel="canonical" href="https://www.hardcoregames.co/fc27">
-<meta property="og:url" content="https://www.hardcoregames.co/fc27">
-<meta property="og:title" content="EA SPORTS FC 27 | Hardcore Games">
-<meta property="og:description" content="EA SPORTS FC 27 para PS5, PS4, Xbox Series, Xbox One o PC. Entrega inmediata, garantía y soporte por WhatsApp.">
+<link rel="canonical" href="https://www.hardcoregames.co/fc27ultimate">
+<meta property="og:url" content="https://www.hardcoregames.co/fc27ultimate">
+<meta property="og:title" content="EA SPORTS FC 27 Ultimate | Hardcore Games">
+<meta property="og:description" content="EA SPORTS FC 27 edición Ultimate para PS5, PS4, Xbox Series y Xbox One. Acceso anticipado, FC Points y contenido extra. Entrega inmediata, garantía y soporte por WhatsApp.">
 <meta property="og:image" content="https://www.hardcoregames.co/fc27/hero-fc27.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://www.hardcoregames.co/fc27/hero-fc27.jpg">
@@ -257,51 +257,6 @@
   .gc-cancel { display: block; width: 100%; text-align: center; margin-top: 10px; background: none; border: none; color: var(--muted-foreground); font-size: 13.5px; cursor: pointer; padding: 6px; font-family: inherit; }
   .gc-note { font-size: 11.5px; color: var(--muted-foreground); margin-top: 14px; text-align: center; }
 
-  /* ---- modal de entrada: Standard vs Ultimate ---- */
-  .ed-overlay {
-    display: none; position: fixed; inset: 0; background: rgba(0,0,0,.7);
-    z-index: 90; align-items: center; justify-content: center; padding: 20px;
-  }
-  .ed-overlay.is-open { display: flex; }
-  .ed-dialog {
-    position: relative; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
-    box-shadow: 0 20px 50px rgba(0,0,0,.5); max-width: 640px; width: 100%; padding: 26px 22px;
-  }
-  .ed-close {
-    position: absolute; top: 12px; right: 12px; background: none; border: none; color: var(--muted-foreground);
-    font-size: 22px; line-height: 1; cursor: pointer; padding: 6px;
-  }
-  .ed-close:hover { color: var(--foreground); }
-  .ed-dialog h3 { font-size: 21px; font-weight: 800; margin: 0 6px 4px 0; padding-right: 24px; }
-  .ed-sub { color: var(--muted-foreground); font-size: 13.5px; margin: 0 0 20px; }
-  .ed-options { display: grid; grid-template-columns: 1fr; align-items: stretch; gap: 12px; }
-  @media (min-width: 560px) { .ed-options { grid-template-columns: 1fr 1fr; } }
-  .ed-card {
-    display: flex; flex-direction: column; gap: 8px; background: var(--secondary); border: 1px solid var(--border);
-    border-radius: var(--radius); padding: 18px 16px; text-align: left; cursor: pointer; color: var(--foreground);
-    font-family: inherit; height: 100%;
-  }
-  .ed-card:hover { border-color: var(--cta); }
-  .ed-card:focus-visible { outline: 2px solid var(--cta); outline-offset: 2px; }
-  .ed-card .ed-tag { font-size: 10.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted-foreground); }
-  .ed-card.is-ultimate .ed-tag { color: var(--cta); }
-  .ed-card .ed-name { font-size: 19px; font-weight: 800; }
-  .ed-card .ed-desc { font-size: 13px; color: var(--muted-foreground); }
-  .ed-card .ed-price-row { display: flex; align-items: baseline; gap: 6px; margin-top: 2px; }
-  .ed-card .ed-price-label { font-size: 10.5px; text-transform: uppercase; color: var(--muted-foreground); }
-  .ed-card .ed-price { font-weight: 800; font-size: 20px; }
-  .ed-card .ed-pick {
-    /* margin-top: auto empuja el botón al fondo de la tarjeta aunque las
-       descripciones tengan distinto largo (Standard vs Ultimate) — así los
-       dos botones "Quiero X" quedan a la misma altura sin importar cuántas
-       líneas ocupe el texto de arriba. */
-    margin-top: auto; background: transparent; border: 1px solid var(--border); color: var(--foreground);
-    font-weight: 700; font-size: 13.5px; padding: 10px; border-radius: calc(var(--radius) - .25rem); text-align: center;
-  }
-  .ed-card.is-ultimate .ed-pick { background: var(--cta); color: var(--cta-foreground); border-color: var(--cta); }
-  .ed-card:hover .ed-pick { border-color: var(--cta); }
-  .ed-card.is-ultimate:hover .ed-pick { filter: brightness(1.08); }
-
   /* ---- faq ---- */
   .faq-item { border-bottom: 1px solid var(--border); }
   .faq-item summary {
@@ -325,12 +280,12 @@
   /* ---- topbar: réplica del header real (mismas proporciones: dos filas
      de 64px, buscador de 40px, nav a 16px) para que la landing se sienta
      parte del sitio y no una página aparte ---- */
-  /* ---- barra superior: acceso directo a la landing Ultimate ---- */
-  .ultimate-bar {
-    display: block; text-align: center; background: var(--cta); color: var(--cta-foreground);
+  /* ---- barra superior: acceso directo a la landing Standard ---- */
+  .standard-bar {
+    display: block; text-align: center; background: var(--primary); color: var(--foreground);
     font-weight: 700; font-size: 13.5px; padding: 10px 16px; text-decoration: none;
   }
-  .ultimate-bar:hover { filter: brightness(1.05); }
+  .standard-bar:hover { filter: brightness(1.1); }
 
   .site-topbar { background: var(--background); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 50; }
   .site-topbar-row {
@@ -425,7 +380,7 @@
 </head>
 <body>
 
-<a href="https://www.hardcoregames.co/fc27ultimate" class="ultimate-bar">¿Buscas la edición Ultimate? Ver FC 27 Ultimate &rsaquo;</a>
+<a href="https://www.hardcoregames.co/fc27" class="standard-bar">¿Buscas la edición Standard? Ver FC 27 Standard &rsaquo;</a>
 
 <header class="site-topbar">
   <div class="site-topbar-row">
@@ -515,9 +470,9 @@
   <img class="hero-bg" id="heroBanner" src="" alt="">
   <div class="hero-scrim"></div>
   <div class="hero hero-inner wrap">
-    <span class="platform-tag" id="v-platform_label">PS5 · PS4 · Xbox Series · Xbox One · PC</span>
-    <h1 id="v-title">EA SPORTS FC 27</h1>
-    <p class="sub" id="v-subtitle">Elige tu plataforma y entra a la cancha con entrega inmediata.</p>
+    <span class="platform-tag" id="v-platform_label">PS5 · PS4 · Xbox Series · Xbox One</span>
+    <h1 id="v-title">EA SPORTS FC 27 Ultimate</h1>
+    <p class="sub" id="v-subtitle">Acceso anticipado, FC Points y contenido extra para Ultimate Team. Elige tu plataforma y entra a la cancha con entrega inmediata.</p>
 
     <div class="price-row">
       <span class="price-label" id="v-price_label">Desde</span>
@@ -538,19 +493,15 @@
   <section>
     <div class="eyebrow" id="v-step1_eyebrow">Paso 1</div>
     <h2 class="sec-title" id="v-step1_title">¿Cuál es tu plataforma?</h2>
-    <p class="sec-body" id="v-step1_body">Elige tu consola para ver las ediciones y precios reales disponibles ahora mismo.</p>
+    <p class="sec-body" id="v-step1_body">Elige tu consola para ver el stock y precio real de la edición Ultimate ahora mismo.</p>
 
     <div class="choice-row" id="choiceRow">
       <button class="choice-btn" data-platform="ps" aria-pressed="true">
-        <span><span class="h" id="v-choice_ps_title">PlayStation</span><span class="s" id="v-choice_ps_desc">PS5 y PS4 — Standard o preventa a cuotas.</span></span>
+        <span><span class="h" id="v-choice_ps_title">PlayStation</span><span class="s" id="v-choice_ps_desc">PS5 y PS4 — edición Ultimate con entrega inmediata.</span></span>
         <span class="arrow">&rsaquo;</span>
       </button>
       <button class="choice-btn" data-platform="xbox" aria-pressed="false">
-        <span><span class="h" id="v-choice_xbox_title">Xbox</span><span class="s" id="v-choice_xbox_desc">Series X|S y Xbox One — Standard o preventa a cuotas.</span></span>
-        <span class="arrow">&rsaquo;</span>
-      </button>
-      <button class="choice-btn" data-platform="pc" aria-pressed="false">
-        <span><span class="h" id="v-choice_pc_title">PC</span><span class="s" id="v-choice_pc_desc">Código directo a tu cuenta de EA Play.</span></span>
+        <span><span class="h" id="v-choice_xbox_title">Xbox</span><span class="s" id="v-choice_xbox_desc">Series X|S y Xbox One — edición Ultimate con entrega inmediata.</span></span>
         <span class="arrow">&rsaquo;</span>
       </button>
     </div>
@@ -558,8 +509,8 @@
 
   <section>
     <div class="eyebrow" id="v-step2_eyebrow">Paso 2</div>
-    <h2 class="sec-title" id="v-step2_title">Elige tu edición</h2>
-    <p class="sec-body" id="v-step2_body">El juego base completo, con entrega inmediata — o resérvalo hoy a cuotas.</p>
+    <h2 class="sec-title" id="v-step2_title">Tu edición: Ultimate</h2>
+    <p class="sec-body" id="v-step2_body">Hasta 7 días de acceso anticipado, FC Points y contenido extra para Ultimate Team y los modos Carrera y Clubes.</p>
 
     <div class="choice-row" id="choiceRowEdition"></div>
   </section>
@@ -567,7 +518,7 @@
   <section>
     <div class="eyebrow" id="v-step3_eyebrow">Paso 3</div>
     <h2 class="sec-title" id="v-step3_title">Elige tu modalidad</h2>
-    <p class="sec-body" id="plansBody">Primaria y secundaria: correo y clave, juegas con tu propio perfil. Código: se activa directo en tu cuenta.</p>
+    <p class="sec-body" id="plansBody">Primaria y secundaria: correo y clave. Las dos te dan acceso completo a la edición Ultimate.</p>
 
     <div class="plans" id="plansContainer">
       <div class="plans-loading" id="plansLoading">Cargando disponibilidad…</div>
@@ -584,37 +535,13 @@
 
   <section style="padding-bottom: 10px;">
     <div class="portal-note">
-      <div class="t" id="v-portal_title">¿Quieres ver las 7 variantes juntas, con toda la letra chica?</div>
-      <div class="d" id="v-portal_desc">Todas las fichas de EA SPORTS FC 27 (PS, Xbox, PC, contado y cuotas) siguen disponibles en el catálogo.</div>
+      <div class="t" id="v-portal_title">¿Quieres ver todas las variantes juntas, con toda la letra chica?</div>
+      <div class="d" id="v-portal_desc">Todas las fichas de EA SPORTS FC 27 (Standard, Ultimate, PS, Xbox, PC, contado y cuotas) siguen disponibles en el catálogo.</div>
       <a id="v-portal_link" href="https://www.hardcoregames.co/filters?search=FC%2027">Ver todas las variantes &rsaquo;</a>
     </div>
   </section>
 
   <footer id="v-footer">Hardcore Games — todos los derechos reservados.</footer>
-
-  <div class="ed-overlay" id="edOverlay" role="dialog" aria-modal="true" aria-labelledby="edTitle" aria-hidden="true">
-    <div class="ed-dialog">
-      <button type="button" class="ed-close" id="edClose" aria-label="Cerrar">&times;</button>
-      <h3 id="edTitle">¿Qué edición de FC 27 quieres?</h3>
-      <p class="ed-sub">Las dos traen el juego completo. Elige la que se ajuste a lo que buscas.</p>
-      <div class="ed-options">
-        <button type="button" class="ed-card" id="edStandardBtn">
-          <span class="ed-tag">Standard</span>
-          <span class="ed-name">Edición Standard</span>
-          <span class="ed-desc">El juego base completo. Podrás jugar el 25 de septiembre.</span>
-          <span class="ed-price-row"><span class="ed-price-label">Desde</span><span class="ed-price tabular">$119.990</span></span>
-          <span class="ed-pick">Quiero Standard</span>
-        </button>
-        <button type="button" class="ed-card is-ultimate" id="edUltimateBtn">
-          <span class="ed-tag">Ultimate</span>
-          <span class="ed-name">Edición Ultimate</span>
-          <span class="ed-desc">Acceso anticipado, FC Points y contenido extra para Ultimate Team. Podrás jugar el 18 de septiembre.</span>
-          <span class="ed-price-row"><span class="ed-price-label">Desde</span><span class="ed-price tabular">$209.990</span></span>
-          <span class="ed-pick">Quiero Ultimate</span>
-        </button>
-      </div>
-    </div>
-  </div>
 
   <div class="gc-overlay" id="gcOverlay" role="dialog" aria-modal="true" aria-labelledby="gcTitle" aria-hidden="true">
     <div class="gc-dialog">
@@ -645,34 +572,26 @@
   var CATALOG_API_BASE = 'https://api.srv936408.hstgr.cloud';
 
   // ---------------------------------------------------------------
-  // FC 27 Standard: CINCO productos reales del catálogo (Standard x
-  // PS/Xbox, código PC, cuotas PS/Xbox). La edición Ultimate tiene su
-  // propia landing dedicada en /fc27ultimate/ (ver ese archivo) — el
-  // modal de entrada de esta página (#edOverlay, más abajo) es lo que
-  // manda para allá a quien la elija.
+  // Esta landing es SOLO la edición Ultimate de FC 27 (la Standard vive
+  // en /fc27/, con su propio Standard/cuotas/PC). Ultimate son DOS
+  // productos reales del catálogo (Ultimate x PS/Xbox) — no existe
+  // Ultimate para PC ni una modalidad a cuotas para esta edición.
   // ---------------------------------------------------------------
   var PLATFORMS = {
     ps: {
       editions: [
-        { key: 'standard', productId: 356, title: 'Standard', kind: 'edition' },
-        { key: 'cuotas', productId: 244, title: 'Standard - A CUOTAS', kind: 'cuotas' }
+        { key: 'ultimate', productId: 359, title: 'Ultimate', kind: 'edition' }
       ]
     },
     xbox: {
       editions: [
-        { key: 'standard', productId: 357, title: 'Standard', kind: 'edition' },
-        { key: 'cuotas', productId: 243, title: 'Standard - A CUOTAS', kind: 'cuotas' }
-      ]
-    },
-    pc: {
-      editions: [
-        { key: 'codigo', productId: 352, title: 'EA FC 27', kind: 'edition' }
+        { key: 'ultimate', productId: 358, title: 'Ultimate', kind: 'edition' }
       ]
     }
   };
-  var ALL_PRODUCT_IDS = [356, 244, 357, 243, 352];
+  var ALL_PRODUCT_IDS = [359, 358];
 
-  var state = { platform: 'ps', edition: 'standard' };
+  var state = { platform: 'ps', edition: 'ultimate' };
 
   // ---------------------------------------------------------------
   // Copy por defecto. Se pinta de inmediato para que la página nunca
@@ -682,10 +601,10 @@
   // ---------------------------------------------------------------
   var CONTENT_DEFAULTS = {
     platform_label: 'PS5 · PS4 · Xbox Series · Xbox One · PC',
-    title: 'EA SPORTS FC 27',
-    subtitle: 'Elige tu plataforma y entra a la cancha con entrega inmediata.',
+    title: 'EA SPORTS FC 27 Ultimate',
+    subtitle: 'Acceso anticipado, FC Points y contenido extra para Ultimate Team. Elige tu plataforma y entra a la cancha con entrega inmediata.',
     price_label: 'Desde',
-    price_amount: '$119.990',
+    price_amount: '$209.990',
     price_unit: 'COP',
     cta_label: 'Elige tu plataforma',
     banner_image: '/fc27/hero-fc27.jpg',
@@ -700,41 +619,29 @@
     ],
     step1_eyebrow: 'Paso 1',
     step1_title: '¿Cuál es tu plataforma?',
-    step1_body: 'Elige tu consola para ver las ediciones y precios reales disponibles ahora mismo.',
+    step1_body: 'Elige tu consola para ver el stock y precio real de la edición Ultimate ahora mismo.',
     choice_ps_title: 'PlayStation',
-    choice_ps_desc: 'PS5 y PS4 — Standard o preventa a cuotas.',
+    choice_ps_desc: 'PS5 y PS4 — edición Ultimate con entrega inmediata.',
     choice_xbox_title: 'Xbox',
-    choice_xbox_desc: 'Series X|S y Xbox One — Standard o preventa a cuotas.',
-    choice_pc_title: 'PC',
-    choice_pc_desc: 'Código directo a tu cuenta de EA Play.',
+    choice_xbox_desc: 'Series X|S y Xbox One — edición Ultimate con entrega inmediata.',
     step2_eyebrow: 'Paso 2',
-    step2_title: 'Elige tu edición',
-    step2_body_ps: 'El juego base completo, con entrega inmediata — o resérvalo hoy a cuotas. Igual en PS4 y PS5.',
-    step2_body_xbox: 'El juego base completo, con entrega inmediata — o resérvalo hoy a cuotas. Igual en Xbox Series y Xbox One.',
-    step2_body_pc: 'Se activa directo en tu cuenta de EA Play para PC.',
-    edition_standard_desc: 'El juego base completo, con entrega inmediata.',
-    edition_cuotas_desc: 'Reserva hoy con un abono de $10.000, el resto se coordina por WhatsApp.',
-    edition_codigo_desc: 'Se activa directo en tu cuenta de EA Play para PC.',
+    step2_title: 'Tu edición: Ultimate',
+    step2_body_ps: 'Hasta 7 días de acceso anticipado, FC Points y contenido extra para Ultimate Team y los modos Carrera y Clubes. Igual en PS4 y PS5.',
+    step2_body_xbox: 'Hasta 7 días de acceso anticipado, FC Points y contenido extra para Ultimate Team y los modos Carrera y Clubes. Igual en Xbox Series y Xbox One.',
+    edition_ultimate_desc: 'Suma hasta 7 días de acceso anticipado, FC Points y contenido extra para Ultimate Team.',
     step3_eyebrow: 'Paso 3',
     step3_title: 'Elige tu modalidad',
-    step3_body: 'Primaria y secundaria: correo y clave. Código: se activa directo en tu cuenta.',
+    step3_body: 'Primaria y secundaria: correo y clave. Las dos te dan acceso completo a la edición Ultimate.',
     // El método de entrega difiere entre PS y Xbox para la MISMA licencia
     // (p.ej. Xbox Secundaria juega con correo propio, PS Secundaria juega
     // con el correo entregado) — mismo patrón que usa desc_<licencia>_<plataforma>
-    // en grandtheftautovi. La modalidad "cuotas" reserva la edición
-    // Standard, así que reusa esas mismas descripciones. Código (solo PC)
-    // no varía por plataforma, así que usa una sola clave (desc_codigo).
-    desc_primaria_ps_standard: 'Recibes correo y clave, juegas con tu correo personal.',
-    desc_secundaria_ps_standard: 'Recibes correo y clave, juegas con el correo entregado. <strong>Conexión a internet obligatoria.</strong>',
-    desc_primaria_xbox_standard: 'Recibes correo y clave, juegas con tu correo personal.',
-    desc_secundaria_xbox_standard: 'Recibes correo y clave, juegas con tu correo personal. <strong>Conexión a internet obligatoria.</strong>',
-    desc_codigo: 'Se activa directo en tu cuenta de EA Play.',
-    cuotas_note: '<strong>Cómo funciona la preventa a cuotas:</strong> los $10.000 que pagas aquí no son el total, solo reservan tu copia al precio de preventa. El resto se paga en 3 cuotas mensuales por WhatsApp — tu asesor te confirma las fechas. Si no completas los pagos, la reserva se retira sin reembolso ni reposición.',
-    cuotas_ps_primaria: '3 cuotas mensuales de $60.000',
-    cuotas_ps_secundaria: '3 cuotas mensuales de $50.000',
-    cuotas_xbox_primaria: '3 cuotas mensuales de $68.000',
-    cuotas_xbox_secundaria: '3 cuotas mensuales de $68.000',
-    empty_msg: 'No tenemos disponibilidad en esta edición ahora mismo. Escríbenos por WhatsApp y te avisamos apenas entre, o mira otra edición arriba.',
+    // en grandtheftautovi/fc27 (Standard), acá fijo siempre en el grupo
+    // "ultimate" porque esta landing no tiene otra edición.
+    desc_primaria_ps_ultimate: 'Recibes correo y clave, juegas con tu correo personal. No obtienes las monedas ni los demás beneficios, solo el acceso anticipado.',
+    desc_secundaria_ps_ultimate: 'Recibes correo y clave, juegas con el correo entregado. Obtienes todos los beneficios de la edición Ultimate. <strong>Conexión a internet obligatoria.</strong>',
+    desc_primaria_xbox_ultimate: 'Recibes correo y clave, juegas con tu correo personal. No obtienes las monedas ni los demás beneficios, solo el acceso anticipado.',
+    desc_secundaria_xbox_ultimate: 'Recibes correo y clave, juegas con el correo entregado. Obtienes todos los beneficios de la edición Ultimate. <strong>Conexión a internet obligatoria.</strong>',
+    empty_msg: 'No tenemos disponibilidad en esta edición ahora mismo. Escríbenos por WhatsApp y te avisamos apenas entre, o mira otra plataforma arriba.',
     badge_recommended: 'Recomendado',
     badge_best_price: 'Mejor precio',
     pick_button_label: 'Elegir',
@@ -745,13 +652,14 @@
     faq_eyebrow: 'Antes de pagar',
     faq_title: 'Lo que suele preguntarse',
     faq: [
+      { q: '¿Qué trae la edición Ultimate que no trae Standard?', a: 'Ultimate suma hasta 7 días de acceso anticipado, FC Points, beneficios exclusivos para Ultimate Team y contenido adicional para los modos Carrera y Clubes. El juego base es el mismo en las dos ediciones.' },
       { q: '¿Qué significa "Primaria" y "Secundaria"?', a: 'Ambas te dan una cuenta con correo y clave. En Primaria juegas con tu propio perfil dentro de esa cuenta. En Secundaria juegas con el correo que te entregamos (revisa el detalle exacto en cada tarjeta, varía un poco según plataforma). Te mostramos precio y stock de las dos por separado para que elijas.' },
-      { q: '¿Cómo funciona la preventa a cuotas?', a: 'Con el primer pago reservas tu copia al precio de preventa. El resto se coordina por WhatsApp antes del lanzamiento. Si no completas los pagos, la reserva se retira sin reembolso ni reposición.' },
-      { q: '¿Un código sirve para toda la familia de consola?', a: 'Sí: en PlayStation funciona igual en PS4 y PS5, y en Xbox funciona igual en Xbox Series y Xbox One.' },
-      { q: '¿Qué pasa si el código o la cuenta falla?', a: 'Tienes garantía: si algo no funciona, te lo reponemos. Escríbenos por WhatsApp y lo resolvemos.' }
+      { q: '¿Funciona igual en las dos consolas de cada plataforma?', a: 'Sí: en PlayStation funciona igual en PS4 y PS5, y en Xbox funciona igual en Xbox Series y Xbox One.' },
+      { q: '¿Qué pasa si la cuenta falla?', a: 'Tienes garantía: si algo no funciona, te lo reponemos. Escríbenos por WhatsApp y lo resolvemos.' },
+      { q: '¿Buscas la edición Standard?', a: 'Sí tenemos, con precio más bajo y opción de preventa a cuotas. <a href="https://www.hardcoregames.co/fc27">Ver FC 27 Standard ›</a>' }
     ],
-    portal_title: '¿Quieres ver las variantes juntas, con toda la letra chica?',
-    portal_desc: 'Todas las fichas de EA SPORTS FC 27 Standard (PS, Xbox, PC, contado y cuotas) siguen disponibles en el catálogo.',
+    portal_title: '¿Quieres ver todas las variantes juntas, con toda la letra chica?',
+    portal_desc: 'Todas las fichas de EA SPORTS FC 27 (Standard, Ultimate, PS, Xbox, PC, contado y cuotas) siguen disponibles en el catálogo.',
     portal_link: 'Ver todas las variantes ›',
     portal_href: 'https://www.hardcoregames.co/filters?search=FC%2027',
     footer: 'Hardcore Games — todos los derechos reservados.'
@@ -763,11 +671,8 @@
   // así que el precio/stock final siempre termina siendo el real del
   // catálogo, no este snapshot.
   var PLAN_DEFAULTS = {
-    356: { pk: 6201, precio: 169990, precio_descuento: 119990, stock: 1, desc_licence: 'Secundaria', consola: 1, desc_console: 'PlayStation 4' },
-    244: { pk: 3762, precio: 10000, precio_descuento: 0, stock: 1, desc_licence: 'Primaria', consola: 1, desc_console: 'PlayStation 4' },
-    357: { pk: 6188, precio: 219990, precio_descuento: 169990, stock: 1, desc_licence: 'Primaria', consola: 5, desc_console: 'xbox' },
-    243: { pk: 3760, precio: 10000, precio_descuento: 0, stock: 1, desc_licence: 'Primaria', consola: 5, desc_console: 'xbox' },
-    352: { pk: 6154, precio: 284990, precio_descuento: 264990, stock: 2, desc_licence: 'Codigo', consola: 5, desc_console: 'xbox' }
+    359: { pk: 6204, precio: 259990, precio_descuento: 209990, stock: 1, desc_licence: 'Primaria', consola: 1, desc_console: 'PlayStation 4' },
+    358: { pk: 6190, precio: 259990, precio_descuento: 209990, stock: 1, desc_licence: 'Primaria', consola: 5, desc_console: 'xbox' }
   };
 
   function fmtCOP(n) {
@@ -808,12 +713,10 @@
   var LICENCE_ORDER = ['Primaria', 'Secundaria', 'Codigo'];
   var LICENCE_LABEL = { Primaria: 'Primaria', Secundaria: 'Secundaria', Codigo: 'Código' };
   var LICENCE_KEY = { Primaria: 'primaria', Secundaria: 'secundaria', Codigo: 'codigo' };
-  // Código (solo PC) no varía por plataforma. Primaria y Secundaria sí: el
-  // método de entrega difiere entre PS y Xbox — mismo patrón que usa
-  // desc_<licencia>_<plataforma> en grandtheftautovi. Esta landing solo
-  // vende la edición Standard (la Ultimate vive en /fc27ultimate/), así que
-  // "group" siempre es 'standard'; se deja la variable por si el día de
-  // mañana esta landing vuelve a tener más de una edición.
+  // Esta landing solo tiene edición Ultimate (no hay Código/PC ni cuotas
+  // acá), pero el método de entrega de Primaria/Secundaria sí difiere
+  // entre PS y Xbox — mismo patrón desc_<licencia>_<plataforma>_<edicion>
+  // que usa /fc27/ (Standard) y grandtheftautovi.
   function licenceDesc(c, licence) {
     if (licence === 'Codigo') return c.desc_codigo || '';
     var group = state.edition === 'ultimate' ? 'ultimate' : 'standard';
@@ -1050,10 +953,7 @@
       state.platform = platform;
       platformButtons.forEach(function (b) { b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'); });
       var c = window.__CONTENT || CONTENT_DEFAULTS;
-      setText('v-step2_body',
-        platform === 'ps' ? c.step2_body_ps :
-        platform === 'xbox' ? c.step2_body_xbox :
-        c.step2_body_pc);
+      setText('v-step2_body', platform === 'ps' ? c.step2_body_ps : c.step2_body_xbox);
       renderEditionButtons();
       updateStep3Body();
       renderModalityCards();
@@ -1314,47 +1214,14 @@
     });
   })();
 
-  // ---------------- modal de entrada: Standard vs Ultimate ----------------
-  // Se muestra solo la primera vez que alguien entra a /fc27/ en ese
-  // navegador (localStorage recuerda la elección). Elegir Ultimate manda a
-  // la landing dedicada (/fc27ultimate/); elegir Standard, cerrar con la X,
-  // hacer click afuera o Escape simplemente deja ver esta misma página.
+  // ---------------- volver a la landing Standard ----------------
+  // Deja escrita la elección para que si el visitante vuelve a /fc27/, el
+  // modal de esa landing (ver fc27/index.html) no le vuelva a preguntar.
   (function () {
-    var STORAGE_KEY = 'fc27_edition_choice';
-    var ULTIMATE_URL = 'https://www.hardcoregames.co/fc27ultimate';
-    var overlay = document.getElementById('edOverlay');
-    var closeBtn = document.getElementById('edClose');
-    var standardBtn = document.getElementById('edStandardBtn');
-    var ultimateBtn = document.getElementById('edUltimateBtn');
-
-    var alreadyChose = false;
-    try { alreadyChose = !!localStorage.getItem(STORAGE_KEY); } catch (e) { /* storage bloqueado: se muestra igual, solo no se recuerda */ }
-
-    function remember(choice) {
-      try { localStorage.setItem(STORAGE_KEY, choice); } catch (e) { /* no-op */ }
-    }
-    function close() {
-      overlay.classList.remove('is-open');
-      overlay.setAttribute('aria-hidden', 'true');
-      document.body.style.overflow = '';
-    }
-    function stayOnStandard() { remember('standard'); close(); }
-
-    if (!alreadyChose) {
-      overlay.classList.add('is-open');
-      overlay.setAttribute('aria-hidden', 'false');
-      document.body.style.overflow = 'hidden';
-    }
-
-    closeBtn.addEventListener('click', stayOnStandard);
-    overlay.addEventListener('click', function (ev) { if (ev.target === overlay) stayOnStandard(); });
-    document.addEventListener('keydown', function (ev) {
-      if (ev.key === 'Escape' && overlay.classList.contains('is-open')) stayOnStandard();
-    });
-    standardBtn.addEventListener('click', stayOnStandard);
-    ultimateBtn.addEventListener('click', function () {
-      remember('ultimate');
-      window.location.href = ULTIMATE_URL;
+    var link = document.querySelector('.standard-bar');
+    if (!link) return;
+    link.addEventListener('click', function () {
+      try { localStorage.setItem('fc27_edition_choice', 'standard'); } catch (e) { /* storage bloqueado: no pasa nada, solo no se recuerda */ }
     });
   })();
 
@@ -1440,17 +1307,20 @@
       .catch(function () { /* si falla, cart_combinations cae al título/imagen genéricos */ });
   });
 
-  fetch(API_BASE + '/systemVariables/fc27')
+  // Clave propia "fc27ultimate" (distinta de "fc27") para que el copy de
+  // esta landing se pueda editar desde el admin sin pisar ni depender de
+  // la fila de la landing Standard.
+  fetch(API_BASE + '/systemVariables/fc27ultimate')
     .then(function (r) { return r.ok ? r.json() : null; })
     .then(function (res) {
       if (res && res.data && res.data.valor) {
         var parsed = JSON.parse(res.data.valor);
-        if (parsed && parsed.fc27) renderContent(parsed.fc27);
+        if (parsed && parsed.fc27ultimate) renderContent(parsed.fc27ultimate);
       }
     })
     .catch(function () { /* se queda con el texto por defecto */ });
 
-  // Un getCombinationPriceByGame por cada uno de los 7 productos reales.
+  // Dos getCombinationPriceByGame, uno por producto Ultimate (PS/Xbox).
   // Una respuesta con data: [] es un dato real ("esta variante se agotó
   // del todo"), no un fallo — solo un error de red/HTTP (res === null)
   // conserva el snapshot PLAN_DEFAULTS para ese producto.
