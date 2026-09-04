@@ -274,24 +274,28 @@
   .ed-close:hover { color: var(--foreground); }
   .ed-dialog h3 { font-size: 21px; font-weight: 800; margin: 0 6px 4px 0; padding-right: 24px; }
   .ed-sub { color: var(--muted-foreground); font-size: 13.5px; margin: 0 0 20px; }
-  .ed-options { display: grid; grid-template-columns: 1fr; gap: 12px; }
+  .ed-options { display: grid; grid-template-columns: 1fr; align-items: stretch; gap: 12px; }
   @media (min-width: 560px) { .ed-options { grid-template-columns: 1fr 1fr; } }
   .ed-card {
     display: flex; flex-direction: column; gap: 8px; background: var(--secondary); border: 1px solid var(--border);
     border-radius: var(--radius); padding: 18px 16px; text-align: left; cursor: pointer; color: var(--foreground);
-    font-family: inherit;
+    font-family: inherit; height: 100%;
   }
   .ed-card:hover { border-color: var(--cta); }
   .ed-card:focus-visible { outline: 2px solid var(--cta); outline-offset: 2px; }
   .ed-card .ed-tag { font-size: 10.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted-foreground); }
   .ed-card.is-ultimate .ed-tag { color: var(--cta); }
   .ed-card .ed-name { font-size: 19px; font-weight: 800; }
-  .ed-card .ed-desc { font-size: 13px; color: var(--muted-foreground); min-height: 34px; }
+  .ed-card .ed-desc { font-size: 13px; color: var(--muted-foreground); }
   .ed-card .ed-price-row { display: flex; align-items: baseline; gap: 6px; margin-top: 2px; }
   .ed-card .ed-price-label { font-size: 10.5px; text-transform: uppercase; color: var(--muted-foreground); }
   .ed-card .ed-price { font-weight: 800; font-size: 20px; }
   .ed-card .ed-pick {
-    margin-top: 8px; background: transparent; border: 1px solid var(--border); color: var(--foreground);
+    /* margin-top: auto empuja el botón al fondo de la tarjeta aunque las
+       descripciones tengan distinto largo (Standard vs Ultimate) — así los
+       dos botones "Quiero X" quedan a la misma altura sin importar cuántas
+       líneas ocupe el texto de arriba. */
+    margin-top: auto; background: transparent; border: 1px solid var(--border); color: var(--foreground);
     font-weight: 700; font-size: 13.5px; padding: 10px; border-radius: calc(var(--radius) - .25rem); text-align: center;
   }
   .ed-card.is-ultimate .ed-pick { background: var(--cta); color: var(--cta-foreground); border-color: var(--cta); }

@@ -280,6 +280,13 @@
   /* ---- topbar: réplica del header real (mismas proporciones: dos filas
      de 64px, buscador de 40px, nav a 16px) para que la landing se sienta
      parte del sitio y no una página aparte ---- */
+  /* ---- barra superior: acceso directo a la landing Standard ---- */
+  .standard-bar {
+    display: block; text-align: center; background: var(--primary); color: var(--foreground);
+    font-weight: 700; font-size: 13.5px; padding: 10px 16px; text-decoration: none;
+  }
+  .standard-bar:hover { filter: brightness(1.1); }
+
   .site-topbar { background: var(--background); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 50; }
   .site-topbar-row {
     max-width: 1400px; margin: 0 auto; padding: 0 20px;
@@ -372,6 +379,8 @@
 </style>
 </head>
 <body>
+
+<a href="https://www.hardcoregames.co/fc27" class="standard-bar">¿Buscas la edición Standard? Ver FC 27 Standard &rsaquo;</a>
 
 <header class="site-topbar">
   <div class="site-topbar-row">
@@ -472,7 +481,6 @@
     </div>
 
     <button class="cta" id="v-cta_label" onclick="document.getElementById('choiceRow').scrollIntoView({behavior:'smooth', block:'center'})">Elige tu plataforma</button>
-    <a href="https://www.hardcoregames.co/fc27" id="v-back-standard" style="display:block; text-align:center; margin-top:14px; color:var(--muted-foreground); font-size:13px; text-decoration:none;">¿Buscas la edición Standard? Ver FC 27 Standard &rsaquo;</a>
   </div>
 </section>
 
@@ -1210,7 +1218,7 @@
   // Deja escrita la elección para que si el visitante vuelve a /fc27/, el
   // modal de esa landing (ver fc27/index.html) no le vuelva a preguntar.
   (function () {
-    var link = document.getElementById('v-back-standard');
+    var link = document.querySelector('.standard-bar');
     if (!link) return;
     link.addEventListener('click', function () {
       try { localStorage.setItem('fc27_edition_choice', 'standard'); } catch (e) { /* storage bloqueado: no pasa nada, solo no se recuerda */ }
