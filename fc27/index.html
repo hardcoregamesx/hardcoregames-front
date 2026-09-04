@@ -321,6 +321,13 @@
   /* ---- topbar: réplica del header real (mismas proporciones: dos filas
      de 64px, buscador de 40px, nav a 16px) para que la landing se sienta
      parte del sitio y no una página aparte ---- */
+  /* ---- barra superior: acceso directo a la landing Ultimate ---- */
+  .ultimate-bar {
+    display: block; text-align: center; background: var(--cta); color: var(--cta-foreground);
+    font-weight: 700; font-size: 13.5px; padding: 10px 16px; text-decoration: none;
+  }
+  .ultimate-bar:hover { filter: brightness(1.05); }
+
   .site-topbar { background: var(--background); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 50; }
   .site-topbar-row {
     max-width: 1400px; margin: 0 auto; padding: 0 20px;
@@ -413,6 +420,8 @@
 </style>
 </head>
 <body>
+
+<a href="https://www.hardcoregames.co/fc27ultimate" class="ultimate-bar">¿Buscas la edición Ultimate? Ver FC 27 Ultimate &rsaquo;</a>
 
 <header class="site-topbar">
   <div class="site-topbar-row">
@@ -735,8 +744,7 @@
       { q: '¿Qué significa "Primaria" y "Secundaria"?', a: 'Ambas te dan una cuenta con correo y clave. En Primaria juegas con tu propio perfil dentro de esa cuenta. En Secundaria juegas con el correo que te entregamos (revisa el detalle exacto en cada tarjeta, varía un poco según plataforma). Te mostramos precio y stock de las dos por separado para que elijas.' },
       { q: '¿Cómo funciona la preventa a cuotas?', a: 'Con el primer pago reservas tu copia al precio de preventa. El resto se coordina por WhatsApp antes del lanzamiento. Si no completas los pagos, la reserva se retira sin reembolso ni reposición.' },
       { q: '¿Un código sirve para toda la familia de consola?', a: 'Sí: en PlayStation funciona igual en PS4 y PS5, y en Xbox funciona igual en Xbox Series y Xbox One.' },
-      { q: '¿Qué pasa si el código o la cuenta falla?', a: 'Tienes garantía: si algo no funciona, te lo reponemos. Escríbenos por WhatsApp y lo resolvemos.' },
-      { q: '¿Buscas la edición Ultimate?', a: 'Sí tenemos, con acceso anticipado, FC Points y contenido extra para Ultimate Team. <a href="https://www.hardcoregames.co/fc27ultimate">Ver FC 27 Ultimate ›</a>' }
+      { q: '¿Qué pasa si el código o la cuenta falla?', a: 'Tienes garantía: si algo no funciona, te lo reponemos. Escríbenos por WhatsApp y lo resolvemos.' }
     ],
     portal_title: '¿Quieres ver las variantes juntas, con toda la letra chica?',
     portal_desc: 'Todas las fichas de EA SPORTS FC 27 Standard (PS, Xbox, PC, contado y cuotas) siguen disponibles en el catálogo.',
