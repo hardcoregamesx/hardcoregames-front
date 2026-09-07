@@ -942,7 +942,11 @@
     // $10.000 porque son un abono, no el precio final, así que etiquetar
     // una de ellas "mejor precio" sería engañoso.
     var bestIndex = (ed.kind !== 'cuotas' && plans.length > 1) ? bestValueIndex(plans) : -1;
-    container.className = 'plans' + (plans.length === 1 ? ' plans-1' : ' plans-2');
+    // plans-1/plans-2 angostan la grilla a 1 o 2 columnas — con 3 licencias
+    // (Primaria/Secundaria/Código, ya real para Ultimate desde que el
+    // catálogo sumó Código en PS/Xbox) NINGÚN modificador debe aplicarse:
+    // la regla base .plans ya pone 3 columnas.
+    container.className = 'plans' + (plans.length === 1 ? ' plans-1' : plans.length === 2 ? ' plans-2' : '');
     container.innerHTML = plans.map(function (p, i) {
       return planCardHTML(p, productId, i === bestIndex, c);
     }).join('');
