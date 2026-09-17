@@ -629,7 +629,78 @@ fbq('track', 'PageView');
 src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
 /></noscript>
 <!-- End Meta Pixel Code -->
-<script src="/assets/attribution-tracking.js"></script>
+<!-- Atribucion de origen (first-touch), inline a proposito: esta pagina la
+     sirve el frontend legacy vía hclandings, y su regla de Traefik solo deja
+     pasar /assets/rewards-widget.js y /assets/sorteos-widget.js -- cualquier
+     otro archivo bajo /assets/ cae a frontend-v2 y no se encuentra. Mismo
+     formato de cookie que frontend-v2/src/lib/attribution.ts. -->
+<script>
+(function () {
+  "use strict";
+  var COOKIE_NAME = "hc_first_touch";
+  var COOKIE_MAX_AGE_SECONDS = 60 * 60 * 24 * 365;
+  function readCookie(name) {
+    try {
+      var match = document.cookie.match(new RegExp("(?:^|; )" + name + "=([^;]*)"));
+      return match ? decodeURIComponent(match[1]) : null;
+    } catch (e) { return null; }
+  }
+  function writeCookie(name, value) {
+    try {
+      document.cookie = name + "=" + encodeURIComponent(value) + "; path=/; max-age=" + COOKIE_MAX_AGE_SECONDS + "; SameSite=Lax";
+    } catch (e) {}
+  }
+  function referrerDomain() {
+    try {
+      if (!document.referrer) return "";
+      return new URL(document.referrer).hostname.replace(/^www\./, "");
+    } catch (e) { return ""; }
+  }
+  function inferFromReferrer(domain, referrerPath) {
+    if (!domain) return { origen: "directo", medio: "ninguno" };
+    if (domain.indexOf("google.") !== -1) {
+      return referrerPath.indexOf("/maps") === 0 ? { origen: "google", medio: "maps" } : { origen: "google", medio: "organico" };
+    }
+    if (domain.indexOf("facebook.") !== -1 || domain.indexOf("instagram.") !== -1 || domain.indexOf("fb.") !== -1) {
+      return { origen: "meta", medio: "organico" };
+    }
+    if (domain.indexOf("tiktok.") !== -1) return { origen: "tiktok", medio: "organico" };
+    if (domain.indexOf("whatsapp.") !== -1 || domain.indexOf("wa.me") !== -1) return { origen: "whatsapp", medio: "referido" };
+    return { origen: domain, medio: "referido" };
+  }
+  try {
+    if (!readCookie(COOKIE_NAME)) {
+      var params = new URLSearchParams(location.search);
+      var utmSource = params.get("utm_source");
+      var utmMedium = params.get("utm_medium");
+      var utmCampaign = params.get("utm_campaign");
+      var gclid = params.get("gclid");
+      var fbclid = params.get("fbclid");
+      var origen, origenMedio;
+      var domain = referrerDomain();
+      var referrerPath = "";
+      try { referrerPath = document.referrer ? new URL(document.referrer).pathname : ""; } catch (e) {}
+      if (utmSource) {
+        origen = utmSource; origenMedio = utmMedium || "";
+      } else if (gclid) {
+        origen = "google"; origenMedio = "cpc";
+      } else if (fbclid) {
+        origen = "meta"; origenMedio = "cpc";
+      } else {
+        var inferred = inferFromReferrer(domain, referrerPath);
+        origen = inferred.origen; origenMedio = inferred.medio;
+      }
+      writeCookie(COOKIE_NAME, JSON.stringify({
+        origen: origen,
+        origen_medio: origenMedio,
+        origen_campana: utmCampaign || (gclid ? "gclid:" + gclid : fbclid ? "fbclid:" + fbclid : ""),
+        origen_referrer: domain,
+        origen_fecha: new Date().toISOString(),
+      }));
+    }
+  } catch (e) {}
+})();
+</script>
 </head>
 <body>
 
