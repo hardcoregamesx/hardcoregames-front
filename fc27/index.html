@@ -214,10 +214,10 @@
       },
       {
         "@type": "Question",
-        "name": "¿Cómo funciona la preventa a cuotas?",
+        "name": "¿Puedo pagarlo a cuotas?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Con el primer pago reservas tu copia al precio de preventa. El resto se coordina por WhatsApp antes del lanzamiento. Si no completas los pagos, la reserva se retira sin reembolso ni reposición."
+          "text": "Si. Al entrar a la edicion que elijas veras \"¿Como quieres pagar?\" con dos opciones: contado o cuotas. Con cuotas pagas una inicial, recibes el juego el mismo dia y el resto se cobra en 2 pagos, uno cada 30 dias. La inicial y el valor de cada cuota dependen de la edicion y se muestran antes de pagar."
         }
       },
       {
@@ -819,11 +819,11 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
 
     <div class="choice-row" id="choiceRow">
       <button class="choice-btn" data-platform="ps" aria-pressed="true">
-        <span><span class="h" id="v-choice_ps_title">PlayStation</span><span class="s" id="v-choice_ps_desc">PS5 y PS4 — Standard, Ultimate o preventa a cuotas.</span></span>
+        <span><span class="h" id="v-choice_ps_title">PlayStation</span><span class="s" id="v-choice_ps_desc">PS5 y PS4 — Standard o Ultimate, con entrega inmediata.</span></span>
         <span class="arrow">&rsaquo;</span>
       </button>
       <button class="choice-btn" data-platform="xbox" aria-pressed="false">
-        <span><span class="h" id="v-choice_xbox_title">Xbox</span><span class="s" id="v-choice_xbox_desc">Series X|S y Xbox One — Standard, Ultimate o preventa a cuotas.</span></span>
+        <span><span class="h" id="v-choice_xbox_title">Xbox</span><span class="s" id="v-choice_xbox_desc">Series X|S y Xbox One — Standard o Ultimate, con entrega inmediata.</span></span>
         <span class="arrow">&rsaquo;</span>
       </button>
       <button class="choice-btn" data-platform="pc" aria-pressed="false">
@@ -861,8 +861,8 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
 
   <section style="padding-bottom: 10px;">
     <div class="portal-note">
-      <div class="t" id="v-portal_title">¿Quieres ver las 7 variantes juntas, con toda la letra chica?</div>
-      <div class="d" id="v-portal_desc">Todas las fichas de EA SPORTS FC 27 (PS, Xbox, PC, contado y cuotas) siguen disponibles en el catálogo.</div>
+      <div class="t" id="v-portal_title">¿Quieres ver todas las versiones juntas, con toda la letra chica?</div>
+      <div class="d" id="v-portal_desc">Todas las fichas de EA SPORTS FC 27 (PS, Xbox y PC) están en el catálogo, cada una con su opción de pago a cuotas.</div>
       <a id="v-portal_link" href="https://www.hardcoregames.co/filters?search=FC%2027">Ver todas las variantes &rsaquo;</a>
     </div>
   </section>
@@ -899,22 +899,29 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
 
   // ---------------------------------------------------------------
   // FC 27 no es UN producto con combinaciones (como Game Pass), son
-  // SIETE productos reales del catálogo (Standard/Ultimate x PS/Xbox,
-  // código PC, cuotas PS/Xbox). Cada entrada acá es una tarjeta.
+  // CINCO productos reales del catálogo (Standard/Ultimate x PS/Xbox,
+  // código PC). Cada entrada acá es una tarjeta.
+  //
+  // 18 sep 2026 — fuera las fichas "Standard - A CUOTAS" (244 PS / 243
+  // Xbox). Dos cosas cambiaron a la vez:
+  //   1. Las cuotas ya no son un producto aparte: cada ficha trae su
+  //      propio selector "¿Cómo quieres pagar? Contado / Cuotas", con
+  //      entrega el mismo día. Ya no hay que reservar ni esperar.
+  //   2. Los ids 244 y 243 fueron reasignados en el catálogo y hoy
+  //      apuntan a FINAL FANTASY VII REVELATION. La tarjeta seguía viva
+  //      y metía ese juego al carrito por $10.000.
   // ---------------------------------------------------------------
   var PLATFORMS = {
     ps: {
       editions: [
         { key: 'standard', productId: 356, title: 'Standard', kind: 'edition' },
-        { key: 'ultimate', productId: 359, title: 'Ultimate', kind: 'edition' },
-        { key: 'cuotas', productId: 244, title: 'Standard - A CUOTAS', kind: 'cuotas' }
+        { key: 'ultimate', productId: 359, title: 'Ultimate', kind: 'edition' }
       ]
     },
     xbox: {
       editions: [
         { key: 'standard', productId: 357, title: 'Standard', kind: 'edition' },
-        { key: 'ultimate', productId: 358, title: 'Ultimate', kind: 'edition' },
-        { key: 'cuotas', productId: 243, title: 'Standard - A CUOTAS', kind: 'cuotas' }
+        { key: 'ultimate', productId: 358, title: 'Ultimate', kind: 'edition' }
       ]
     },
     pc: {
@@ -923,7 +930,7 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
       ]
     }
   };
-  var ALL_PRODUCT_IDS = [356, 359, 244, 357, 358, 243, 352];
+  var ALL_PRODUCT_IDS = [356, 359, 357, 358, 352];
 
   var state = { platform: 'ps', edition: 'standard' };
 
@@ -936,18 +943,19 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
   var CONTENT_DEFAULTS = {
     platform_label: 'PS5 · PS4 · Xbox Series · Xbox One · PC',
     title: 'EA SPORTS FC 27',
-    subtitle: 'Standard o Ultimate. Elige tu plataforma y entra a la cancha con entrega inmediata.',
+    subtitle: 'Ya disponible. Standard o Ultimate, con entrega inmediata y opción de pagar a cuotas.',
     price_label: 'Desde',
     price_amount: '$119.990',
     price_unit: 'COP',
     cta_label: 'Elige tu plataforma',
     banner_image: '/fc27/hero-fc27.jpg',
-    // "Reserva y ahorra": sale de la ficha real de los productos a cuotas
-    // (244/243, "Con la primer cuota, puedes reservar y asegurar el valor
-    // de preventa") — reservar ahora congela el precio de preventa antes
-    // de que suba. Soporte incluye tutoriales 24/7 además de WhatsApp.
+    // 18 sep 2026: el juego salió. El primer badge decía "Reserva y
+    // ahorra / Asegura el precio de preventa" — cierto durante la
+    // preventa, falso desde hoy, y encima contradecía al anuncio que
+    // trae a la gente acá ("YA DISPONIBLE · ENTREGA INMEDIATA").
+    // Soporte incluye tutoriales 24/7 además de WhatsApp.
     trust: [
-      { title: 'Reserva y ahorra', desc: 'Asegura el precio de preventa', tone: 'primary' },
+      { title: 'Ya disponible', desc: 'Entrega inmediata tras el pago', tone: 'primary' },
       { title: 'Con garantía', desc: 'Reposición si algo falla', tone: 'accent' },
       { title: 'Soporte real', desc: 'Tutoriales 24/7 y WhatsApp', tone: 'cta' }
     ],
@@ -955,9 +963,9 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
     step1_title: '¿Cuál es tu plataforma?',
     step1_body: 'Elige tu consola para ver las ediciones y precios reales disponibles ahora mismo.',
     choice_ps_title: 'PlayStation',
-    choice_ps_desc: 'PS5 y PS4 — Standard, Ultimate o preventa a cuotas.',
+    choice_ps_desc: 'PS5 y PS4 — Standard o Ultimate, con entrega inmediata.',
     choice_xbox_title: 'Xbox',
-    choice_xbox_desc: 'Series X|S y Xbox One — Standard, Ultimate o preventa a cuotas.',
+    choice_xbox_desc: 'Series X|S y Xbox One — Standard o Ultimate, con entrega inmediata.',
     choice_pc_title: 'PC',
     choice_pc_desc: 'Código directo a tu cuenta de EA Play.',
     step2_eyebrow: 'Paso 2',
@@ -967,7 +975,6 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
     step2_body_pc: 'Se activa directo en tu cuenta de EA Play para PC.',
     edition_standard_desc: 'El juego base completo, con entrega inmediata.',
     edition_ultimate_desc: 'Suma hasta 7 días de acceso anticipado, FC Points y contenido extra para Ultimate Team.',
-    edition_cuotas_desc: 'Reserva hoy con un abono de $10.000, el resto se coordina por WhatsApp.',
     edition_codigo_desc: 'Se activa directo en tu cuenta de EA Play para PC.',
     step3_eyebrow: 'Paso 3',
     step3_title: 'Elige tu modalidad',
@@ -976,10 +983,9 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
     // Ultimate para la MISMA licencia (p.ej. Xbox Secundaria Standard
     // juega con correo propio, pero Xbox Secundaria Ultimate juega con el
     // correo entregado) — mismo patrón que ya usa desc_<licencia>_<plataforma>
-    // en grandtheftautovi, extendido acá con la edición. La modalidad
-    // "cuotas" reserva la edición Standard, así que usa las mismas
-    // descripciones que Standard. Código (solo PC) no varía por plataforma
-    // ni edición, así que usa una sola clave (desc_codigo).
+    // en grandtheftautovi, extendido acá con la edición. Código (solo PC)
+    // no varía por plataforma ni edición, así que usa una sola clave
+    // (desc_codigo).
     desc_primaria_ps_standard: 'Recibes correo y clave, juegas con tu correo personal.',
     desc_secundaria_ps_standard: 'Recibes correo y clave, juegas con el correo entregado. <strong>Conexión a internet obligatoria.</strong>',
     desc_primaria_ps_ultimate: 'Recibes correo y clave, juegas con tu correo personal. No obtienes las monedas ni los demás beneficios, solo el acceso anticipado.',
@@ -989,11 +995,11 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
     desc_primaria_xbox_ultimate: 'Recibes correo y clave, juegas con tu correo personal. No obtienes las monedas ni los demás beneficios, solo el acceso anticipado.',
     desc_secundaria_xbox_ultimate: 'Recibes correo y clave, juegas con el correo entregado. Obtienes todos los beneficios de la edición Ultimate. <strong>Conexión a internet obligatoria.</strong>',
     desc_codigo: 'Se activa directo en tu cuenta de EA Play.',
-    cuotas_note: '<strong>Cómo funciona la preventa a cuotas:</strong> los $10.000 que pagas aquí no son el total, solo reservan tu copia al precio de preventa. El resto se paga en 3 cuotas mensuales por WhatsApp — tu asesor te confirma las fechas. Si no completas los pagos, la reserva se retira sin reembolso ni reposición.',
-    cuotas_ps_primaria: '3 cuotas mensuales de $60.000',
-    cuotas_ps_secundaria: '3 cuotas mensuales de $50.000',
-    cuotas_xbox_primaria: '3 cuotas mensuales de $68.000',
-    cuotas_xbox_secundaria: '3 cuotas mensuales de $68.000',
+    // Nota de pago, siempre visible. Las cuotas dejaron de ser una ficha
+    // aparte: viven dentro de cada producto, en el selector "¿Cómo
+    // quieres pagar?". No se ponen cifras acá porque la inicial y las
+    // cuotas dependen del precio de cada edición — la ficha las calcula.
+    pago_note: '<strong>¿Prefieres pagarlo a cuotas?</strong> Al elegir tu edición puedes pagar de contado o a cuotas: das una inicial, <strong>recibes el juego hoy mismo</strong> y el resto se cobra en 2 pagos, uno cada 30 días. Ya no hay que reservar ni esperar al lanzamiento.',
     empty_msg: 'No tenemos disponibilidad en esta edición ahora mismo. Escríbenos por WhatsApp y te avisamos apenas entre, o mira otra edición arriba.',
     badge_recommended: 'Recomendado',
     badge_best_price: 'Mejor precio',
@@ -1007,12 +1013,12 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
     faq: [
       { q: '¿Cuál es la diferencia entre Standard y Ultimate?', a: 'Ultimate suma hasta 7 días de acceso anticipado, FC Points, beneficios exclusivos para Ultimate Team y contenido adicional para los modos Carrera y Clubes. El juego base es el mismo en las dos ediciones.' },
       { q: '¿Qué significa "Primaria" y "Secundaria"?', a: 'Ambas te dan una cuenta con correo y clave. En Primaria juegas con tu propio perfil dentro de esa cuenta. En Secundaria juegas con el correo que te entregamos (revisa el detalle exacto en cada tarjeta, varía un poco según plataforma y edición). Te mostramos precio y stock de las dos por separado para que elijas.' },
-      { q: '¿Cómo funciona la preventa a cuotas?', a: 'Con el primer pago reservas tu copia al precio de preventa. El resto se coordina por WhatsApp antes del lanzamiento. Si no completas los pagos, la reserva se retira sin reembolso ni reposición.' },
+      { q: '¿Puedo pagarlo a cuotas?', a: 'Sí. Al entrar a la edición que elijas verás "¿Cómo quieres pagar?" con dos opciones: contado o cuotas. Con cuotas pagas una inicial, recibes el juego el mismo día y el resto se cobra en 2 pagos, uno cada 30 días. La inicial y el valor de cada cuota dependen de la edición y se muestran antes de pagar.' },
       { q: '¿Un código sirve para toda la familia de consola?', a: 'Sí: en PlayStation funciona igual en PS4 y PS5, y en Xbox funciona igual en Xbox Series y Xbox One.' },
       { q: '¿Qué pasa si el código o la cuenta falla?', a: 'Tienes garantía: si algo no funciona, te lo reponemos. Escríbenos por WhatsApp y lo resolvemos.' }
     ],
-    portal_title: '¿Quieres ver las 7 variantes juntas, con toda la letra chica?',
-    portal_desc: 'Todas las fichas de EA SPORTS FC 27 (PS, Xbox, PC, contado y cuotas) siguen disponibles en el catálogo.',
+    portal_title: '¿Quieres ver todas las versiones juntas, con toda la letra chica?',
+    portal_desc: 'Todas las fichas de EA SPORTS FC 27 (PS, Xbox y PC) están en el catálogo, cada una con su opción de pago a cuotas.',
     portal_link: 'Ver todas las variantes ›',
     portal_href: 'https://www.hardcoregames.co/filters?search=FC%2027',
     footer: 'Hardcore Games — todos los derechos reservados.'
@@ -1023,13 +1029,16 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
   // getCombinationPriceByGame por producto lo reemplaza en cuanto responde,
   // así que el precio/stock final siempre termina siendo el real del
   // catálogo, no este snapshot.
+  // Refrescado el 18 sep 2026 contra getCombinationPriceByGame. Los de
+  // Xbox (357/358) decían "Primaria" y hoy esa licencia no existe en
+  // ninguno de los dos: el catálogo solo tiene Secundaria y Código, así
+  // que el snapshot pintaba una tarjeta que la API borraba medio segundo
+  // después.
   var PLAN_DEFAULTS = {
-    356: { pk: 6201, precio: 169990, precio_descuento: 119990, stock: 1, desc_licence: 'Secundaria', consola: 1, desc_console: 'PlayStation 4' },
-    359: { pk: 6204, precio: 259990, precio_descuento: 209990, stock: 1, desc_licence: 'Primaria', consola: 1, desc_console: 'PlayStation 4' },
-    244: { pk: 3762, precio: 10000, precio_descuento: 0, stock: 1, desc_licence: 'Primaria', consola: 1, desc_console: 'PlayStation 4' },
-    357: { pk: 6188, precio: 219990, precio_descuento: 169990, stock: 1, desc_licence: 'Primaria', consola: 5, desc_console: 'xbox' },
-    358: { pk: 6190, precio: 259990, precio_descuento: 209990, stock: 1, desc_licence: 'Primaria', consola: 5, desc_console: 'xbox' },
-    243: { pk: 3760, precio: 10000, precio_descuento: 0, stock: 1, desc_licence: 'Primaria', consola: 5, desc_console: 'xbox' },
+    356: { pk: 6201, precio: 169990, precio_descuento: 119990, stock: 8, desc_licence: 'Secundaria', consola: 1, desc_console: 'PlayStation 4' },
+    359: { pk: 6204, precio: 259990, precio_descuento: 209990, stock: 3, desc_licence: 'Primaria', consola: 1, desc_console: 'PlayStation 4' },
+    357: { pk: 6189, precio: 219990, precio_descuento: 169990, stock: 1, desc_licence: 'Secundaria', consola: 5, desc_console: 'xbox' },
+    358: { pk: 6191, precio: 309990, precio_descuento: 259990, stock: 1, desc_licence: 'Secundaria', consola: 5, desc_console: 'xbox' },
     352: { pk: 6154, precio: 284990, precio_descuento: 264990, stock: 2, desc_licence: 'Codigo', consola: 5, desc_console: 'xbox' }
   };
 
@@ -1037,10 +1046,9 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
     return '$' + Number(n).toLocaleString('es-CO');
   }
   // El catálogo usa precio_descuento = 0 con el sentido de "sin descuento",
-  // no "gratis" — así están cargados hoy los productos a cuotas (243/244):
-  // precio 10000, precio_descuento 0. Mismo criterio que ya usa
-  // writeCartCombination para el precio del carrito, así que tarjeta y
-  // carrito no pueden desincronizarse.
+  // no "gratis". Mismo criterio que ya usa writeCartCombination para el
+  // precio del carrito, así que tarjeta y carrito no pueden
+  // desincronizarse.
   function planPrice(p) {
     return (p.precio_descuento > 0 && p.precio_descuento < p.precio) ? p.precio_descuento : p.precio;
   }
@@ -1259,17 +1267,12 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
   function updateStep3Body() {
     var c = window.__CONTENT || CONTENT_DEFAULTS;
     document.getElementById('plansBody').textContent = c.step3_body || '';
-    var ed = currentEdition();
+    // La nota de pago va siempre visible: antes solo salía en la ficha
+    // "a cuotas", que ya no existe, y las cuotas son justo lo que nos
+    // diferencia de los marketplaces grandes. Esconderla era regalarla.
     var note = document.getElementById('cuotasNote');
-    if (ed.kind === 'cuotas') {
-      var primaria = c['cuotas_' + state.platform + '_primaria'];
-      var secundaria = c['cuotas_' + state.platform + '_secundaria'];
-      var cuotasLine = 'PRIMARIA: ' + (primaria || '—') + ' · SECUNDARIA: ' + (secundaria || '—') + '.';
-      note.innerHTML = (c.cuotas_note || '') + ' ' + cuotasLine;
-      note.classList.remove('is-hidden');
-    } else {
-      note.classList.add('is-hidden');
-    }
+    note.innerHTML = c.pago_note || '';
+    note.classList.toggle('is-hidden', !c.pago_note);
   }
 
   function renderModalityCards() {
@@ -1277,7 +1280,12 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
     var ed = currentEdition();
     var productId = ed.productId;
     var rows = (window.__PLAN_DATA || {})[productId] || [];
-    var plans = groupByLicence(rows);
+    // Solo lo que se puede comprar hoy. Antes una licencia agotada se
+    // seguía pintando con el botón inerte "Sin stock" — sirve de
+    // referencia de precio, pero en un lanzamiento es una tarjeta muerta
+    // compitiendo por la atención con la que sí se vende. Si no queda
+    // ninguna, cae en empty_msg, que ya invita a escribir por WhatsApp.
+    var plans = groupByLicence(rows).filter(function (p) { return !isSoldOut(p); });
     var container = document.getElementById('plansContainer');
     var emptyMsg = document.getElementById('plansEmptyMsg');
 
@@ -1291,11 +1299,7 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
     emptyMsg.style.display = 'none';
 
     plans.forEach(function (p) { registerPlan(p, productId); });
-    // "Mejor precio" solo tiene sentido comparando compra real (Standard /
-    // Ultimate / Código) — en la modalidad "cuotas" las tarjetas cuestan
-    // $10.000 porque son un abono, no el precio final, así que etiquetar
-    // una de ellas "mejor precio" sería engañoso.
-    var bestIndex = (ed.kind !== 'cuotas' && plans.length > 1) ? bestValueIndex(plans) : -1;
+    var bestIndex = plans.length > 1 ? bestValueIndex(plans) : -1;
     container.className = 'plans' + (plans.length === 1 ? ' plans-1' : ' plans-2');
     container.innerHTML = plans.map(function (p, i) {
       return planCardHTML(p, productId, i === bestIndex, c);
