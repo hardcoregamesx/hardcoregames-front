@@ -826,8 +826,12 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
     <p class="sec-body" id="v-step1_body">Elige tu consola para ver las ediciones y precios reales disponibles ahora mismo.</p>
 
     <div class="choice-row" id="choiceRow">
-      <button class="choice-btn" data-platform="ps" aria-pressed="true">
-        <span><span class="h" id="v-choice_ps_title">PlayStation</span><span class="s" id="v-choice_ps_desc">PS5 y PS4 — Standard o Ultimate, con entrega inmediata.</span></span>
+      <button class="choice-btn" data-platform="ps5" aria-pressed="true">
+        <span><span class="h" id="v-choice_ps5_title">PlayStation 5</span><span class="s" id="v-choice_ps5_desc">Standard o Ultimate, con entrega inmediata.</span></span>
+        <span class="arrow">&rsaquo;</span>
+      </button>
+      <button class="choice-btn" data-platform="ps4" aria-pressed="false">
+        <span><span class="h" id="v-choice_ps4_title">PlayStation 4</span><span class="s" id="v-choice_ps4_desc">Standard o Ultimate, con entrega inmediata.</span></span>
         <span class="arrow">&rsaquo;</span>
       </button>
       <button class="choice-btn" data-platform="xbox" aria-pressed="false">
@@ -919,20 +923,39 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
   //      apuntan a FINAL FANTASY VII REVELATION. La tarjeta seguía viva
   //      y metía ese juego al carrito por $10.000.
   // ---------------------------------------------------------------
+  // `consola` filtra las combinaciones del producto: los de PlayStation
+  // traen filas de PS4 (1) y PS5 (2) mezcladas, y NO tienen el mismo
+  // inventario. El Ultimate, por ejemplo, tiene Primaria solo en PS4: sin
+  // este filtro la landing se la ofrecia tambien a quien elegia PS5 y le
+  // mandaba al carrito el pk de PS4. Xbox no se divide (una sola consola,
+  // id 5) y PC es la 6.
+  //
+  // `family` es solo para los textos (desc_<licencia>_<family>_<edicion>,
+  // step2_body_<family>): PS4 y PS5 comparten explicaciones.
   var PLATFORMS = {
-    ps: {
+    ps5: {
+      consola: 2, family: 'ps',
+      editions: [
+        { key: 'standard', productId: 356, title: 'Standard', kind: 'edition' },
+        { key: 'ultimate', productId: 359, title: 'Ultimate', kind: 'edition' }
+      ]
+    },
+    ps4: {
+      consola: 1, family: 'ps',
       editions: [
         { key: 'standard', productId: 356, title: 'Standard', kind: 'edition' },
         { key: 'ultimate', productId: 359, title: 'Ultimate', kind: 'edition' }
       ]
     },
     xbox: {
+      consola: 5, family: 'xbox',
       editions: [
         { key: 'standard', productId: 357, title: 'Standard', kind: 'edition' },
         { key: 'ultimate', productId: 358, title: 'Ultimate', kind: 'edition' }
       ]
     },
     pc: {
+      consola: 6, family: 'pc',
       editions: [
         { key: 'codigo', productId: 352, title: 'EA FC 27', kind: 'edition' }
       ]
@@ -943,7 +966,7 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
   // Arranca en Ultimate: es la edición que ya se entrega y la que están
   // pidiendo los anuncios que traen a la gente a esta página. Abrir en
   // Standard mandaba al visitante a lo que no llega hasta el 25.
-  var state = { platform: 'ps', edition: 'ultimate' };
+  var state = { platform: 'ps5', edition: 'ultimate' };
 
   // ---------------------------------------------------------------
   // Copy por defecto. Se pinta de inmediato para que la página nunca
@@ -972,15 +995,17 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
     step1_eyebrow: 'Paso 1',
     step1_title: '¿Cuál es tu plataforma?',
     step1_body: 'Elige tu consola para ver las ediciones y precios reales disponibles ahora mismo.',
-    choice_ps_title: 'PlayStation',
-    choice_ps_desc: 'PS5 y PS4 — Standard o Ultimate, con entrega inmediata.',
+    choice_ps5_title: 'PlayStation 5',
+    choice_ps4_title: 'PlayStation 4',
+    choice_ps5_desc: 'Standard o Ultimate, con entrega inmediata.',
+    choice_ps4_desc: 'Standard o Ultimate, con entrega inmediata.',
     choice_xbox_title: 'Xbox',
     choice_xbox_desc: 'Series X|S y Xbox One — Standard o Ultimate, con entrega inmediata.',
     choice_pc_title: 'PC',
     choice_pc_desc: 'Código directo a tu cuenta de EA Play.',
     step2_eyebrow: 'Paso 2',
     step2_title: 'Elige tu edición',
-    step2_body_ps: 'El Ultimate ya se entrega; el Standard sale el 25 de septiembre. Ambas funcionan igual en PS4 y PS5.',
+    step2_body_ps: 'El Ultimate ya se entrega; el Standard sale el 25 de septiembre. Te mostramos solo lo que hay para la consola que elegiste.',
     step2_body_xbox: 'El Ultimate ya se entrega; el Standard sale el 25 de septiembre. Ambas funcionan igual en Xbox Series y Xbox One.',
     step2_body_pc: 'Se activa directo en tu cuenta de EA Play para PC.',
     edition_standard_desc: 'El juego base completo. Se entrega el viernes 25 de septiembre.',
@@ -1050,12 +1075,28 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
   // ninguno de los dos: el catálogo solo tiene Secundaria y Código, así
   // que el snapshot pintaba una tarjeta que la API borraba medio segundo
   // después.
+  // Una fila por consola: desde que el paso 3 filtra por `consola`, un
+  // snapshot que solo tenga PS4 deja la pestaña de PS5 en blanco hasta
+  // que responde la API. El del PC ademas venia marcado como consola 5
+  // (Xbox), que con el filtro nuevo lo habria dejado siempre vacio.
   var PLAN_DEFAULTS = {
-    356: { pk: 6201, precio: 169990, precio_descuento: 119990, stock: 8, desc_licence: 'Secundaria', consola: 1, desc_console: 'PlayStation 4' },
-    359: { pk: 6204, precio: 259990, precio_descuento: 209990, stock: 3, desc_licence: 'Primaria', consola: 1, desc_console: 'PlayStation 4' },
-    357: { pk: 6189, precio: 219990, precio_descuento: 169990, stock: 1, desc_licence: 'Secundaria', consola: 5, desc_console: 'xbox' },
-    358: { pk: 6191, precio: 309990, precio_descuento: 259990, stock: 1, desc_licence: 'Secundaria', consola: 5, desc_console: 'xbox' },
-    352: { pk: 6154, precio: 284990, precio_descuento: 264990, stock: 2, desc_licence: 'Codigo', consola: 5, desc_console: 'xbox' }
+    356: [
+      { pk: 6201, precio: 169990, precio_descuento: 119990, stock: 4, desc_licence: 'Secundaria', consola: 1, desc_console: 'PlayStation 4' },
+      { pk: 6203, precio: 169990, precio_descuento: 119990, stock: 4, desc_licence: 'Secundaria', consola: 2, desc_console: 'PlayStation 5' }
+    ],
+    359: [
+      { pk: 6204, precio: 259990, precio_descuento: 209990, stock: 3, desc_licence: 'Primaria', consola: 1, desc_console: 'PlayStation 4' },
+      { pk: 6207, precio: 309990, precio_descuento: 259990, stock: 1, desc_licence: 'Secundaria', consola: 2, desc_console: 'PlayStation 5' }
+    ],
+    357: [
+      { pk: 6189, precio: 219990, precio_descuento: 169990, stock: 1, desc_licence: 'Secundaria', consola: 5, desc_console: 'xbox' }
+    ],
+    358: [
+      { pk: 6191, precio: 309990, precio_descuento: 259990, stock: 1, desc_licence: 'Secundaria', consola: 5, desc_console: 'xbox' }
+    ],
+    352: [
+      { pk: 6154, precio: 284990, precio_descuento: 264990, stock: 2, desc_licence: 'Codigo', consola: 6, desc_console: 'Pc' }
+    ]
   };
 
   function fmtCOP(n) {
@@ -1102,7 +1143,7 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
   function licenceDesc(c, licence) {
     if (licence === 'Codigo') return c.desc_codigo || '';
     var group = state.edition === 'ultimate' ? 'ultimate' : 'standard';
-    var key = 'desc_' + (LICENCE_KEY[licence] || licence.toLowerCase()) + '_' + state.platform + '_' + group;
+    var key = 'desc_' + (LICENCE_KEY[licence] || licence.toLowerCase()) + '_' + PLATFORMS[state.platform].family + '_' + group;
     return c[key] || '';
   }
 
@@ -1138,8 +1179,10 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
     setText('v-step1_eyebrow', c.step1_eyebrow);
     setText('v-step1_title', c.step1_title);
     setText('v-step1_body', c.step1_body);
-    setText('v-choice_ps_title', c.choice_ps_title);
-    setText('v-choice_ps_desc', c.choice_ps_desc);
+    setText('v-choice_ps5_title', c.choice_ps5_title);
+    setText('v-choice_ps5_desc', c.choice_ps5_desc);
+    setText('v-choice_ps4_title', c.choice_ps4_title);
+    setText('v-choice_ps4_desc', c.choice_ps4_desc);
     setText('v-choice_xbox_title', c.choice_xbox_title);
     setText('v-choice_xbox_desc', c.choice_xbox_desc);
     setText('v-choice_pc_title', c.choice_pc_title);
@@ -1187,7 +1230,7 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
       faqList.appendChild(d);
     });
 
-    setText('v-step2_body', c.step2_body_ps);
+    setText('v-step2_body', c['step2_body_' + PLATFORMS[state.platform].family]);
 
     window.__CONTENT = c;
     renderEditionButtons();
@@ -1299,7 +1342,13 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
     var c = window.__CONTENT || CONTENT_DEFAULTS;
     var ed = currentEdition();
     var productId = ed.productId;
-    var rows = (window.__PLAN_DATA || {})[productId] || [];
+    // Solo las combinaciones de la consola elegida. Sin esto, PS4 y PS5
+    // se sumaban en una sola tarjeta y el "Elegir" mandaba al carrito el
+    // pk de la fila representativa, que podia ser de la otra consola.
+    var consola = PLATFORMS[state.platform].consola;
+    var rows = ((window.__PLAN_DATA || {})[productId] || []).filter(function (r) {
+      return Number(r.consola) === consola;
+    });
     // Solo lo que se puede comprar hoy. Antes una licencia agotada se
     // seguía pintando con el botón inerte "Sin stock" — sirve de
     // referencia de precio, pero en un lanzamiento es una tarjeta muerta
@@ -1335,10 +1384,7 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
       state.platform = platform;
       platformButtons.forEach(function (b) { b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'); });
       var c = window.__CONTENT || CONTENT_DEFAULTS;
-      setText('v-step2_body',
-        platform === 'ps' ? c.step2_body_ps :
-        platform === 'xbox' ? c.step2_body_xbox :
-        c.step2_body_pc);
+      setText('v-step2_body', c['step2_body_' + PLATFORMS[platform].family]);
       renderEditionButtons();
       updateStep3Body();
       renderModalityCards();
@@ -1664,7 +1710,7 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
   // Secundaria (y Código) como tarjetas separadas.
   window.__PLAN_DATA = {};
   ALL_PRODUCT_IDS.forEach(function (id) {
-    window.__PLAN_DATA[id] = PLAN_DEFAULTS[id] ? [PLAN_DEFAULTS[id]] : [];
+    window.__PLAN_DATA[id] = (PLAN_DEFAULTS[id] || []).slice();
   });
   renderContent(CONTENT_DEFAULTS);
 
