@@ -233,7 +233,7 @@
         "name": "¿Un código sirve para toda la familia de consola?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Sí: en PlayStation funciona igual en PS4 y PS5, y en Xbox funciona igual en Xbox Series y Xbox One."
+          "text": "Si: en PlayStation funciona igual en PS4 y PS5, y en Xbox funciona igual en Xbox Series y Xbox One. Eso si, revisa la letra chica de cada uno antes de comprar: el codigo de PlayStation solo se canjea en cuentas de Estados Unidos, y el de Xbox necesita VPN para activarse. El de PC se instala directo en tu cuenta de EA Play, sin condiciones."
         }
       },
       {
@@ -1018,9 +1018,9 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
     // Ultimate para la MISMA licencia (p.ej. Xbox Secundaria Standard
     // juega con correo propio, pero Xbox Secundaria Ultimate juega con el
     // correo entregado) — mismo patrón que ya usa desc_<licencia>_<plataforma>
-    // en grandtheftautovi, extendido acá con la edición. Código (solo PC)
-    // no varía por plataforma ni edición, así que usa una sola clave
-    // (desc_codigo).
+    // en grandtheftautovi, extendido acá con la edición. El Código no
+    // varía por edición pero sí por plataforma (desc_codigo_<family>,
+    // más abajo).
     desc_primaria_ps_standard: 'Recibes correo y clave, juegas con tu correo personal.',
     desc_secundaria_ps_standard: 'Recibes correo y clave, juegas con el correo entregado. <strong>Conexión a internet obligatoria.</strong>',
     desc_primaria_ps_ultimate: 'Recibes correo y clave, juegas con tu correo personal. No obtienes las monedas ni los demás beneficios, solo el acceso anticipado.',
@@ -1029,7 +1029,16 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
     desc_secundaria_xbox_standard: 'Recibes correo y clave, juegas con tu correo personal. <strong>Conexión a internet obligatoria.</strong>',
     desc_primaria_xbox_ultimate: 'Recibes correo y clave, juegas con tu correo personal. No obtienes las monedas ni los demás beneficios, solo el acceso anticipado.',
     desc_secundaria_xbox_ultimate: 'Recibes correo y clave, juegas con el correo entregado. Obtienes todos los beneficios de la edición Ultimate. <strong>Conexión a internet obligatoria.</strong>',
-    desc_codigo: 'Se activa directo en tu cuenta de EA Play.',
+    // El Código NO es lo mismo en las tres plataformas, y la diferencia
+    // cuesta plata: el de PlayStation solo canjea en cuentas de Estados
+    // Unidos y el de Xbox pide VPN. Copiado de las guías de entrega de
+    // frontend-v2 (product.delivery.psCodeText / xboxCodeText), que es
+    // lo que ve el cliente en la ficha. Antes los tres decían "EA Play",
+    // que solo es cierto en PC.
+    desc_codigo_ps: 'Se activa directo en tu cuenta de PlayStation. <strong>Solo funciona en cuentas de Estados Unidos.</strong>',
+    desc_codigo_xbox: 'Se activa directo en tu cuenta de Xbox. <strong>Necesitas VPN para canjearlo.</strong>',
+    desc_codigo_pc: 'Se activa directo en tu cuenta de EA Play para PC.',
+    desc_codigo: 'Se activa directo en tu cuenta.',
     // Nota de pago, siempre visible. Las cuotas dejaron de ser una ficha
     // aparte: viven dentro de cada producto, en el selector "¿Cómo
     // quieres pagar?". No se ponen cifras acá porque la inicial y las
@@ -1055,7 +1064,7 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
       { q: '¿Qué significa "Primaria" y "Secundaria"?', a: 'Ambas te dan una cuenta con correo y clave. En Primaria juegas con tu propio perfil dentro de esa cuenta. En Secundaria juegas con el correo que te entregamos (revisa el detalle exacto en cada tarjeta, varía un poco según plataforma y edición). Te mostramos precio y stock de las dos por separado para que elijas.' },
       { q: '¿Puedo pagarlo a cuotas?', a: 'Sí. Al entrar a la edición que elijas verás "¿Cómo quieres pagar?" con dos opciones: contado o cuotas. Con cuotas pagas una inicial y el resto se cobra en 2 pagos, uno cada 30 días. La inicial y el valor de cada cuota dependen de la edición y se muestran antes de pagar. Pagar a cuotas no retrasa la entrega: el Ultimate llega apenas confirmemos el pago y el Standard el 25 de septiembre, igual que de contado.' },
       { q: '¿Cuándo me llega el juego?', a: 'El Ultimate ya está disponible: lo recibes apenas confirmemos el pago. El Standard sale el viernes 25 de septiembre y se entrega ese día; si lo compras antes, queda apartado a tu nombre.' },
-      { q: '¿Un código sirve para toda la familia de consola?', a: 'Sí: en PlayStation funciona igual en PS4 y PS5, y en Xbox funciona igual en Xbox Series y Xbox One.' },
+      { q: '¿Un código sirve para toda la familia de consola?', a: 'Sí: en PlayStation funciona igual en PS4 y PS5, y en Xbox funciona igual en Xbox Series y Xbox One. Eso sí, revisa la letra chica de cada uno antes de comprar: el código de PlayStation solo se canjea en cuentas de Estados Unidos, y el de Xbox necesita VPN para activarse. El de PC se instala directo en tu cuenta de EA Play, sin condiciones.' },
       { q: '¿Qué pasa si el código o la cuenta falla?', a: 'Tienes garantía: si algo no funciona, te lo reponemos. Escríbenos por WhatsApp y lo resolvemos.' }
     ],
     portal_title: '¿Quieres ver todas las versiones juntas, con toda la letra chica?',
@@ -1141,7 +1150,9 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
   // Ultimate (ver comentario en CONTENT_DEFAULTS). "cuotas" reserva la
   // edición Standard, así que reusa esas mismas claves.
   function licenceDesc(c, licence) {
-    if (licence === 'Codigo') return c.desc_codigo || '';
+    if (licence === 'Codigo') {
+      return c['desc_codigo_' + PLATFORMS[state.platform].family] || c.desc_codigo || '';
+    }
     var group = state.edition === 'ultimate' ? 'ultimate' : 'standard';
     var key = 'desc_' + (LICENCE_KEY[licence] || licence.toLowerCase()) + '_' + PLATFORMS[state.platform].family + '_' + group;
     return c[key] || '';
