@@ -217,7 +217,7 @@
         "name": "¿Puedo pagarlo a cuotas?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Si. Al entrar a la edicion que elijas veras \"¿Como quieres pagar?\" con dos opciones: contado o cuotas. Con cuotas pagas una inicial y el resto se cobra en 2 pagos, uno cada 30 dias. La inicial y el valor de cada cuota dependen de la edicion y se muestran antes de pagar. Pagar a cuotas no retrasa la entrega."
+          "text": "Si, y se elige en la misma pagina: en el paso 3 hay un interruptor entre pagar de contado y pagar a cuotas, con la inicial y el valor de cada cuota de cada opcion. Pagas la inicial hoy y el resto se cobra cada 30 dias. Pagar a cuotas no retrasa la entrega. Los codigos se venden solo de contado."
         }
       },
       {
@@ -453,6 +453,13 @@
   .plan-stock.is-low { color: var(--destructive); }
   .plan-stock.is-out { color: var(--destructive); font-weight: 700; }
   .plan-note { font-size: 12px; color: var(--muted-foreground); }
+  .plan-today { font-size: 13px; font-weight: 600; color: var(--muted-foreground); margin-left: 4px; }
+  .pago-switch { display: inline-flex; gap: 4px; padding: 4px; margin-bottom: 16px;
+    background: var(--secondary); border: 1px solid var(--border); border-radius: 999px; }
+  .pago-btn { appearance: none; border: 0; cursor: pointer; font: inherit; font-size: 13px; font-weight: 700;
+    padding: 9px 16px; border-radius: 999px; background: transparent; color: var(--muted-foreground); }
+  .pago-btn[aria-pressed="true"] { background: var(--cta); color: var(--cta-foreground); }
+  @media (max-width: 420px) { .pago-switch { display: flex; width: 100%; } .pago-btn { flex: 1; padding: 9px 8px; } }
   .plan-card.is-sold-out { opacity: .72; }
   .plan-card.is-sold-out .plan-price { color: var(--muted-foreground); }
   /* Botón muerto de una tarjeta agotada: NO lleva la clase .plan-pick a
@@ -858,6 +865,11 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
     <h2 class="sec-title" id="v-step3_title">Elige tu modalidad</h2>
     <p class="sec-body" id="plansBody">Primaria y secundaria: correo y clave, juegas con tu propio perfil. Código: se activa directo en tu cuenta.</p>
 
+    <div class="pago-switch" id="pagoSwitch" role="group" aria-label="Forma de pago">
+      <button type="button" class="pago-btn" data-pago="contado" aria-pressed="true">Pagar de contado</button>
+      <button type="button" class="pago-btn" data-pago="cuotas" aria-pressed="false">Pagar a cuotas</button>
+    </div>
+
     <div class="plans" id="plansContainer">
       <div class="plans-loading" id="plansLoading">Cargando disponibilidad…</div>
     </div>
@@ -966,7 +978,7 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
   // Arranca en Ultimate: es la edición que ya se entrega y la que están
   // pidiendo los anuncios que traen a la gente a esta página. Abrir en
   // Standard mandaba al visitante a lo que no llega hasta el 25.
-  var state = { platform: 'ps5', edition: 'ultimate' };
+  var state = { platform: 'ps5', edition: 'ultimate', pago: 'contado' };
 
   // ---------------------------------------------------------------
   // Copy por defecto. Se pinta de inmediato para que la página nunca
@@ -1043,7 +1055,8 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
     // aparte: viven dentro de cada producto, en el selector "¿Cómo
     // quieres pagar?". No se ponen cifras acá porque la inicial y las
     // cuotas dependen del precio de cada edición — la ficha las calcula.
-    pago_note: '<strong>¿Prefieres pagarlo a cuotas?</strong> Al elegir tu edición puedes pagar de contado o a cuotas: das una inicial y el resto se cobra en 2 pagos, uno cada 30 días. La entrega no cambia por pagar a cuotas.',
+    pago_note: '<strong>Cómo funcionan las cuotas:</strong> pagas la inicial hoy y el resto se cobra cada 30 días. <strong>La entrega no cambia por pagar a cuotas.</strong> Los códigos se venden solo de contado.',
+    solo_contado: 'Solo de contado',
     // Línea de entrega, distinta por edición. El Ultimate salió el 18 y
     // el Standard sale el 25: mezclarlos en un solo "entrega inmediata"
     // es prometerle a alguien un juego que no le va a llegar hoy.
@@ -1062,7 +1075,7 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
     faq: [
       { q: '¿Cuál es la diferencia entre Standard y Ultimate?', a: 'Ultimate suma hasta 7 días de acceso anticipado, FC Points, beneficios exclusivos para Ultimate Team y contenido adicional para los modos Carrera y Clubes. El juego base es el mismo en las dos ediciones.' },
       { q: '¿Qué significa "Primaria" y "Secundaria"?', a: 'Ambas te dan una cuenta con correo y clave. En Primaria juegas con tu propio perfil dentro de esa cuenta. En Secundaria juegas con el correo que te entregamos (revisa el detalle exacto en cada tarjeta, varía un poco según plataforma y edición). Te mostramos precio y stock de las dos por separado para que elijas.' },
-      { q: '¿Puedo pagarlo a cuotas?', a: 'Sí. Al entrar a la edición que elijas verás "¿Cómo quieres pagar?" con dos opciones: contado o cuotas. Con cuotas pagas una inicial y el resto se cobra en 2 pagos, uno cada 30 días. La inicial y el valor de cada cuota dependen de la edición y se muestran antes de pagar. Pagar a cuotas no retrasa la entrega: el Ultimate llega apenas confirmemos el pago y el Standard el 25 de septiembre, igual que de contado.' },
+      { q: '¿Puedo pagarlo a cuotas?', a: 'Sí, y lo eliges aquí mismo: en el paso 3 cambia el interruptor a "Pagar a cuotas" y verás la inicial y el valor de cada cuota de cada opción. Pagas la inicial hoy y el resto se cobra cada 30 días. Pagar a cuotas no retrasa la entrega: el Ultimate llega apenas confirmemos el pago y el Standard el 25 de septiembre, igual que de contado. Los códigos son la excepción: esos se venden solo de contado.' },
       { q: '¿Cuándo me llega el juego?', a: 'El Ultimate ya está disponible: lo recibes apenas confirmemos el pago. El Standard sale el viernes 25 de septiembre y se entrega ese día; si lo compras antes, queda apartado a tu nombre.' },
       { q: '¿Un código sirve para toda la familia de consola?', a: 'Sí: en PlayStation funciona igual en PS4 y PS5, y en Xbox funciona igual en Xbox Series y Xbox One. Eso sí, revisa la letra chica de cada uno antes de comprar: el código de PlayStation solo se canjea en cuentas de Estados Unidos, y el de Xbox necesita VPN para activarse. El de PC se instala directo en tu cuenta de EA Play, sin condiciones.' },
       { q: '¿Qué pasa si el código o la cuenta falla?', a: 'Tienes garantía: si algo no funciona, te lo reponemos. Escríbenos por WhatsApp y lo resolvemos.' }
@@ -1090,21 +1103,21 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
   // (Xbox), que con el filtro nuevo lo habria dejado siempre vacio.
   var PLAN_DEFAULTS = {
     356: [
-      { pk: 6201, precio: 169990, precio_descuento: 119990, stock: 4, desc_licence: 'Secundaria', consola: 1, desc_console: 'PlayStation 4' },
-      { pk: 6203, precio: 169990, precio_descuento: 119990, stock: 4, desc_licence: 'Secundaria', consola: 2, desc_console: 'PlayStation 5' }
+      { pk: 6201, precio: 169990, precio_descuento: 119990, stock: 4, desc_licence: 'Secundaria', consola: 1, desc_console: 'PlayStation 4', cuotas_activas: true, num_cuotas: 3, valor_cuota: 50000, cuota_inicial: null },
+      { pk: 6203, precio: 169990, precio_descuento: 119990, stock: 4, desc_licence: 'Secundaria', consola: 2, desc_console: 'PlayStation 5', cuotas_activas: true, num_cuotas: 3, valor_cuota: 50000, cuota_inicial: null }
     ],
     359: [
-      { pk: 6204, precio: 259990, precio_descuento: 209990, stock: 3, desc_licence: 'Primaria', consola: 1, desc_console: 'PlayStation 4' },
-      { pk: 6207, precio: 309990, precio_descuento: 259990, stock: 1, desc_licence: 'Secundaria', consola: 2, desc_console: 'PlayStation 5' }
+      { pk: 6380, precio: 259990, precio_descuento: 209990, stock: 3, desc_licence: 'Primaria', consola: 1, desc_console: 'PlayStation 4', cuotas_activas: true, num_cuotas: 3, valor_cuota: 80000, cuota_inicial: 150000 },
+      { pk: 6207, precio: 309990, precio_descuento: 259990, stock: 1, desc_licence: 'Secundaria', consola: 2, desc_console: 'PlayStation 5', cuotas_activas: true, num_cuotas: 3, valor_cuota: 85000, cuota_inicial: 150000 }
     ],
     357: [
-      { pk: 6189, precio: 219990, precio_descuento: 169990, stock: 1, desc_licence: 'Secundaria', consola: 5, desc_console: 'xbox' }
+      { pk: 6189, precio: 219990, precio_descuento: 169990, stock: 1, desc_licence: 'Secundaria', consola: 5, desc_console: 'xbox', cuotas_activas: true, num_cuotas: 3, valor_cuota: 68000, cuota_inicial: null }
     ],
     358: [
-      { pk: 6191, precio: 309990, precio_descuento: 259990, stock: 1, desc_licence: 'Secundaria', consola: 5, desc_console: 'xbox' }
+      { pk: 6191, precio: 309990, precio_descuento: 259990, stock: 1, desc_licence: 'Secundaria', consola: 5, desc_console: 'xbox', cuotas_activas: true, num_cuotas: 3, valor_cuota: 85000, cuota_inicial: 150000 }
     ],
     352: [
-      { pk: 6154, precio: 284990, precio_descuento: 264990, stock: 2, desc_licence: 'Codigo', consola: 6, desc_console: 'Pc' }
+      { pk: 6154, precio: 284990, precio_descuento: 264990, stock: 2, desc_licence: 'Codigo', consola: 6, desc_console: 'Pc', cuotas_activas: false }
     ]
   };
 
@@ -1120,6 +1133,28 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
   }
   function isSoldOut(p) {
     return !(p.stock > 0);
+  }
+  // Espejo de getCuotasPlanInfo en frontend-v2 (src/lib/api.ts). Misma
+  // regla, mismos campos, mismo endpoint de origen: si cambia allá, hay
+  // que cambiarlo acá. Solo Primaria y Secundaria traen cuotas_activas en
+  // true; los códigos vienen en false y se venden solo de contado.
+  function cuotasPlanInfo(p) {
+    if (!p || !p.cuotas_activas || !(p.valor_cuota > 0)) return null;
+    var n = (p.num_cuotas && p.num_cuotas >= 2) ? p.num_cuotas : 3;
+    var inicial = (p.cuota_inicial && p.cuota_inicial > 0) ? p.cuota_inicial : p.valor_cuota;
+    return { inicial: inicial, valorCuota: p.valor_cuota, numCuotas: n };
+  }
+  // "Inicial $X + 2 cuotas de $Y" / "3 cuotas de $Y", igual que la ficha.
+  function describeCuotas(info) {
+    if (info.inicial !== info.valorCuota) {
+      return 'Inicial ' + fmtCOP(info.inicial) + ' + ' + (info.numCuotas - 1) + ' cuotas de ' + fmtCOP(info.valorCuota);
+    }
+    return info.numCuotas + ' cuotas de ' + fmtCOP(info.valorCuota);
+  }
+  // Lo que se paga HOY: la inicial si va a cuotas, el precio completo si no.
+  function pagoHoy(p) {
+    var info = state.pago === 'cuotas' ? cuotasPlanInfo(p) : null;
+    return info ? info.inicial : planPrice(p);
   }
   function setText(id, value) {
     var el = document.getElementById(id);
@@ -1172,7 +1207,12 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
       return {
         desc_licence: key, precio: rep.precio, precio_descuento: rep.precio_descuento,
         stock: totalStock, pk: rep.pk, consola: rep.consola, desc_console: rep.desc_console,
-        licencia: rep.licencia, duracion_dias_alquiler: rep.duracion_dias_alquiler
+        licencia: rep.licencia, duracion_dias_alquiler: rep.duracion_dias_alquiler,
+        // Columnas de cuotas y reserva: si no viajan hasta acá, la tarjeta
+        // no sabe que la licencia admite cuotas y el carrito recibe contado.
+        cuotas_activas: rep.cuotas_activas, num_cuotas: rep.num_cuotas,
+        valor_cuota: rep.valor_cuota, cuota_inicial: rep.cuota_inicial,
+        monto_reserva: rep.monto_reserva
       };
     }).sort(function (a, b) { return LICENCE_ORDER.indexOf(a.desc_licence) - LICENCE_ORDER.indexOf(b.desc_licence); });
   }
@@ -1263,7 +1303,12 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
   function planCardHTML(plan, productId, isRecommended, c) {
     var soldOut = isSoldOut(plan);
     var stockLow = plan.stock <= (c.low_stock_threshold || 2);
-    var price = planPrice(plan);
+    var contado = planPrice(plan);
+    var info = state.pago === 'cuotas' ? cuotasPlanInfo(plan) : null;
+    // En modo cuotas el número grande es la INICIAL, no el total: es lo que
+    // el comprador paga hoy, y es el mismo criterio de la ficha. Debajo va
+    // el desglose, para que nadie crea que el juego vale $150.000.
+    var price = info ? info.inicial : contado;
     var href = 'https://www.hardcoregames.co/product/' + productId;
     // Una licencia agotada se sigue mostrando (referencia de precio y "esto
     // existe, vuelve luego"), pero no se puede comprar: el botón deja de
@@ -1274,8 +1319,12 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
       (isRecommended ? '<span class="plan-badge">' + c.badge_best_price + '</span>' : '') +
       '<div class="plan-duration">' + (LICENCE_LABEL[plan.desc_licence] || plan.desc_licence) +
         '<span class="sub">' + licenceDesc(c, plan.desc_licence) + '</span></div>' +
-      '<div><span class="plan-price tabular">' + fmtCOP(price) + '</span>' +
-      (plan.precio > price ? '<span class="plan-price-old tabular">' + fmtCOP(plan.precio) + '</span>' : '') + '</div>' +
+      '<div><span class="plan-price tabular">' + fmtCOP(price) +
+        (info ? '<span class="plan-today"> hoy</span>' : '') + '</span>' +
+      (!info && plan.precio > price ? '<span class="plan-price-old tabular">' + fmtCOP(plan.precio) + '</span>' : '') + '</div>' +
+      (info
+        ? '<div class="plan-note">' + describeCuotas(info) + ' · total ' + fmtCOP(contado) + '</div>'
+        : (state.pago === 'cuotas' ? '<div class="plan-note">' + (c.solo_contado || 'Solo de contado') + '</div>' : '')) +
       (soldOut
         ? '<div class="plan-stock is-out">' + c.sold_out_label + '</div>'
         : '<div class="plan-stock' + (stockLow ? ' is-low' : '') + '">' + plan.stock + ' ' + c.stock_suffix + '</div>') +
@@ -1402,6 +1451,22 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
     });
   });
 
+  // ---------------- selector de forma de pago ----------------
+  // Un solo interruptor para todas las tarjetas, como en la ficha. Cambia
+  // el precio que se muestra (inicial vs total) y el modo_pago que se le
+  // manda al carrito.
+  var pagoButtons = document.querySelectorAll('.pago-btn[data-pago]');
+  pagoButtons.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var pago = btn.getAttribute('data-pago');
+      if (pago === state.pago) return;
+      state.pago = pago;
+      pagoButtons.forEach(function (b) { b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'); });
+      updateStep3Body();
+      renderModalityCards();
+    });
+  });
+
   // ---------------- carrito directo al elegir un plan ----------------
   // El sitio real guarda la sesión (jwt_token + user_data) en localStorage,
   // por origen — por eso el guard de apex→www al principio del <head>.
@@ -1442,6 +1507,8 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
   function writeCartCombination(plan, productId) {
     try {
       var info = (window.__PRODUCT_CATALOG || {})[productId] || {};
+      var cuotas = state.pago === 'cuotas' ? cuotasPlanInfo(plan) : null;
+      var modo = cuotas ? 'cuotas' : 'contado';
       var cache = JSON.parse(localStorage.getItem('cart_combinations') || '{}');
       cache[String(plan.pk)] = {
         id_combination: plan.pk,
@@ -1452,11 +1519,20 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
         image: info.image || '/placeholder.svg',
         desc_console: plan.desc_console,
         desc_licence: plan.desc_licence,
-        price: planPrice(plan),
+        // `price` es lo que se paga HOY — la inicial si va a cuotas. Mismo
+        // criterio que `pagoHoy` en la ficha (ProductDetail.tsx), que es
+        // de donde /cart saca el desglose de la línea.
+        price: cuotas ? cuotas.inicial : planPrice(plan),
         coupon: undefined,
         consola: plan.consola,
         licencia: plan.licencia,
-        duracion_dias_alquiler: plan.duracion_dias_alquiler
+        duracion_dias_alquiler: plan.duracion_dias_alquiler,
+        modo_pago: modo,
+        precio_contado: planPrice(plan),
+        num_cuotas: cuotas ? cuotas.numCuotas : undefined,
+        valor_cuota: cuotas ? cuotas.valorCuota : undefined,
+        cuota_inicial: plan.cuota_inicial,
+        monto_reserva: plan.monto_reserva
       };
       localStorage.setItem('cart_combinations', JSON.stringify(cache));
     } catch (e) {
@@ -1467,10 +1543,16 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
   }
 
   function addToCart(jwt, pk) {
+    // `modo_pago` viaja en el POST igual que en la ficha: sin él el backend
+    // asume contado y el comprador pierde las cuotas sin enterarse. Solo se
+    // manda 'cuotas' si esa licencia de verdad las admite.
+    var indexed = PLAN_INDEX[String(pk)];
+    var plan = indexed && indexed.plan;
+    var modo = (state.pago === 'cuotas' && cuotasPlanInfo(plan)) ? 'cuotas' : 'contado';
     return fetch(CART_API, {
       method: 'POST',
       headers: { 'Authorization': 'Bearer ' + jwt, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ product_id: Number(pk), estado: true })
+      body: JSON.stringify({ product_id: Number(pk), estado: true, modo_pago: modo })
     }).then(function (r) {
       // 409 = "ya está en el carrito": no es un error, ya quedó como
       // queríamos, así que sigue igual que un 2xx.
@@ -1748,12 +1830,17 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
     })
     .catch(function () { /* se queda con el texto por defecto */ });
 
-  // Un getCombinationPriceByGame por cada uno de los 7 productos reales.
+  // Un combination-price por cada producto real. Es el MISMO endpoint que
+  // usa la ficha de producto (frontend-v2, lib/api.ts) y por eso trae las
+  // columnas de cuotas — cuotas_activas, num_cuotas, valor_cuota,
+  // cuota_inicial — que getCombinationPriceByGame, el que usaba antes esta
+  // landing, no devuelve. Sin ellas era imposible ofrecer pago a cuotas
+  // acá, y todo lo que salía de esta página iba al carrito como contado.
   // Una respuesta con data: [] es un dato real ("esta variante se agotó
   // del todo"), no un fallo — solo un error de red/HTTP (res === null)
   // conserva el snapshot PLAN_DEFAULTS para ese producto.
   ALL_PRODUCT_IDS.forEach(function (id) {
-    fetch(API_BASE + '/getCombinationPriceByGame/' + id)
+    fetch(CATALOG_API_BASE + '/products/combination-price/' + id)
       .then(function (r) { return r.ok ? r.json() : null; })
       .then(function (res) {
         if (res && Array.isArray(res.data)) {
