@@ -217,7 +217,15 @@
         "name": "¿Puedo pagarlo a cuotas?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Si. Al entrar a la edicion que elijas veras \"¿Como quieres pagar?\" con dos opciones: contado o cuotas. Con cuotas pagas una inicial, recibes el juego el mismo dia y el resto se cobra en 2 pagos, uno cada 30 dias. La inicial y el valor de cada cuota dependen de la edicion y se muestran antes de pagar."
+          "text": "Si. Al entrar a la edicion que elijas veras \"¿Como quieres pagar?\" con dos opciones: contado o cuotas. Con cuotas pagas una inicial y el resto se cobra en 2 pagos, uno cada 30 dias. La inicial y el valor de cada cuota dependen de la edicion y se muestran antes de pagar. Pagar a cuotas no retrasa la entrega."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "¿Cuando me llega el juego?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "El Ultimate ya esta disponible: lo recibes apenas confirmemos el pago. El Standard sale el viernes 25 de septiembre de 2026 y se entrega ese dia; si lo compras antes, queda apartado a tu nombre."
         }
       },
       {
@@ -794,7 +802,7 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
   <div class="hero hero-inner wrap">
     <span class="platform-tag" id="v-platform_label">PS5 · PS4 · Xbox Series · Xbox One · PC</span>
     <h1 id="v-title">EA SPORTS FC 27</h1>
-    <p class="sub" id="v-subtitle">Standard o Ultimate. Elige tu plataforma y entra a la cancha con entrega inmediata.</p>
+    <p class="sub" id="v-subtitle">Ultimate ya disponible, con entrega inmediata. El Standard se entrega el viernes 25 de septiembre.</p>
 
     <div class="price-row">
       <span class="price-label" id="v-price_label">Desde</span>
@@ -836,7 +844,7 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
   <section>
     <div class="eyebrow" id="v-step2_eyebrow">Paso 2</div>
     <h2 class="sec-title" id="v-step2_title">Elige tu edición</h2>
-    <p class="sec-body" id="v-step2_body">Standard trae el juego base. Ultimate suma acceso anticipado y contenido extra.</p>
+    <p class="sec-body" id="v-step2_body">El Ultimate ya se entrega; el Standard sale el 25 de septiembre.</p>
 
     <div class="choice-row" id="choiceRowEdition"></div>
   </section>
@@ -932,7 +940,10 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
   };
   var ALL_PRODUCT_IDS = [356, 359, 357, 358, 352];
 
-  var state = { platform: 'ps', edition: 'standard' };
+  // Arranca en Ultimate: es la edición que ya se entrega y la que están
+  // pidiendo los anuncios que traen a la gente a esta página. Abrir en
+  // Standard mandaba al visitante a lo que no llega hasta el 25.
+  var state = { platform: 'ps', edition: 'ultimate' };
 
   // ---------------------------------------------------------------
   // Copy por defecto. Se pinta de inmediato para que la página nunca
@@ -943,19 +954,18 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
   var CONTENT_DEFAULTS = {
     platform_label: 'PS5 · PS4 · Xbox Series · Xbox One · PC',
     title: 'EA SPORTS FC 27',
-    subtitle: 'Ya disponible. Standard o Ultimate, con entrega inmediata y opción de pagar a cuotas.',
+    subtitle: 'Ultimate ya disponible, con entrega inmediata. El Standard se entrega el viernes 25 de septiembre.',
     price_label: 'Desde',
     price_amount: '$119.990',
     price_unit: 'COP',
     cta_label: 'Elige tu plataforma',
     banner_image: '/fc27/hero-fc27.jpg',
-    // 18 sep 2026: el juego salió. El primer badge decía "Reserva y
-    // ahorra / Asegura el precio de preventa" — cierto durante la
-    // preventa, falso desde hoy, y encima contradecía al anuncio que
-    // trae a la gente acá ("YA DISPONIBLE · ENTREGA INMEDIATA").
+    // 18 sep 2026: salió el Ultimate, NO el Standard — ese se entrega el
+    // 25. El badge tiene que separar las dos cosas: decir "ya disponible"
+    // a secas era prometerle entrega de hoy a quien compra el Standard.
     // Soporte incluye tutoriales 24/7 además de WhatsApp.
     trust: [
-      { title: 'Ya disponible', desc: 'Entrega inmediata tras el pago', tone: 'primary' },
+      { title: 'Ultimate ya disponible', desc: 'Entrega inmediata · Standard el 25 de sep', tone: 'primary' },
       { title: 'Con garantía', desc: 'Reposición si algo falla', tone: 'accent' },
       { title: 'Soporte real', desc: 'Tutoriales 24/7 y WhatsApp', tone: 'cta' }
     ],
@@ -970,12 +980,12 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
     choice_pc_desc: 'Código directo a tu cuenta de EA Play.',
     step2_eyebrow: 'Paso 2',
     step2_title: 'Elige tu edición',
-    step2_body_ps: 'Standard trae el juego base. Ultimate suma acceso anticipado y contenido extra. Ambas funcionan igual en PS4 y PS5.',
-    step2_body_xbox: 'Standard trae el juego base. Ultimate suma acceso anticipado y contenido extra. Ambas funcionan igual en Xbox Series y Xbox One.',
+    step2_body_ps: 'El Ultimate ya se entrega; el Standard sale el 25 de septiembre. Ambas funcionan igual en PS4 y PS5.',
+    step2_body_xbox: 'El Ultimate ya se entrega; el Standard sale el 25 de septiembre. Ambas funcionan igual en Xbox Series y Xbox One.',
     step2_body_pc: 'Se activa directo en tu cuenta de EA Play para PC.',
-    edition_standard_desc: 'El juego base completo, con entrega inmediata.',
-    edition_ultimate_desc: 'Suma hasta 7 días de acceso anticipado, FC Points y contenido extra para Ultimate Team.',
-    edition_codigo_desc: 'Se activa directo en tu cuenta de EA Play para PC.',
+    edition_standard_desc: 'El juego base completo. Se entrega el viernes 25 de septiembre.',
+    edition_ultimate_desc: 'Hasta 7 días de acceso anticipado, FC Points y contenido extra. Lo recibes hoy.',
+    edition_codigo_desc: 'Se activa directo en tu cuenta de EA Play. Se entrega el 25 de septiembre.',
     step3_eyebrow: 'Paso 3',
     step3_title: 'Elige tu modalidad',
     step3_body: 'Primaria y secundaria: correo y clave. Código: se activa directo en tu cuenta.',
@@ -999,7 +1009,12 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
     // aparte: viven dentro de cada producto, en el selector "¿Cómo
     // quieres pagar?". No se ponen cifras acá porque la inicial y las
     // cuotas dependen del precio de cada edición — la ficha las calcula.
-    pago_note: '<strong>¿Prefieres pagarlo a cuotas?</strong> Al elegir tu edición puedes pagar de contado o a cuotas: das una inicial, <strong>recibes el juego hoy mismo</strong> y el resto se cobra en 2 pagos, uno cada 30 días. Ya no hay que reservar ni esperar al lanzamiento.',
+    pago_note: '<strong>¿Prefieres pagarlo a cuotas?</strong> Al elegir tu edición puedes pagar de contado o a cuotas: das una inicial y el resto se cobra en 2 pagos, uno cada 30 días. La entrega no cambia por pagar a cuotas.',
+    // Línea de entrega, distinta por edición. El Ultimate salió el 18 y
+    // el Standard sale el 25: mezclarlos en un solo "entrega inmediata"
+    // es prometerle a alguien un juego que no le va a llegar hoy.
+    entrega_ultimate: '<strong>Entrega inmediata:</strong> recibes tu cuenta apenas confirmemos el pago.',
+    entrega_standard: '<strong>Se entrega el viernes 25 de septiembre</strong>, el día que sale el Standard. Si lo compras hoy, queda apartado a tu nombre.',
     empty_msg: 'No tenemos disponibilidad en esta edición ahora mismo. Escríbenos por WhatsApp y te avisamos apenas entre, o mira otra edición arriba.',
     badge_recommended: 'Recomendado',
     badge_best_price: 'Mejor precio',
@@ -1013,7 +1028,8 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
     faq: [
       { q: '¿Cuál es la diferencia entre Standard y Ultimate?', a: 'Ultimate suma hasta 7 días de acceso anticipado, FC Points, beneficios exclusivos para Ultimate Team y contenido adicional para los modos Carrera y Clubes. El juego base es el mismo en las dos ediciones.' },
       { q: '¿Qué significa "Primaria" y "Secundaria"?', a: 'Ambas te dan una cuenta con correo y clave. En Primaria juegas con tu propio perfil dentro de esa cuenta. En Secundaria juegas con el correo que te entregamos (revisa el detalle exacto en cada tarjeta, varía un poco según plataforma y edición). Te mostramos precio y stock de las dos por separado para que elijas.' },
-      { q: '¿Puedo pagarlo a cuotas?', a: 'Sí. Al entrar a la edición que elijas verás "¿Cómo quieres pagar?" con dos opciones: contado o cuotas. Con cuotas pagas una inicial, recibes el juego el mismo día y el resto se cobra en 2 pagos, uno cada 30 días. La inicial y el valor de cada cuota dependen de la edición y se muestran antes de pagar.' },
+      { q: '¿Puedo pagarlo a cuotas?', a: 'Sí. Al entrar a la edición que elijas verás "¿Cómo quieres pagar?" con dos opciones: contado o cuotas. Con cuotas pagas una inicial y el resto se cobra en 2 pagos, uno cada 30 días. La inicial y el valor de cada cuota dependen de la edición y se muestran antes de pagar. Pagar a cuotas no retrasa la entrega: el Ultimate llega apenas confirmemos el pago y el Standard el 25 de septiembre, igual que de contado.' },
+      { q: '¿Cuándo me llega el juego?', a: 'El Ultimate ya está disponible: lo recibes apenas confirmemos el pago. El Standard sale el viernes 25 de septiembre y se entrega ese día; si lo compras antes, queda apartado a tu nombre.' },
       { q: '¿Un código sirve para toda la familia de consola?', a: 'Sí: en PlayStation funciona igual en PS4 y PS5, y en Xbox funciona igual en Xbox Series y Xbox One.' },
       { q: '¿Qué pasa si el código o la cuenta falla?', a: 'Tienes garantía: si algo no funciona, te lo reponemos. Escríbenos por WhatsApp y lo resolvemos.' }
     ],
@@ -1267,12 +1283,16 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
   function updateStep3Body() {
     var c = window.__CONTENT || CONTENT_DEFAULTS;
     document.getElementById('plansBody').textContent = c.step3_body || '';
-    // La nota de pago va siempre visible: antes solo salía en la ficha
-    // "a cuotas", que ya no existe, y las cuotas son justo lo que nos
+    // La nota va siempre visible: antes solo salía en la ficha "a
+    // cuotas", que ya no existe, y las cuotas son justo lo que nos
     // diferencia de los marketplaces grandes. Esconderla era regalarla.
+    // Encabeza la fecha de entrega, que es lo que más importa ahora
+    // mismo: el Ultimate se entrega hoy y el Standard el 25.
+    var entrega = currentEdition().key === 'ultimate' ? c.entrega_ultimate : c.entrega_standard;
     var note = document.getElementById('cuotasNote');
-    note.innerHTML = c.pago_note || '';
-    note.classList.toggle('is-hidden', !c.pago_note);
+    var partes = [entrega, c.pago_note].filter(Boolean);
+    note.innerHTML = partes.join('<br><br>');
+    note.classList.toggle('is-hidden', !partes.length);
   }
 
   function renderModalityCards() {
