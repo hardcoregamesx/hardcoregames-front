@@ -431,6 +431,8 @@
     .plans.plans-2 { grid-template-columns: repeat(2, 1fr); max-width: 420px; }
   }
   .plans-loading { color: var(--muted-foreground); font-size: 14px; padding: 20px 0; }
+  .pago-inline { appearance: none; background: none; border: 0; padding: 0; margin-left: 4px; cursor: pointer;
+    font: inherit; font-weight: 700; color: var(--cta); text-decoration: underline; }
   .cuotas-note { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 18px; margin-top: 14px; font-size: 13px; color: var(--muted-foreground); }
   .cuotas-note strong { color: var(--foreground); }
   .cuotas-note.is-hidden { display: none; }
@@ -1057,6 +1059,8 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
     // cuotas dependen del precio de cada edición — la ficha las calcula.
     pago_note: '<strong>Cómo funcionan las cuotas:</strong> pagas la inicial hoy y el resto se cobra cada 30 días. <strong>La entrega no cambia por pagar a cuotas.</strong> Los códigos se venden solo de contado.',
     solo_contado: 'Solo de contado',
+    solo_contado_opcion: 'Esta opción se vende solo de contado.',
+    ver_contado: 'Ver precios de contado',
     // Línea de entrega, distinta por edición. El Ultimate salió el 18 y
     // el Standard sale el 25: mezclarlos en un solo "entrega inmediata"
     // es prometerle a alguien un juego que no le va a llegar hoy.
@@ -1424,6 +1428,21 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
       emptyMsg.style.display = '';
       return;
     }
+    // En modo cuotas solo se muestran las licencias que de verdad admiten
+    // cuotas. Una tarjeta "Solo de contado" en medio de las cuotas
+    // confundía (Código siempre viene con cuotas_activas=false). Si hay
+    // stock pero nada a cuotas, se avisa y se ofrece volver a contado —
+    // no es el empty_msg de "sin disponibilidad", porque sí hay.
+    if (state.pago === 'cuotas') {
+      plans = plans.filter(function (p) { return !!cuotasPlanInfo(p); });
+      if (!plans.length) {
+        container.innerHTML = '';
+        emptyMsg.innerHTML = (c.solo_contado_opcion || CONTENT_DEFAULTS.solo_contado_opcion) +
+          ' <button type="button" class="pago-inline" data-goto-pago="contado">' + (c.ver_contado || CONTENT_DEFAULTS.ver_contado) + '</button>';
+        emptyMsg.style.display = '';
+        return;
+      }
+    }
     emptyMsg.textContent = '';
     emptyMsg.style.display = 'none';
 
@@ -1456,15 +1475,20 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
   // el precio que se muestra (inicial vs total) y el modo_pago que se le
   // manda al carrito.
   var pagoButtons = document.querySelectorAll('.pago-btn[data-pago]');
+  function setPago(pago) {
+    if (pago === state.pago) return;
+    state.pago = pago;
+    pagoButtons.forEach(function (b) { b.setAttribute('aria-pressed', b.getAttribute('data-pago') === pago ? 'true' : 'false'); });
+    updateStep3Body();
+    renderModalityCards();
+  }
   pagoButtons.forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      var pago = btn.getAttribute('data-pago');
-      if (pago === state.pago) return;
-      state.pago = pago;
-      pagoButtons.forEach(function (b) { b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'); });
-      updateStep3Body();
-      renderModalityCards();
-    });
+    btn.addEventListener('click', function () { setPago(btn.getAttribute('data-pago')); });
+  });
+  // "Ver precios de contado" del aviso de una opción sin cuotas.
+  document.getElementById('plansEmptyMsg').addEventListener('click', function (ev) {
+    var b = ev.target.closest && ev.target.closest('[data-goto-pago]');
+    if (b) setPago(b.getAttribute('data-goto-pago'));
   });
 
   // ---------------- carrito directo al elegir un plan ----------------
