@@ -1323,7 +1323,7 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
         (info ? '<span class="plan-today"> hoy</span>' : '') + '</span>' +
       (!info && plan.precio > price ? '<span class="plan-price-old tabular">' + fmtCOP(plan.precio) + '</span>' : '') + '</div>' +
       (info
-        ? '<div class="plan-note">' + describeCuotas(info) + ' · total ' + fmtCOP(contado) + '</div>'
+        ? '<div class="plan-note">' + describeCuotas(info) + '</div>'
         : (state.pago === 'cuotas' ? '<div class="plan-note">' + (c.solo_contado || 'Solo de contado') + '</div>' : '')) +
       (soldOut
         ? '<div class="plan-stock is-out">' + c.sold_out_label + '</div>'
