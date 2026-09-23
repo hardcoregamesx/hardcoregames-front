@@ -221,7 +221,7 @@
   }
   .plan-pick { transition: background 120ms ease, color 120ms ease, border-color 120ms ease, transform 100ms ease; }
   .plan-pick:focus-visible { outline: 2px solid var(--cta); outline-offset: 2px; }
-  .plans-loading { color: var(--muted-foreground); font-size: 14px; padding: 20px 0; }
+  .plans-loading { color: var(--muted-foreground); font-size: 14px; padding: 20px 0; grid-column: 1 / -1; }
   .plan-note { font-size: 12px; color: var(--muted-foreground); }
   .plan-today { font-size: 13px; font-weight: 600; color: var(--muted-foreground); margin-left: 4px; }
   .pago-switch { display: inline-flex; gap: 4px; padding: 4px; margin-bottom: 16px;
@@ -230,6 +230,8 @@
     padding: 9px 16px; border-radius: 999px; background: transparent; color: var(--muted-foreground); }
   .pago-btn[aria-pressed="true"] { background: var(--cta); color: var(--cta-foreground); }
   .pago-btn:focus-visible { outline: 2px solid var(--cta); outline-offset: 2px; }
+  .pago-inline { appearance: none; background: none; border: 0; padding: 0; margin-left: 4px; cursor: pointer;
+    font: inherit; font-weight: 700; color: var(--cta); text-decoration: underline; }
   @media (max-width: 420px) { .pago-switch { display: flex; width: 100%; } .pago-btn { flex: 1; padding: 9px 8px; } }
 
   .cuotas-note { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 18px; margin-top: 14px; font-size: 13px; color: var(--muted-foreground); }
@@ -666,6 +668,8 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
     // Con otra clave el admin no lo puede pisar por accidente.
     pago_note: '<strong>Cómo funcionan las cuotas:</strong> pagas la inicial hoy y el resto se cobra cada 30 días. <strong>La entrega no cambia por pagar a cuotas:</strong> recibes el juego el día del lanzamiento, igual que de contado. Los códigos y la edición Ultimate se venden solo de contado.',
     solo_contado: 'Solo de contado',
+    solo_contado_edicion: 'Esta edición se vende solo de contado.',
+    ver_contado: 'Ver precios de contado',
     faq_cuotas: { q: '¿Puedo pagarlo a cuotas?', a: 'Sí, y lo eliges aquí mismo: en el paso 3 cambia el interruptor a "Pagar a cuotas" y verás la inicial y el valor de cada cuota de cada opción. Pagas la inicial hoy y el resto se cobra cada 30 días. Pagar a cuotas no retrasa la entrega: recibes el juego el 19 de noviembre, igual que de contado. Aplica a Standard primaria y secundaria; los códigos y la Ultimate se venden solo de contado.' },
     faq_eyebrow: 'Antes de reservar',
     faq_title: 'Lo que suele preguntarse',
@@ -935,15 +939,29 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
     });
     sorted.forEach(function (p) { registerPlan(p, productId); });
 
-    var bestIndex = sorted.length > 1 ? sorted.reduce(function (bestI, p, i, arr) {
-      return p.precio_descuento < arr[bestI].precio_descuento ? i : bestI;
-    }, 0) : -1;
-
     var container = document.getElementById('plansContainer');
     if (!sorted.length) {
       container.innerHTML = '<div class="plans-loading">Sin combinaciones disponibles ahora mismo. Escríbenos por WhatsApp.</div>';
       return;
     }
+
+    // En modo cuotas solo se muestran las licencias que de verdad admiten
+    // cuotas. Una tarjeta "Solo de contado" en medio de las cuotas
+    // confundía (Código siempre viene con cuotas_activas=false). Si no
+    // queda ninguna — Ultimate, que solo trae Código — se avisa y se
+    // ofrece volver a contado, en vez de dejar el paso 3 vacío.
+    if (state.pago === 'cuotas') {
+      sorted = sorted.filter(function (p) { return !!cuotasPlanInfo(p); });
+      if (!sorted.length) {
+        container.innerHTML = '<div class="plans-loading">' + (c.solo_contado_edicion || CONTENT_DEFAULTS.solo_contado_edicion) +
+          ' <button type="button" class="pago-inline" data-goto-pago="contado">' + (c.ver_contado || CONTENT_DEFAULTS.ver_contado) + '</button></div>';
+        return;
+      }
+    }
+
+    var bestIndex = sorted.length > 1 ? sorted.reduce(function (bestI, p, i, arr) {
+      return p.precio_descuento < arr[bestI].precio_descuento ? i : bestI;
+    }, 0) : -1;
     container.innerHTML = sorted.map(function (p, i) {
       return planCardHTML(p, productId, i === bestIndex, c);
     }).join('');
@@ -1017,15 +1035,20 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
   // se le manda al carrito. No vuelve a pedir nada a la API: re-pinta con
   // lo que ya está en caché (o el respaldo, si aún no llegó).
   var pagoButtons = document.querySelectorAll('.pago-btn[data-pago]');
+  function setPago(pago) {
+    if (pago === state.pago) return;
+    state.pago = pago;
+    pagoButtons.forEach(function (b) { b.setAttribute('aria-pressed', b.getAttribute('data-pago') === pago ? 'true' : 'false'); });
+    var productId = PRODUCT_MAP[state.platform + '-' + state.edition];
+    renderCombos(comboCache[productId] || COMBO_DEFAULTS[productId] || [], productId);
+  }
   pagoButtons.forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      var pago = btn.getAttribute('data-pago');
-      if (pago === state.pago) return;
-      state.pago = pago;
-      pagoButtons.forEach(function (b) { b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'); });
-      var productId = PRODUCT_MAP[state.platform + '-' + state.edition];
-      renderCombos(comboCache[productId] || COMBO_DEFAULTS[productId] || [], productId);
-    });
+    btn.addEventListener('click', function () { setPago(btn.getAttribute('data-pago')); });
+  });
+  // "Ver precios de contado" del aviso de una edición sin cuotas.
+  document.getElementById('plansContainer').addEventListener('click', function (ev) {
+    var b = ev.target.closest && ev.target.closest('[data-goto-pago]');
+    if (b) setPago(b.getAttribute('data-goto-pago'));
   });
 
   // ---------------- carrito directo al elegir un plan ----------------
