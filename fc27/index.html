@@ -225,7 +225,7 @@
         "name": "¿Cuando me llega el juego?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "El Ultimate ya esta disponible: lo recibes apenas confirmemos el pago. El Standard sale el viernes 25 de septiembre de 2026 y se entrega ese dia; si lo compras antes, queda apartado a tu nombre."
+          "text": "Ya estan disponibles el Standard y el Ultimate: los recibes apenas confirmemos el pago."
         }
       },
       {
@@ -811,7 +811,7 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
   <div class="hero hero-inner wrap">
     <span class="platform-tag" id="v-platform_label">PS5 · PS4 · Xbox Series · Xbox One · PC</span>
     <h1 id="v-title">EA SPORTS FC 27</h1>
-    <p class="sub" id="v-subtitle">Ultimate ya disponible, con entrega inmediata. El Standard se entrega el viernes 25 de septiembre.</p>
+    <p class="sub" id="v-subtitle">Standard y Ultimate ya disponibles, con entrega inmediata.</p>
 
     <div class="price-row">
       <span class="price-label" id="v-price_label">Desde</span>
@@ -857,7 +857,7 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
   <section>
     <div class="eyebrow" id="v-step2_eyebrow">Paso 2</div>
     <h2 class="sec-title" id="v-step2_title">Elige tu edición</h2>
-    <p class="sec-body" id="v-step2_body">El Ultimate ya se entrega; el Standard sale el 25 de septiembre.</p>
+    <p class="sec-body" id="v-step2_body">Standard y Ultimate ya se entregan al instante.</p>
 
     <div class="choice-row" id="choiceRowEdition"></div>
   </section>
@@ -992,7 +992,7 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
 
   // Arranca en Ultimate: es la edición que ya se entrega y la que están
   // pidiendo los anuncios que traen a la gente a esta página. Abrir en
-  // Standard mandaba al visitante a lo que no llega hasta el 25.
+  // Standard ya no es problema (se entrega igual), se deja Ultimate por los anuncios.
   var state = { platform: 'ps5', edition: 'ultimate', pago: 'contado' };
 
   // ---------------------------------------------------------------
@@ -1004,18 +1004,16 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
   var CONTENT_DEFAULTS = {
     platform_label: 'PS5 · PS4 · Xbox Series · Xbox One · PC',
     title: 'EA SPORTS FC 27',
-    subtitle: 'Ultimate ya disponible, con entrega inmediata. El Standard se entrega el viernes 25 de septiembre.',
+    subtitle: 'Standard y Ultimate ya disponibles, con entrega inmediata.',
     price_label: 'Desde',
     price_amount: '$119.990',
     price_unit: 'COP',
     cta_label: 'Elige tu plataforma',
     banner_image: '/fc27/hero-fc27.jpg',
-    // 18 sep 2026: salió el Ultimate, NO el Standard — ese se entrega el
-    // 25. El badge tiene que separar las dos cosas: decir "ya disponible"
-    // a secas era prometerle entrega de hoy a quien compra el Standard.
+    // 25 sep 2026: ya salió el Standard; las dos ediciones se entregan al instante.
     // Soporte incluye tutoriales 24/7 además de WhatsApp.
     trust: [
-      { title: 'Ultimate ya disponible', desc: 'Entrega inmediata · Standard el 25 de sep', tone: 'primary' },
+      { title: 'Ya disponible', desc: 'Standard y Ultimate · Entrega inmediata', tone: 'primary' },
       { title: 'Con garantía', desc: 'Reposición si algo falla', tone: 'accent' },
       { title: 'Soporte real', desc: 'Tutoriales 24/7 y WhatsApp', tone: 'cta' }
     ],
@@ -1032,12 +1030,12 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
     choice_pc_desc: 'Código directo a tu cuenta de EA Play.',
     step2_eyebrow: 'Paso 2',
     step2_title: 'Elige tu edición',
-    step2_body_ps: 'El Ultimate ya se entrega; el Standard sale el 25 de septiembre. Te mostramos solo lo que hay para la consola que elegiste.',
-    step2_body_xbox: 'El Ultimate ya se entrega; el Standard sale el 25 de septiembre. Ambas funcionan igual en Xbox Series y Xbox One.',
+    step2_body_ps: 'Standard y Ultimate ya se entregan al instante. Te mostramos solo lo que hay para la consola que elegiste.',
+    step2_body_xbox: 'Standard y Ultimate ya se entregan al instante. Ambas funcionan igual en Xbox Series y Xbox One.',
     step2_body_pc: 'Se activa directo en tu cuenta de EA Play para PC.',
-    edition_standard_desc: 'El juego base completo. Se entrega el viernes 25 de septiembre.',
+    edition_standard_desc: 'El juego base completo. Lo recibes hoy, con entrega inmediata.',
     edition_ultimate_desc: 'Hasta 7 días de acceso anticipado, FC Points y contenido extra. Lo recibes hoy.',
-    edition_codigo_desc: 'Se activa directo en tu cuenta de EA Play. Se entrega el 25 de septiembre.',
+    edition_codigo_desc: 'Se activa directo en tu cuenta de EA Play. Entrega inmediata.',
     step3_eyebrow: 'Paso 3',
     step3_title: 'Elige tu modalidad',
     step3_body: 'Primaria y secundaria: correo y clave. Código: se activa directo en tu cuenta.',
@@ -1078,7 +1076,7 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
     // el Standard sale el 25: mezclarlos en un solo "entrega inmediata"
     // es prometerle a alguien un juego que no le va a llegar hoy.
     entrega_ultimate: '<strong>Entrega inmediata:</strong> recibes tu cuenta apenas confirmemos el pago.',
-    entrega_standard: '<strong>Se entrega el viernes 25 de septiembre</strong>, el día que sale el Standard. Si lo compras hoy, queda apartado a tu nombre.',
+    entrega_standard: '<strong>Entrega inmediata:</strong> recibes tu cuenta apenas confirmemos el pago.',
     empty_msg: 'No tenemos disponibilidad en esta edición ahora mismo. Escríbenos por WhatsApp y te avisamos apenas entre, o mira otra edición arriba.',
     badge_recommended: 'Recomendado',
     badge_best_price: 'Mejor precio',
@@ -1092,8 +1090,8 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
     faq: [
       { q: '¿Cuál es la diferencia entre Standard y Ultimate?', a: 'Ultimate suma hasta 7 días de acceso anticipado, FC Points, beneficios exclusivos para Ultimate Team y contenido adicional para los modos Carrera y Clubes. El juego base es el mismo en las dos ediciones.' },
       { q: '¿Qué significa "Primaria" y "Secundaria"?', a: 'Ambas te dan una cuenta con correo y clave. En Primaria juegas con tu propio perfil dentro de esa cuenta. En Secundaria juegas con el correo que te entregamos (revisa el detalle exacto en cada tarjeta, varía un poco según plataforma y edición). Te mostramos precio y stock de las dos por separado para que elijas.' },
-      { q: '¿Puedo pagarlo a cuotas?', a: 'Sí, y lo eliges aquí mismo: en el paso 3 cambia el interruptor a "Pagar a cuotas" y verás la inicial y el valor de cada cuota de cada opción. Pagas la inicial hoy y el resto se cobra cada 30 días. Pagar a cuotas no retrasa la entrega: el Ultimate llega apenas confirmemos el pago y el Standard el 25 de septiembre, igual que de contado. Los códigos son la excepción: esos se venden solo de contado.' },
-      { q: '¿Cuándo me llega el juego?', a: 'El Ultimate ya está disponible: lo recibes apenas confirmemos el pago. El Standard sale el viernes 25 de septiembre y se entrega ese día; si lo compras antes, queda apartado a tu nombre.' },
+      { q: '¿Puedo pagarlo a cuotas?', a: 'Sí, y lo eliges aquí mismo: en el paso 3 cambia el interruptor a "Pagar a cuotas" y verás la inicial y el valor de cada cuota de cada opción. Pagas la inicial hoy y el resto se cobra cada 30 días. Pagar a cuotas no retrasa la entrega: llega apenas confirmemos el pago, igual que de contado. Los códigos son la excepción: esos se venden solo de contado.' },
+      { q: '¿Cuándo me llega el juego?', a: 'Ya están disponibles el Standard y el Ultimate: los recibes apenas confirmemos el pago.' },
       { q: '¿Un código sirve para toda la familia de consola?', a: 'Sí: en PlayStation funciona igual en PS4 y PS5, y en Xbox funciona igual en Xbox Series y Xbox One. Eso sí, revisa la letra chica de cada uno antes de comprar: el código de PlayStation solo se canjea en cuentas de Estados Unidos, y el de Xbox necesita VPN para activarse. El de PC se instala directo en tu cuenta de EA Play, sin condiciones.' },
       { q: '¿Qué pasa si el código o la cuenta falla?', a: 'Tienes garantía: si algo no funciona, te lo reponemos. Escríbenos por WhatsApp y lo resolvemos.' }
     ],
