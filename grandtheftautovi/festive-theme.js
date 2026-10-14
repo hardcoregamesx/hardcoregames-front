@@ -51,26 +51,26 @@
     },
     gta6: {
       vars: {
-        background: '275 65% 8%',
-        card: '280 55% 13%',
-        'card-2': '280 55% 15%',
-        popover: '280 55% 13%',
-        primary: '330 95% 58%',
+        background: '285 55% 20%',
+        card: '290 48% 25%',
+        'card-2': '290 48% 28%',
+        popover: '290 48% 25%',
+        primary: '330 95% 62%',
         'primary-foreground': '0 0% 100%',
-        secondary: '275 50% 18%',
-        muted: '280 35% 22%',
-        'muted-foreground': '300 20% 76%',
-        accent: '183 90% 55%',
-        'accent-foreground': '275 65% 8%',
-        border: '315 55% 30%',
-        input: '280 45% 17%',
-        ring: '330 95% 58%',
-        cta: '36 100% 58%',
-        'cta-foreground': '275 65% 8%'
+        secondary: '285 45% 28%',
+        muted: '290 35% 32%',
+        'muted-foreground': '300 25% 82%',
+        accent: '183 90% 60%',
+        'accent-foreground': '285 55% 14%',
+        border: '315 45% 40%',
+        input: '288 42% 24%',
+        ring: '330 95% 62%',
+        cta: '36 100% 60%',
+        'cta-foreground': '285 55% 14%'
       },
-      gradient: 'linear-gradient(180deg,#1b0638 0%,#5b1a7a 40%,#ff2e93 78%,#ff9e4a 105%)',
+      gradient: 'linear-gradient(165deg,#4b5bdc 0%,#8f4fd9 30%,#d94fa6 62%,#ff8f78 100%)',
       banner: '🌴 Bienvenido a Vice City · todo para GTA VI 🌴',
-      emojis: ['🌴', '🦩', '💖', '🕶️', '🌅', '🌴'],
+      emojis: [],
       palms: true,
       accent: '#ff2e93',
       glow: 'rgba(255,46,147,.55)'
@@ -138,15 +138,14 @@
     }
     if (t.palms) {
       extra +=
+        'html[data-festive="gta6"] body{background:' + t.gradient + ' fixed !important}' +
+        'html[data-festive="gta6"] .page-gradient{background:none !important}' +
         '#hc-festive-banner{background:linear-gradient(90deg,#ff2e93,#ff9e4a,#ff2e93);color:#2a0845;text-shadow:none;font-weight:800}' +
         '#hc-festive-banner button{color:#2a0845}' +
-        '.hc-palm{position:fixed;bottom:0;width:190px;height:300px;pointer-events:none;z-index:41;opacity:.9}' +
-        '.hc-palm.l{left:-30px}.hc-palm.r{right:-30px;transform:scaleX(-1)}' +
-        '.hc-sun{position:fixed;left:50%;bottom:0;width:280px;height:140px;margin-left:-140px;pointer-events:none;z-index:39;opacity:.35;' +
-          'border-radius:140px 140px 0 0;background:repeating-linear-gradient(180deg,#ff9e4a 0 14px,#ff2e93 14px 28px);' +
-          '-webkit-mask:linear-gradient(180deg,#000 40%,transparent 100%);mask:linear-gradient(180deg,#000 40%,transparent 100%)}' +
-        'html[data-festive="gta6"] h1,html[data-festive="gta6"] h2{text-shadow:0 0 14px rgba(255,46,147,.7),0 0 28px rgba(45,226,230,.35)}' +
-        '@media (max-width:640px){.hc-palm{width:110px;height:175px;left:-18px}.hc-palm.r{left:auto;right:-18px}.hc-sun{width:180px;height:90px;margin-left:-90px}}';
+        '.hc-palm{position:fixed;width:78vmin;height:78vmin;pointer-events:none;z-index:-1}' +
+        '.hc-palm.tl{top:-14vmin;left:-14vmin}' +
+        '.hc-palm.br{bottom:-14vmin;right:-14vmin;transform:rotate(180deg)}' +
+        'html[data-festive="gta6"] h1,html[data-festive="gta6"] h2{text-shadow:0 0 14px rgba(255,46,147,.6),0 0 28px rgba(45,226,230,.3)}';
     }
     return extra + (
       'html[data-festive="' + name + '"]{' + vars + '}' +
@@ -176,13 +175,31 @@
     '<circle cx="62" cy="62" r="3" fill="#e8e8e8" stroke="none"/></svg>';
 
 
-  var PALM =
-    '<svg viewBox="0 0 190 300" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#12031f" stroke-linecap="round">' +
-    '<path d="M70 300 C74 220 66 150 96 78" stroke-width="9"/>' +
-    '<path d="M96 78 C70 50 38 56 10 84" stroke-width="6"/><path d="M96 78 C74 38 44 22 14 34" stroke-width="6"/>' +
-    '<path d="M96 78 C98 36 118 14 150 10" stroke-width="6"/><path d="M96 78 C124 46 156 46 184 70" stroke-width="6"/>' +
-    '<path d="M96 78 C118 70 150 86 172 118" stroke-width="6"/><path d="M96 78 C74 76 42 96 28 128" stroke-width="6"/>' +
-    '<circle cx="92" cy="86" r="6" fill="#12031f"/><circle cx="102" cy="90" r="5" fill="#12031f"/></svg>';
+  // Palmera de fondo: frondas con hojuelas generadas, para que se vea como
+  // las siluetas translucidas del icono de GTA VI.
+  function palmSvg() {
+    var col = 'rgba(52,12,110,.30)', out = '', fr = [-15, 20, 50, 80, 110, 145, 180, 215];
+    fr.forEach(function (deg, i) {
+      var ang = deg * Math.PI / 180, L = 360 + (i % 3) * 50, N = 34, prev = [20, 20];
+      var dx = Math.cos(ang), dy = Math.sin(ang);
+      for (var k = 1; k <= N; k++) {
+        var t = k / N;
+        var x = 20 + dx * L * t, y = 20 + dy * L * t + 170 * t * t;
+        var tx = x - prev[0], ty = y - prev[1], tl = Math.sqrt(tx * tx + ty * ty) || 1;
+        tx /= tl; ty /= tl;
+        var nx = -ty, ny = tx, len = 78 * Math.sin(Math.PI * Math.min(1, t * 1.1)) + 14;
+        [1, -1].forEach(function (sd) {
+          var ex = x + (tx * 0.85 + nx * 0.5 * sd) * len, ey = y + (ty * 0.85 + ny * 0.5 * sd) * len + len * 0.28;
+          var bx = nx * 3.2, by = ny * 3.2;
+          out += '<path d="M' + (x - bx).toFixed(1) + ' ' + (y - by).toFixed(1) + ' Q' + ((x + ex) / 2 + nx * 4 * sd).toFixed(1) + ' ' + ((y + ey) / 2 + 10).toFixed(1) + ' ' + ex.toFixed(1) + ' ' + ey.toFixed(1) +
+                 ' Q' + ((x + ex) / 2 + nx * 4 * sd).toFixed(1) + ' ' + ((y + ey) / 2 + 2).toFixed(1) + ' ' + (x + bx).toFixed(1) + ' ' + (y + by).toFixed(1) + 'Z"/>';
+        });
+        prev = [x, y];
+      }
+      out += '<path d="M20 20 Q' + (20 + dx * L * 0.5) + ' ' + (20 + dy * L * 0.5 + 40) + ' ' + (20 + dx * L) + ' ' + (20 + dy * L + 170) + '" fill="none" stroke="' + col + '" stroke-width="5"/>';
+    });
+    return '<svg viewBox="0 0 560 560" xmlns="http://www.w3.org/2000/svg" fill="' + col + '">' + out + '</svg>';
+  }
 
   function apply(name) {
     var t = THEMES[name];
@@ -218,7 +235,7 @@
       var layer = document.createElement('div');
       layer.id = 'hc-festive-layer';
       layer.setAttribute('aria-hidden', 'true');
-      for (var i = 0; i < 14; i++) {
+      for (var i = 0; i < (t.emojis.length ? 14 : 0); i++) {
         var s = document.createElement('span');
         s.className = 'hc-fx';
         s.textContent = t.emojis[i % t.emojis.length];
@@ -261,15 +278,11 @@
       }
 
       if (t.palms) {
-        var sun = document.createElement('div');
-        sun.className = 'hc-sun';
-        sun.setAttribute('aria-hidden', 'true');
-        document.body.appendChild(sun);
-        ['l', 'r'].forEach(function (side) {
+        ['tl', 'br'].forEach(function (pos) {
           var p = document.createElement('div');
-          p.className = 'hc-palm ' + side;
+          p.className = 'hc-palm ' + pos;
           p.setAttribute('aria-hidden', 'true');
-          p.innerHTML = PALM;
+          p.innerHTML = palmSvg();
           document.body.appendChild(p);
         });
       }
@@ -293,7 +306,7 @@
     ['hc-festive-css', 'hc-festive-banner', 'hc-festive-layer', 'hc-lights'].forEach(function (id) {
       var el = document.getElementById(id); if (el) el.remove();
     });
-    Array.prototype.forEach.call(document.querySelectorAll('.hc-corner,.hc-palm,.hc-sun'), function (el) { el.remove(); });
+    Array.prototype.forEach.call(document.querySelectorAll('.hc-corner,.hc-palm'), function (el) { el.remove(); });
     root.removeAttribute('data-festive');
   }
 
