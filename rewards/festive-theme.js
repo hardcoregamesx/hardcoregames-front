@@ -51,27 +51,29 @@
     },
     navidad: {
       vars: {
-        background: '350 55% 8%',
-        card: '350 45% 12%',
-        'card-2': '350 45% 14%',
-        popover: '350 45% 12%',
+        background: '150 55% 7%',
+        card: '150 40% 11%',
+        'card-2': '150 40% 13%',
+        popover: '150 40% 11%',
         primary: '0 78% 50%',
         'primary-foreground': '0 0% 100%',
-        secondary: '150 40% 14%',
-        muted: '350 25% 20%',
-        'muted-foreground': '350 10% 72%',
-        accent: '145 65% 50%',
+        secondary: '0 45% 16%',
+        muted: '150 25% 19%',
+        'muted-foreground': '150 10% 74%',
+        accent: '48 95% 60%',
         'accent-foreground': '0 0% 8%',
-        border: '350 35% 24%',
-        input: '350 30% 18%',
+        border: '150 30% 24%',
+        input: '150 30% 16%',
         ring: '0 78% 50%',
         cta: '48 95% 60%',
-        'cta-foreground': '350 55% 8%'
+        'cta-foreground': '150 55% 7%'
       },
-      gradient: 'linear-gradient(135deg,#0b3d20 0%,#7a0c1c 100%)',
+      gradient: 'linear-gradient(160deg,#0d5c36 0%,#0a3d25 45%,#a50f26 130%)',
       banner: '🎄 Navidad en Hardcore Games · regala juegos 🎁',
-      emojis: ['❄️', '🎄', '❄️', '🎁', '⭐', '❄️'],
-      accent: '#e11d2e',
+      emojis: ['🎄', '🎁', '⭐', '🔔', '🎅', '🦌'],
+      snow: true,
+      lights: true,
+      accent: '#c8102e',
       glow: 'rgba(225,29,46,.4)'
     }
   };
@@ -96,7 +98,19 @@
     }
     vars += '--gradient-bg:' + t.gradient + ';';
     var a = t.accent;
-    return (
+    var extra = '';
+    if (t.lights) {
+      extra =
+        '#hc-lights{position:fixed;top:0;left:0;right:0;height:46px;z-index:70;pointer-events:none;display:flex;justify-content:space-between;padding:0 6px}' +
+        '#hc-lights:before{content:"";position:absolute;left:0;right:0;top:-6px;height:20px;border-bottom:2px solid #222;border-radius:0 0 50% 50%/0 0 100% 100%}' +
+        '.hc-bulb{position:relative;width:11px;height:17px;margin-top:11px;border-radius:50% 50% 55% 55%;animation:hc-twinkle 1.6s ease-in-out infinite}' +
+        '.hc-bulb:before{content:"";position:absolute;left:3px;top:-5px;width:5px;height:6px;background:#2b2b2b;border-radius:2px}' +
+        '@keyframes hc-twinkle{0%,100%{opacity:1;filter:brightness(1.3)}50%{opacity:.4;filter:brightness(.8)}}' +
+        '.hc-snow{position:absolute;top:-4vh;border-radius:50%;background:#fff;opacity:.85;animation:hc-snowfall linear infinite;box-shadow:0 0 6px rgba(255,255,255,.8)}' +
+        '@keyframes hc-snowfall{0%{transform:translate3d(0,-4vh,0)}50%{transform:translate3d(24px,52vh,0)}100%{transform:translate3d(-16px,108vh,0)}}' +
+        '#hc-festive-banner{background:repeating-linear-gradient(135deg,#c8102e 0 14px,#a50d25 14px 28px);padding:26px 40px 8px !important}';
+    }
+    return extra + (
       'html[data-festive="' + name + '"]{' + vars + '}' +
       'html[data-festive="' + name + '"] body{background-color:' +
         (full ? 'hsl(' + t.vars.background + ')' : 'hsl(' + t.vars.background + ')') + ';}' +
@@ -112,7 +126,7 @@
       '.hc-corner.l{left:0}.hc-corner.r{right:0;transform:scaleX(-1)}' +
       'html[data-festive="' + name + '"] a:hover,html[data-festive="' + name + '"] button:hover{text-shadow:0 0 12px ' + t.glow + '}' +
       '@media (max-width:640px){.hc-corner{width:70px;height:70px}}' +
-      '@media (prefers-reduced-motion:reduce){.hc-fx{animation:none;display:none}}'
+      '@media (prefers-reduced-motion:reduce){.hc-fx,.hc-snow{animation:none;display:none}.hc-bulb{animation:none}}'
     );
   }
 
@@ -168,7 +182,36 @@
         s.style.opacity = '.75';
         layer.appendChild(s);
       }
+      if (t.snow) {
+        for (var j = 0; j < 40; j++) {
+          var f = document.createElement('span');
+          f.className = 'hc-snow';
+          var sz = 3 + (j % 4) * 2;
+          f.style.width = f.style.height = sz + 'px';
+          f.style.left = (j * 2.6 + (j % 5)) % 100 + 'vw';
+          f.style.animationDuration = 9 + (j % 7) * 2 + 's';
+          f.style.animationDelay = -(j * 0.9) + 's';
+          layer.appendChild(f);
+        }
+      }
       document.body.appendChild(layer);
+
+      if (t.lights) {
+        var lights = document.createElement('div');
+        lights.id = 'hc-lights';
+        lights.setAttribute('aria-hidden', 'true');
+        var cols = ['#ff2a2a', '#ffd23f', '#2ecc71', '#3aa0ff'];
+        var n = Math.max(12, Math.round(window.innerWidth / 38));
+        for (var k = 0; k < n; k++) {
+          var bulb = document.createElement('span');
+          bulb.className = 'hc-bulb';
+          bulb.style.background = cols[k % 4];
+          bulb.style.boxShadow = '0 0 10px 2px ' + cols[k % 4];
+          bulb.style.animationDelay = (k % 4) * 0.4 + 's';
+          lights.appendChild(bulb);
+        }
+        document.body.appendChild(lights);
+      }
 
       if (name === 'halloween') {
         ['l', 'r'].forEach(function (side) {
@@ -186,7 +229,7 @@
   }
 
   function clear() {
-    ['hc-festive-css', 'hc-festive-banner', 'hc-festive-layer'].forEach(function (id) {
+    ['hc-festive-css', 'hc-festive-banner', 'hc-festive-layer', 'hc-lights'].forEach(function (id) {
       var el = document.getElementById(id); if (el) el.remove();
     });
     Array.prototype.forEach.call(document.querySelectorAll('.hc-corner'), function (el) { el.remove(); });
