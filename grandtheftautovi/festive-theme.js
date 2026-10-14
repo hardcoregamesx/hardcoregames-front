@@ -49,6 +49,32 @@
       accent: '#ff7a00',
       glow: 'rgba(255,122,0,.45)'
     },
+    gta6: {
+      vars: {
+        background: '275 65% 8%',
+        card: '280 55% 13%',
+        'card-2': '280 55% 15%',
+        popover: '280 55% 13%',
+        primary: '330 95% 58%',
+        'primary-foreground': '0 0% 100%',
+        secondary: '275 50% 18%',
+        muted: '280 35% 22%',
+        'muted-foreground': '300 20% 76%',
+        accent: '183 90% 55%',
+        'accent-foreground': '275 65% 8%',
+        border: '315 55% 30%',
+        input: '280 45% 17%',
+        ring: '330 95% 58%',
+        cta: '36 100% 58%',
+        'cta-foreground': '275 65% 8%'
+      },
+      gradient: 'linear-gradient(180deg,#1b0638 0%,#5b1a7a 40%,#ff2e93 78%,#ff9e4a 105%)',
+      banner: '🌴 Bienvenido a Vice City · todo para GTA VI 🌴',
+      emojis: ['🌴', '🦩', '💖', '🕶️', '🌅', '🌴'],
+      palms: true,
+      accent: '#ff2e93',
+      glow: 'rgba(255,46,147,.55)'
+    },
     navidad: {
       vars: {
         background: '150 55% 7%',
@@ -110,6 +136,18 @@
         '@keyframes hc-snowfall{0%{transform:translate3d(0,-4vh,0)}50%{transform:translate3d(24px,52vh,0)}100%{transform:translate3d(-16px,108vh,0)}}' +
         '#hc-festive-banner{background:repeating-linear-gradient(135deg,#c8102e 0 14px,#a50d25 14px 28px);padding:26px 40px 8px !important}';
     }
+    if (t.palms) {
+      extra +=
+        '#hc-festive-banner{background:linear-gradient(90deg,#ff2e93,#ff9e4a,#ff2e93);color:#2a0845;text-shadow:none;font-weight:800}' +
+        '#hc-festive-banner button{color:#2a0845}' +
+        '.hc-palm{position:fixed;bottom:0;width:190px;height:300px;pointer-events:none;z-index:41;opacity:.9}' +
+        '.hc-palm.l{left:-30px}.hc-palm.r{right:-30px;transform:scaleX(-1)}' +
+        '.hc-sun{position:fixed;left:50%;bottom:0;width:280px;height:140px;margin-left:-140px;pointer-events:none;z-index:39;opacity:.35;' +
+          'border-radius:140px 140px 0 0;background:repeating-linear-gradient(180deg,#ff9e4a 0 14px,#ff2e93 14px 28px);' +
+          '-webkit-mask:linear-gradient(180deg,#000 40%,transparent 100%);mask:linear-gradient(180deg,#000 40%,transparent 100%)}' +
+        'html[data-festive="gta6"] h1,html[data-festive="gta6"] h2{text-shadow:0 0 14px rgba(255,46,147,.7),0 0 28px rgba(45,226,230,.35)}' +
+        '@media (max-width:640px){.hc-palm{width:110px;height:175px;left:-18px}.hc-palm.r{left:auto;right:-18px}.hc-sun{width:180px;height:90px;margin-left:-90px}}';
+    }
     return extra + (
       'html[data-festive="' + name + '"]{' + vars + '}' +
       'html[data-festive="' + name + '"] body{background-color:' +
@@ -136,6 +174,15 @@
     '<path d="M0 0 L150 0 M0 0 L0 150 M0 0 L130 80 M0 0 L80 130 M0 0 L148 38 M0 0 L38 148"/>' +
     '<path d="M30 0 Q22 22 0 30 M60 0 Q42 42 0 60 M90 0 Q62 62 0 90 M120 0 Q82 82 0 120"/>' +
     '<circle cx="62" cy="62" r="3" fill="#e8e8e8" stroke="none"/></svg>';
+
+
+  var PALM =
+    '<svg viewBox="0 0 190 300" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#12031f" stroke-linecap="round">' +
+    '<path d="M70 300 C74 220 66 150 96 78" stroke-width="9"/>' +
+    '<path d="M96 78 C70 50 38 56 10 84" stroke-width="6"/><path d="M96 78 C74 38 44 22 14 34" stroke-width="6"/>' +
+    '<path d="M96 78 C98 36 118 14 150 10" stroke-width="6"/><path d="M96 78 C124 46 156 46 184 70" stroke-width="6"/>' +
+    '<path d="M96 78 C118 70 150 86 172 118" stroke-width="6"/><path d="M96 78 C74 76 42 96 28 128" stroke-width="6"/>' +
+    '<circle cx="92" cy="86" r="6" fill="#12031f"/><circle cx="102" cy="90" r="5" fill="#12031f"/></svg>';
 
   function apply(name) {
     var t = THEMES[name];
@@ -213,6 +260,20 @@
         document.body.appendChild(lights);
       }
 
+      if (t.palms) {
+        var sun = document.createElement('div');
+        sun.className = 'hc-sun';
+        sun.setAttribute('aria-hidden', 'true');
+        document.body.appendChild(sun);
+        ['l', 'r'].forEach(function (side) {
+          var p = document.createElement('div');
+          p.className = 'hc-palm ' + side;
+          p.setAttribute('aria-hidden', 'true');
+          p.innerHTML = PALM;
+          document.body.appendChild(p);
+        });
+      }
+
       if (name === 'halloween') {
         ['l', 'r'].forEach(function (side) {
           var c = document.createElement('div');
@@ -232,7 +293,7 @@
     ['hc-festive-css', 'hc-festive-banner', 'hc-festive-layer', 'hc-lights'].forEach(function (id) {
       var el = document.getElementById(id); if (el) el.remove();
     });
-    Array.prototype.forEach.call(document.querySelectorAll('.hc-corner'), function (el) { el.remove(); });
+    Array.prototype.forEach.call(document.querySelectorAll('.hc-corner,.hc-palm,.hc-sun'), function (el) { el.remove(); });
     root.removeAttribute('data-festive');
   }
 
