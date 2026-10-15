@@ -52,14 +52,14 @@
     gta6: {
       vars: {
         background: '285 55% 20%',
-        card: '290 48% 25%',
-        'card-2': '290 48% 28%',
+        card: '285 55% 15%',
+        'card-2': '285 55% 18%',
         popover: '290 48% 25%',
         primary: '330 95% 62%',
         'primary-foreground': '0 0% 100%',
         secondary: '285 45% 28%',
         muted: '290 35% 32%',
-        'muted-foreground': '300 25% 82%',
+        'muted-foreground': '300 30% 93%',
         accent: '183 90% 60%',
         'accent-foreground': '285 55% 14%',
         border: '315 45% 40%',
@@ -138,13 +138,14 @@
     }
     if (t.bgImage) {
       extra +=
-        'html[data-festive="gta6"] body{background:#e9a07f !important}' +
+        'html[data-festive="gta6"] body{background:#2a0c40 !important}' +
         'html[data-festive="gta6"] body:before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;' +
-          'background:linear-gradient(rgba(35,10,55,.12),rgba(35,10,55,.38)),url(' + t.bgImage + ') center 75%/cover no-repeat}' +
+          'background:linear-gradient(rgba(30,8,50,.35),rgba(30,8,50,.62)),url(' + t.bgImage + ') center 75%/cover no-repeat}' +
         'html[data-festive="gta6"] .page-gradient{background:none !important}' +
         '#hc-festive-banner{background:linear-gradient(90deg,#ff2e93,#ff9e4a,#ff2e93);color:#2a0845;text-shadow:none;font-weight:800}' +
         '#hc-festive-banner button{color:#2a0845}' +
-        'html[data-festive="gta6"] h1,html[data-festive="gta6"] h2{text-shadow:0 0 14px rgba(255,46,147,.6),0 0 28px rgba(45,226,230,.3)}';
+        'html[data-festive="gta6"] h1,html[data-festive="gta6"] h2,html[data-festive="gta6"] h3{text-shadow:0 2px 6px rgba(20,5,35,.8),0 0 18px rgba(255,46,147,.45)}' +
+        'html[data-festive="gta6"] p,html[data-festive="gta6"] span,html[data-festive="gta6"] li,html[data-festive="gta6"] a,html[data-festive="gta6"] label,html[data-festive="gta6"] small{text-shadow:0 1px 3px rgba(20,5,35,.75)}';
     }
     return extra + (
       'html[data-festive="' + name + '"]{' + vars + '}' +
