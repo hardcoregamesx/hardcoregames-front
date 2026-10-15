@@ -178,27 +178,27 @@
   // Palmera de fondo: frondas con hojuelas generadas, para que se vea como
   // las siluetas translucidas del icono de GTA VI.
   function palmSvg() {
-    var col = 'rgba(52,12,110,.30)', out = '', fr = [-15, 20, 50, 80, 110, 145, 180, 215];
+    var col = 'rgb(52,12,110)', out = '', fr = [-25, 0, 25, 50, 75, 100, 125, 150, 175, 200, 225];
     fr.forEach(function (deg, i) {
-      var ang = deg * Math.PI / 180, L = 360 + (i % 3) * 50, N = 34, prev = [20, 20];
+      var ang = deg * Math.PI / 180, L = 340 + (i % 3) * 55, N = 58, prev = [20, 20];
       var dx = Math.cos(ang), dy = Math.sin(ang);
       for (var k = 1; k <= N; k++) {
         var t = k / N;
         var x = 20 + dx * L * t, y = 20 + dy * L * t + 170 * t * t;
         var tx = x - prev[0], ty = y - prev[1], tl = Math.sqrt(tx * tx + ty * ty) || 1;
         tx /= tl; ty /= tl;
-        var nx = -ty, ny = tx, len = 78 * Math.sin(Math.PI * Math.min(1, t * 1.1)) + 14;
+        var nx = -ty, ny = tx, len = 115 * Math.pow(Math.sin(Math.PI * Math.min(1, t * 1.08)), 0.7) + 16;
         [1, -1].forEach(function (sd) {
-          var ex = x + (tx * 0.85 + nx * 0.5 * sd) * len, ey = y + (ty * 0.85 + ny * 0.5 * sd) * len + len * 0.28;
-          var bx = nx * 3.2, by = ny * 3.2;
+          var ex = x + (tx * 0.7 + nx * 0.7 * sd) * len, ey = y + (ty * 0.7 + ny * 0.7 * sd) * len + len * 0.3;
+          var bx = nx * 5.5, by = ny * 5.5;
           out += '<path d="M' + (x - bx).toFixed(1) + ' ' + (y - by).toFixed(1) + ' Q' + ((x + ex) / 2 + nx * 4 * sd).toFixed(1) + ' ' + ((y + ey) / 2 + 10).toFixed(1) + ' ' + ex.toFixed(1) + ' ' + ey.toFixed(1) +
                  ' Q' + ((x + ex) / 2 + nx * 4 * sd).toFixed(1) + ' ' + ((y + ey) / 2 + 2).toFixed(1) + ' ' + (x + bx).toFixed(1) + ' ' + (y + by).toFixed(1) + 'Z"/>';
         });
         prev = [x, y];
       }
-      out += '<path d="M20 20 Q' + (20 + dx * L * 0.5) + ' ' + (20 + dy * L * 0.5 + 40) + ' ' + (20 + dx * L) + ' ' + (20 + dy * L + 170) + '" fill="none" stroke="' + col + '" stroke-width="5"/>';
+      out += '<path d="M20 20 Q' + (20 + dx * L * 0.5) + ' ' + (20 + dy * L * 0.5 + 40) + ' ' + (20 + dx * L) + ' ' + (20 + dy * L + 170) + '" fill="none" stroke="' + col + '" stroke-width="7"/>';
     });
-    return '<svg viewBox="0 0 560 560" xmlns="http://www.w3.org/2000/svg" fill="' + col + '">' + out + '</svg>';
+    return '<svg viewBox="0 0 560 560" xmlns="http://www.w3.org/2000/svg" fill="' + col + '" opacity=".3">' + out + '</svg>';
   }
 
   function apply(name) {
