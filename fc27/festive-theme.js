@@ -23,6 +23,8 @@
 
   // Paletas. "tri" = formato triplete de frontend-v2 (hsl(var(--x))),
   // "full" = formato hsl() completo que usan las landings viejas.
+  var server = typeof window.__hcFestiveTheme === 'string' ? window.__hcFestiveTheme : null;
+
   var THEMES = {
     halloween: {
       vars: {
@@ -105,10 +107,10 @@
   };
 
   function readCache() {
-    try { return sessionStorage.getItem(CACHE_KEY); } catch (e) { return null; }
+    try { return localStorage.getItem(CACHE_KEY); } catch (e) { return null; }
   }
   function writeCache(v) {
-    try { sessionStorage.setItem(CACHE_KEY, v); } catch (e) { /* ignorar */ }
+    try { localStorage.setItem(CACHE_KEY, v); } catch (e) { /* ignorar */ }
   }
 
   function isFullHslSite() {
@@ -262,8 +264,16 @@
       }
     }
 
-    if (document.body) decorate();
-    else document.addEventListener('DOMContentLoaded', decorate);
+    // El CSS (colores) ya quedo aplicado. La decoracion (banner, capas) toca el
+    // <body>: en frontend-v2 (tema desde el servidor) se espera a que React
+    // termine de hidratar -- lo avisa <FestiveDecorations/> llamando a
+    // window.__hcFestiveDecorate --; insertar antes rompe la hidratacion.
+    // En las landings estaticas no hay React hidratando: basta el load.
+    if (server) {
+      window.__hcFestiveDecorate = decorate;
+      if (window.__hcFestiveHydrated) decorate();
+    } else if (document.readyState === 'complete') decorate();
+    else window.addEventListener('load', decorate, { once: true });
   }
 
   function clear() {
@@ -274,8 +284,13 @@
     root.removeAttribute('data-festive');
   }
 
-  var cached = readCache();
-  if (cached && cached !== 'none') apply(cached); // evita parpadeo en navegaciones siguientes
+  // Sin parpadeo: frontend-v2 manda el tema desde el servidor en
+  // window.__hcFestiveTheme (antes de cargar este script, bloqueante en <head>).
+  // Las landings estaticas no lo saben de antemano y usan el ultimo tema visto
+  // (localStorage); la API solo corrige si cambio.
+  var cached = server || readCache();
+  if (server) writeCache(server);
+  if (cached && cached !== 'none') apply(cached);
 
   var ctl = window.AbortController ? new AbortController() : null;
   var timer = ctl ? setTimeout(function () { ctl.abort(); }, 4000) : null;
