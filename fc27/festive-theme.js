@@ -71,7 +71,7 @@
       gradient: 'radial-gradient(70% 45% at 100% 0%,#4f94c2 0%,rgba(79,148,194,0) 100%),linear-gradient(180deg,#5a4aa8 0%,#9a6bb0 32%,#e07fa0 62%,#f28f7c 100%)',
       banner: '🌴 Bienvenido a Vice City · todo para GTA VI 🌴',
       emojis: [],
-      palms: true,
+      bgImage: '/gta6-bg.webp',
       accent: '#ff2e93',
       glow: 'rgba(255,46,147,.55)'
     },
@@ -136,13 +136,14 @@
         '@keyframes hc-snowfall{0%{transform:translate3d(0,-4vh,0)}50%{transform:translate3d(24px,52vh,0)}100%{transform:translate3d(-16px,108vh,0)}}' +
         '#hc-festive-banner{background:repeating-linear-gradient(135deg,#c8102e 0 14px,#a50d25 14px 28px);padding:26px 40px 8px !important}';
     }
-    if (t.palms) {
+    if (t.bgImage) {
       extra +=
-        'html[data-festive="gta6"] body{background:' + t.gradient + ' fixed !important}' +
+        'html[data-festive="gta6"] body{background:#e9a07f !important}' +
+        'html[data-festive="gta6"] body:before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;' +
+          'background:linear-gradient(rgba(35,10,55,.12),rgba(35,10,55,.38)),url(' + t.bgImage + ') center 75%/cover no-repeat}' +
         'html[data-festive="gta6"] .page-gradient{background:none !important}' +
         '#hc-festive-banner{background:linear-gradient(90deg,#ff2e93,#ff9e4a,#ff2e93);color:#2a0845;text-shadow:none;font-weight:800}' +
         '#hc-festive-banner button{color:#2a0845}' +
-        '.hc-palm{position:fixed;inset:0;pointer-events:none;z-index:-1}' +
         'html[data-festive="gta6"] h1,html[data-festive="gta6"] h2{text-shadow:0 0 14px rgba(255,46,147,.6),0 0 28px rgba(45,226,230,.3)}';
     }
     return extra + (
@@ -172,83 +173,6 @@
     '<path d="M30 0 Q22 22 0 30 M60 0 Q42 42 0 60 M90 0 Q62 62 0 90 M120 0 Q82 82 0 120"/>' +
     '<circle cx="62" cy="62" r="3" fill="#e8e8e8" stroke="none"/></svg>';
 
-
-  // Palmeras de fondo (siluetas propias, estilo atardecer tropical): troncos
-  // altos y curvos, coronas de frondas plumosas con hojuelas colgantes.
-  // PRNG con semilla para que el dibujo sea identico en cada carga.
-  function rng(seed) {
-    return function () {
-      seed |= 0; seed = seed + 0x6D2B79F5 | 0;
-      var t = Math.imul(seed ^ seed >>> 15, 1 | seed);
-      t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
-      return ((t ^ t >>> 14) >>> 0) / 4294967296;
-    };
-  }
-
-  function palmPath(P, rand) {
-    var d = '', u = P.u * P.s;
-    // tronco: bezier cuadratica base->corona, ancho decreciente
-    var bx = P.bx, by = P.by, cx = P.cx, cy = P.cy, kx = (bx + cx) / 2 + P.lean * u, ky = (by + cy) / 2;
-    var L = [], R = [], n = 24, i, t, x, y, tx, ty, tl, w;
-    for (i = 0; i <= n; i++) {
-      t = i / n;
-      x = (1 - t) * (1 - t) * bx + 2 * (1 - t) * t * kx + t * t * cx;
-      y = (1 - t) * (1 - t) * by + 2 * (1 - t) * t * ky + t * t * cy;
-      tx = 2 * (1 - t) * (kx - bx) + 2 * t * (cx - kx); ty = 2 * (1 - t) * (ky - by) + 2 * t * (cy - ky);
-      tl = Math.sqrt(tx * tx + ty * ty) || 1;
-      w = (0.034 - 0.020 * t) * u;
-      L.push([x - ty / tl * w, y + tx / tl * w]); R.push([x + ty / tl * w, y - tx / tl * w]);
-    }
-    d += 'M' + L[0][0].toFixed(1) + ' ' + L[0][1].toFixed(1);
-    for (i = 1; i <= n; i++) d += 'L' + L[i][0].toFixed(1) + ' ' + L[i][1].toFixed(1);
-    for (i = n; i >= 0; i--) d += 'L' + R[i][0].toFixed(1) + ' ' + R[i][1].toFixed(1);
-    d += 'Z';
-    // frondas
-    var angles = [-172, -150, -128, -105, -82, -58, -34, -10, 14, 38, 150, 172, 196];
-    angles.forEach(function (deg, fi) {
-      var a = (deg + (rand() - 0.5) * 10) * Math.PI / 180;
-      var FL = u * (0.46 + rand() * 0.22) * (Math.abs(Math.sin(a)) > 0.8 ? 0.8 : 1);
-      var G = FL * (0.5 + 0.55 * Math.abs(Math.cos(a)));
-      var dx = Math.cos(a), dy = Math.sin(a), N = 38, prev = [cx, cy];
-      for (var k = 1; k <= N; k++) {
-        var tt = k / N, px = cx + dx * FL * tt, py = cy + dy * FL * tt + G * tt * tt;
-        var ux = px - prev[0], uy = py - prev[1], ul = Math.sqrt(ux * ux + uy * uy) || 1;
-        ux /= ul; uy /= ul;
-        var prof = Math.pow(Math.sin(Math.PI * Math.min(1, 0.06 + tt * 0.94)), 0.85);
-        [1, -1].forEach(function (sd) {
-          var ln = u * 0.24 * prof * (0.65 + rand() * 0.7) + u * 0.012;
-          var nx = -uy * sd, ny = ux * sd;
-          var vx = ux * 0.42 + nx * 0.5, vy = uy * 0.42 + ny * 0.5 + 0.62 + rand() * 0.2, vl = Math.sqrt(vx * vx + vy * vy);
-          var ex = px + vx / vl * ln, ey = py + vy / vl * ln;
-          var mx = (px + ex) / 2 + nx * ln * 0.12, my = (py + ey) / 2 - ln * 0.08, hw = u * 0.0075;
-          d += 'M' + px.toFixed(1) + ' ' + (py - hw).toFixed(1) + 'Q' + mx.toFixed(1) + ' ' + (my - hw).toFixed(1) + ' ' + ex.toFixed(1) + ' ' + ey.toFixed(1) +
-               'Q' + mx.toFixed(1) + ' ' + (my + hw).toFixed(1) + ' ' + px.toFixed(1) + ' ' + (py + hw).toFixed(1) + 'Z';
-        });
-        prev = [px, py];
-      }
-      // raquis (nervio central)
-      var sp = 'M' + cx + ' ' + cy;
-      for (var q = 1; q <= 12; q++) { var qt = q / 12; sp += 'L' + (cx + dx * FL * qt).toFixed(1) + ' ' + (cy + dy * FL * qt + G * qt * qt).toFixed(1); }
-      d += sp + 'L' + (cx + dx * FL).toFixed(1) + ' ' + (cy + dy * FL + G + 2).toFixed(1) + 'L' + cx + ' ' + (cy + u * 0.012).toFixed(1) + 'Z';
-    });
-    return d;
-  }
-
-  function palmsSvg() {
-    var W = window.innerWidth, H = window.innerHeight, u = Math.min(W, H * 1.3) * 0.5;
-    var palms = [
-      { cx: W * 0.88, cy: H * 0.30, bx: W * 0.84, by: H + 20, s: 1.0, lean: 0.10, fill: 'rgb(98,42,104)', op: 0.55, seed: 7 },
-      { cx: W * 0.12, cy: H * 0.34, bx: W * 0.17, by: H + 20, s: 1.0, lean: -0.08, fill: 'rgb(98,42,104)', op: 0.55, seed: 21 },
-      { cx: W * 0.30, cy: H * 0.64, bx: W * 0.27, by: H + 20, s: 0.55, lean: 0.05, fill: 'rgb(118,78,150)', op: 0.40, seed: 33 },
-      { cx: W * 0.74, cy: H * 0.70, bx: W * 0.77, by: H + 20, s: 0.5, lean: -0.05, fill: 'rgb(118,78,150)', op: 0.40, seed: 45 }
-    ];
-    var out = '';
-    palms.forEach(function (P) {
-      P.u = u;
-      out += '<path d="' + palmPath(P, rng(P.seed)) + '" fill="' + P.fill + '" fill-opacity="' + P.op + '"/>';
-    });
-    return '<svg width="' + W + '" height="' + H + '" viewBox="0 0 ' + W + ' ' + H + '" xmlns="http://www.w3.org/2000/svg">' + out + '</svg>';
-  }
 
   function apply(name) {
     var t = THEMES[name];
@@ -326,19 +250,6 @@
         document.body.appendChild(lights);
       }
 
-      if (t.palms) {
-        var pl = document.createElement('div');
-        pl.className = 'hc-palm';
-        pl.setAttribute('aria-hidden', 'true');
-        pl.innerHTML = palmsSvg();
-        document.body.appendChild(pl);
-        var rt;
-        window.addEventListener('resize', function () {
-          clearTimeout(rt);
-          rt = setTimeout(function () { var el = document.querySelector('.hc-palm'); if (el) el.innerHTML = palmsSvg(); }, 250);
-        });
-      }
-
       if (name === 'halloween') {
         ['l', 'r'].forEach(function (side) {
           var c = document.createElement('div');
@@ -358,7 +269,7 @@
     ['hc-festive-css', 'hc-festive-banner', 'hc-festive-layer', 'hc-lights'].forEach(function (id) {
       var el = document.getElementById(id); if (el) el.remove();
     });
-    Array.prototype.forEach.call(document.querySelectorAll('.hc-corner,.hc-palm'), function (el) { el.remove(); });
+    Array.prototype.forEach.call(document.querySelectorAll('.hc-corner'), function (el) { el.remove(); });
     root.removeAttribute('data-festive');
   }
 
