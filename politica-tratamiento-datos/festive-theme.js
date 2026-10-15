@@ -142,9 +142,9 @@
         'html[data-festive="gta6"] .page-gradient{background:none !important}' +
         '#hc-festive-banner{background:linear-gradient(90deg,#ff2e93,#ff9e4a,#ff2e93);color:#2a0845;text-shadow:none;font-weight:800}' +
         '#hc-festive-banner button{color:#2a0845}' +
-        '.hc-palm{position:fixed;width:78vmin;height:78vmin;pointer-events:none;z-index:-1}' +
-        '.hc-palm.tl{top:-14vmin;left:-14vmin}' +
-        '.hc-palm.br{bottom:-14vmin;right:-14vmin;transform:rotate(180deg)}' +
+        '.hc-palm{position:fixed;width:95vmin;height:95vmin;pointer-events:none;z-index:-1;filter:blur(1.2px)}' +
+        '.hc-palm.tl{left:-8vmin;bottom:-14vmin}' +
+        '.hc-palm.br{right:-8vmin;top:-2vh;transform:scaleX(-1)}' +
         'html[data-festive="gta6"] h1,html[data-festive="gta6"] h2{text-shadow:0 0 14px rgba(255,46,147,.6),0 0 28px rgba(45,226,230,.3)}';
     }
     return extra + (
@@ -178,27 +178,33 @@
   // Palmera de fondo: frondas con hojuelas generadas, para que se vea como
   // las siluetas translucidas del icono de GTA VI.
   function palmSvg() {
-    var col = 'rgb(52,12,110)', out = '', fr = [-25, 0, 25, 50, 75, 100, 125, 150, 175, 200, 225];
-    fr.forEach(function (deg, i) {
-      var ang = deg * Math.PI / 180, L = 340 + (i % 3) * 55, N = 58, prev = [20, 20];
-      var dx = Math.cos(ang), dy = Math.sin(ang);
+    // Corona en (70,430): frondas que suben y se arquean, con hojuelas
+    // colgando hacia abajo (peine), como las siluetas del icono.
+    var out = '', cx = 70, cy = 430;
+    var fronds = [[-160, 300], [-125, 360], [-90, 340], [-55, 360], [-20, 300]];
+    fronds.forEach(function (f) {
+      var a = f[0] * Math.PI / 180, L = f[1], G = 0.85 * L, N = 24, prev = [cx, cy];
+      var dx = Math.cos(a), dy = Math.sin(a), spine = 'M' + cx + ' ' + cy;
       for (var k = 1; k <= N; k++) {
-        var t = k / N;
-        var x = 20 + dx * L * t, y = 20 + dy * L * t + 170 * t * t;
+        var t = k / N, x = cx + dx * L * t, y = cy + dy * L * t + G * t * t;
         var tx = x - prev[0], ty = y - prev[1], tl = Math.sqrt(tx * tx + ty * ty) || 1;
         tx /= tl; ty /= tl;
-        var nx = -ty, ny = tx, len = 115 * Math.pow(Math.sin(Math.PI * Math.min(1, t * 1.08)), 0.7) + 16;
+        spine += ' L' + x.toFixed(1) + ' ' + y.toFixed(1);
+        var len = 70 * Math.pow(Math.sin(Math.PI * Math.min(1, 0.1 + t * 0.9)), 0.8) + 8;
         [1, -1].forEach(function (sd) {
-          var ex = x + (tx * 0.7 + nx * 0.7 * sd) * len, ey = y + (ty * 0.7 + ny * 0.7 * sd) * len + len * 0.3;
-          var bx = nx * 5.5, by = ny * 5.5;
-          out += '<path d="M' + (x - bx).toFixed(1) + ' ' + (y - by).toFixed(1) + ' Q' + ((x + ex) / 2 + nx * 4 * sd).toFixed(1) + ' ' + ((y + ey) / 2 + 10).toFixed(1) + ' ' + ex.toFixed(1) + ' ' + ey.toFixed(1) +
-                 ' Q' + ((x + ex) / 2 + nx * 4 * sd).toFixed(1) + ' ' + ((y + ey) / 2 + 2).toFixed(1) + ' ' + (x + bx).toFixed(1) + ' ' + (y + by).toFixed(1) + 'Z"/>';
+          var px = -ty * sd, py = tx * sd;               // normal (lado)
+          var vx = tx * 0.35 + px * 0.45, vy = ty * 0.35 + py * 0.45 + 0.85;  // cae hacia abajo
+          var vl = Math.sqrt(vx * vx + vy * vy);
+          var ex = x + vx / vl * len, ey = y + vy / vl * len;
+          var mx = (x + ex) / 2 + px * 5, my = (y + ey) / 2 - 3;
+          out += '<path d="M' + x.toFixed(1) + ' ' + (y - 1.4).toFixed(1) + ' Q' + mx.toFixed(1) + ' ' + my.toFixed(1) + ' ' + ex.toFixed(1) + ' ' + ey.toFixed(1) +
+                 ' Q' + (mx - 2).toFixed(1) + ' ' + (my + 6).toFixed(1) + ' ' + x.toFixed(1) + ' ' + (y + 1.4).toFixed(1) + 'Z"/>';
         });
         prev = [x, y];
       }
-      out += '<path d="M20 20 Q' + (20 + dx * L * 0.5) + ' ' + (20 + dy * L * 0.5 + 40) + ' ' + (20 + dx * L) + ' ' + (20 + dy * L + 170) + '" fill="none" stroke="' + col + '" stroke-width="7"/>';
+      out += '<path d="' + spine + '" fill="none" stroke="rgb(52,12,110)" stroke-width="5" stroke-linecap="round"/>';
     });
-    return '<svg viewBox="0 0 560 560" xmlns="http://www.w3.org/2000/svg" fill="' + col + '" opacity=".3">' + out + '</svg>';
+    return '<svg viewBox="0 0 560 560" xmlns="http://www.w3.org/2000/svg" fill="rgb(52,12,110)" opacity=".32">' + out + '</svg>';
   }
 
   function apply(name) {
