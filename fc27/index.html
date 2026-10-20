@@ -719,6 +719,7 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
 })();
 </script>
 <script src="/fc27/festive-theme.js"></script>
+<script src="/fc27/currency.js"></script>
 </head>
 <body>
 
@@ -1137,7 +1138,10 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
     ]
   };
 
+  // Muestra el precio en la moneda elegida (COP/USD/MXN/CLP). En COP queda
+  // igual que siempre ("$169.990"). Ver currency.js.
   function fmtCOP(n) {
+    if (window.HCCurrency) return window.HCCurrency.short(n);
     return '$' + Number(n).toLocaleString('es-CO');
   }
   // El catálogo usa precio_descuento = 0 con el sentido de "sin descuento",
@@ -1235,7 +1239,10 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
 
   // ---------------- contenido de texto ----------------
   function renderContent(c) {
+    // Se guarda el contenido SIN convertir para poder repintar si cambia la moneda.
+    window.__CONTENT_RAW = c || null;
     c = Object.assign({}, CONTENT_DEFAULTS, c || {});
+    if (window.HCCurrency) c = window.HCCurrency.localizeContent(c);
     setText('v-platform_label', c.platform_label);
     setText('v-title', c.title);
     setText('v-subtitle', c.subtitle);
@@ -1842,6 +1849,8 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
     window.__PLAN_DATA[id] = (PLAN_DEFAULTS[id] || []).slice();
   });
   renderContent(CONTENT_DEFAULTS);
+  // Cambió la moneda (selector, país detectado o tasas): repinta textos y tarjetas.
+  if (window.HCCurrency) window.HCCurrency.onChange(function () { renderContent(window.__CONTENT_RAW || CONTENT_DEFAULTS); });
 
   // Title/image "canónicos" del catálogo (mismo endpoint que usa la ficha
   // de producto real) para las 7 fichas que vive esta landing — hacen
