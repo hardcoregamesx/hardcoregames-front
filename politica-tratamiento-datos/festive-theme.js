@@ -125,7 +125,8 @@
       },
       gradient: 'linear-gradient(135deg,#000000 0%,#1a1500 55%,#5c4a00 130%)',
       banner: '🖤 BLACK FRIDAY en Hardcore Games · ofertas por tiempo limitado ⚡',
-      emojis: ['🏷️', '💥', '⚡', '🔥', '🖤', '💸'],
+      emojis: [],
+      sparkles: true,
       accent: '#ffd400',
       glow: 'rgba(255,212,0,.5)'
     }
@@ -169,7 +170,10 @@
         '#hc-festive-banner{background:repeating-linear-gradient(135deg,#ffd400 0 16px,#111 16px 32px);color:#fff;font-weight:900;letter-spacing:.06em;text-transform:uppercase;' +
           'text-shadow:0 0 4px #000,0 0 4px #000,0 1px 8px #000;border-bottom:2px solid #ffd400}' +
         '#hc-festive-banner button{color:#fff;text-shadow:0 0 4px #000}' +
-        'html[data-festive="blackfriday"] h1,html[data-festive="blackfriday"] h2{text-shadow:0 0 18px rgba(255,212,0,.35)}';
+        'html[data-festive="blackfriday"] h1,html[data-festive="blackfriday"] h2,html[data-festive="blackfriday"] h3{text-shadow:0 2px 6px rgba(0,0,0,.9),0 0 18px rgba(255,212,0,.5)}' +
+        'html[data-festive="blackfriday"] p,html[data-festive="blackfriday"] span,html[data-festive="blackfriday"] li,html[data-festive="blackfriday"] a,html[data-festive="blackfriday"] label,html[data-festive="blackfriday"] small{text-shadow:0 1px 3px rgba(0,0,0,.8)}' +
+        '.hc-spark{position:absolute;border-radius:50%;background:#ffe45c;opacity:0;animation:hc-glint ease-in-out infinite;box-shadow:0 0 8px 2px rgba(255,212,0,.85),0 0 22px 6px rgba(255,212,0,.35)}' +
+        '@keyframes hc-glint{0%,100%{opacity:0;transform:scale(.3)}50%{opacity:1;transform:scale(1.15)}}';
     }
     if (t.bgImage) {
       extra +=
@@ -198,7 +202,7 @@
       '.hc-corner.l{left:0}.hc-corner.r{right:0;transform:scaleX(-1)}' +
       'html[data-festive="' + name + '"] a:hover,html[data-festive="' + name + '"] button:hover{text-shadow:0 0 12px ' + t.glow + '}' +
       '@media (max-width:640px){.hc-corner{width:70px;height:70px}}' +
-      '@media (prefers-reduced-motion:reduce){.hc-fx,.hc-snow{animation:none;display:none}.hc-bulb{animation:none}}'
+      '@media (prefers-reduced-motion:reduce){.hc-fx,.hc-snow,.hc-spark{animation:none;display:none}.hc-bulb{animation:none}}'
     );
   }
 
@@ -254,6 +258,20 @@
         s.style.animationDelay = -(i * 2.1) + 's';
         s.style.opacity = '.75';
         layer.appendChild(s);
+      }
+      if (t.sparkles) {
+        // Destellos dorados fijos que titilan (sin caer): 22 puntos repartidos.
+        for (var q = 0; q < 22; q++) {
+          var sp = document.createElement('span');
+          sp.className = 'hc-spark';
+          var d = 2 + (q % 3);
+          sp.style.width = sp.style.height = d + 'px';
+          sp.style.left = (q * 13.7 + (q % 4) * 5) % 97 + 'vw';
+          sp.style.top = (q * 29.3 + (q % 5) * 7) % 94 + 'vh';
+          sp.style.animationDuration = 2.6 + (q % 5) * 0.9 + 's';
+          sp.style.animationDelay = -(q * 0.7) + 's';
+          layer.appendChild(sp);
+        }
       }
       if (t.snow) {
         for (var j = 0; j < 40; j++) {
