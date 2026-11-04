@@ -103,6 +103,31 @@
       lights: true,
       accent: '#c8102e',
       glow: 'rgba(225,29,46,.4)'
+    },
+    blackfriday: {
+      vars: {
+        background: '0 0% 4%',
+        card: '0 0% 8%',
+        'card-2': '0 0% 10%',
+        popover: '0 0% 8%',
+        primary: '50 100% 50%',
+        'primary-foreground': '0 0% 5%',
+        secondary: '0 0% 13%',
+        muted: '0 0% 16%',
+        'muted-foreground': '0 0% 72%',
+        accent: '0 88% 56%',
+        'accent-foreground': '0 0% 100%',
+        border: '48 60% 22%',
+        input: '0 0% 12%',
+        ring: '50 100% 50%',
+        cta: '50 100% 50%',
+        'cta-foreground': '0 0% 5%'
+      },
+      gradient: 'linear-gradient(135deg,#000000 0%,#1a1500 55%,#5c4a00 130%)',
+      banner: '🖤 BLACK FRIDAY en Hardcore Games · ofertas por tiempo limitado ⚡',
+      emojis: ['🏷️', '💥', '⚡', '🔥', '🖤', '💸'],
+      accent: '#ffd400',
+      glow: 'rgba(255,212,0,.5)'
     }
   };
 
@@ -137,6 +162,14 @@
         '.hc-snow{position:absolute;top:-4vh;border-radius:50%;background:#fff;opacity:.85;animation:hc-snowfall linear infinite;box-shadow:0 0 6px rgba(255,255,255,.8)}' +
         '@keyframes hc-snowfall{0%{transform:translate3d(0,-4vh,0)}50%{transform:translate3d(24px,52vh,0)}100%{transform:translate3d(-16px,108vh,0)}}' +
         '#hc-festive-banner{background:repeating-linear-gradient(135deg,#c8102e 0 14px,#a50d25 14px 28px);padding:26px 40px 8px !important}';
+    }
+    if (name === 'blackfriday') {
+      // Cinta de precaucion amarilla/negra + brillo dorado en titulos.
+      extra +=
+        '#hc-festive-banner{background:repeating-linear-gradient(135deg,#ffd400 0 16px,#111 16px 32px);color:#fff;font-weight:900;letter-spacing:.06em;text-transform:uppercase;' +
+          'text-shadow:0 0 4px #000,0 0 4px #000,0 1px 8px #000;border-bottom:2px solid #ffd400}' +
+        '#hc-festive-banner button{color:#fff;text-shadow:0 0 4px #000}' +
+        'html[data-festive="blackfriday"] h1,html[data-festive="blackfriday"] h2{text-shadow:0 0 18px rgba(255,212,0,.35)}';
     }
     if (t.bgImage) {
       extra +=
