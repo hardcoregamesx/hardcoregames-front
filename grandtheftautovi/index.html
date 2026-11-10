@@ -378,6 +378,23 @@
   }
 
   @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+
+  /* Desplegable "Cómo se instala" bajo las modalidades */
+  .howto { margin-top: 14px; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+  .howto > summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 18px; font-weight: 700; font-size: 15px; color: var(--foreground); }
+  .howto > summary::-webkit-details-marker { display: none; }
+  .howto > summary:focus-visible { outline: 2px solid var(--cta); outline-offset: -2px; }
+  .howto > summary .chev { flex: none; width: 26px; height: 26px; border-radius: 50%; background: var(--cta); color: var(--cta-foreground); display: inline-flex; align-items: center; justify-content: center; font-size: 13px; transition: transform .2s; }
+  .howto[open] > summary .chev { transform: rotate(180deg); }
+  .howto-body { padding: 0 18px 16px; display: grid; gap: 10px; }
+  .howto-intro { margin: 0; font-size: 13px; color: var(--muted-foreground); }
+  .howto-item { display: flex; align-items: center; justify-content: space-between; gap: 12px; border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 14px; background: var(--card-2, var(--card)); }
+  .howto-item .t { font-weight: 700; font-size: 14px; }
+  .howto-item .d { display: block; font-weight: 400; font-size: 12.5px; color: var(--muted-foreground); margin-top: 2px; }
+  .howto-item a { flex: none; background: var(--cta); color: var(--cta-foreground); font-weight: 800; font-size: 13px; padding: 8px 14px; border-radius: 999px; text-decoration: none; white-space: nowrap; }
+  .howto-item a:hover { filter: brightness(1.08); }
+  .howto-item a:focus-visible { outline: 2px solid var(--foreground); outline-offset: 2px; }
+  .howto-item.diff { border-color: var(--cta); }
 </style>
 <!-- Meta Pixel Code -->
 <script>
@@ -557,6 +574,10 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
     <div class="plans plans-3" id="plansContainer">
       <div class="plans-loading" id="plansLoading">Cargando disponibilidad…</div>
     </div>
+        <details class="howto" id="howtoBox">
+      <summary><span>¿Cómo se instala? Ver videos</span><span class="chev" aria-hidden="true">&#9660;</span></summary>
+      <div class="howto-body" id="howtoBody"></div>
+    </details>
     <div class="cuotas-note is-hidden" id="cuotasNote"></div>
   </section>
 
@@ -1426,5 +1447,51 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
 <script src="/assets/rewards-widget.js"></script>
 <!-- Hardcore Sorteos: widget flotante (no toca el bundle de la app) -->
 <script src="/assets/sorteos-widget.js"></script>
+<script>
+(function () {
+  // Videos de instalación: las mismas URLs de las fichas de producto del sitio.
+  var DIFF = 'https://www.youtube.com/watch?v=Q7R4choPl7o';
+  var VIDEOS = {
+    ps: { primaria: 'https://youtu.be/4QLM0OLC8rU', secundaria: 'https://youtu.be/6Vzrdh9JCSk', codigo: null },
+    xbox: { primaria: 'https://youtu.be/LVDwvB3hztk', secundaria: 'https://www.youtube.com/watch?v=39nyBwy0h1k', codigo: 'https://www.youtube.com/watch?v=IsTIIrWjVPY' },
+    pc: { pc: 'https://www.youtube.com/watch?v=Q2VhD64uSVU', codigo: null }
+  };
+  var LABELS = {
+    primaria: ['Instalar Primaria', 'Correo y clave; juegas desde tu perfil personal.'],
+    secundaria: ['Instalar Secundaria', 'Juegas con el correo entregado; requiere conexión a internet.'],
+    codigo: ['Activar Código', 'Se canjea directo en tu cuenta.'],
+    pc: ['Instalar en PC', 'Paso a paso para dejar el juego listo en tu cuenta.']
+  };
+  var NOTE_CODIGO_PS = 'El código de PlayStation se canjea directo en tu cuenta de Estados Unidos; no necesita video.';
+  function family(p) { return p === 'xbox' ? 'xbox' : (p === 'pc' ? 'pc' : 'ps'); }
+  function item(key, url) {
+    var l = LABELS[key];
+    return '<div class="howto-item"><div class="t">' + l[0] + '<span class="d">' + l[1] + '</span></div>' +
+      '<a href="' + url + '" target="_blank" rel="noopener noreferrer">&#9654; Ver video</a></div>';
+  }
+  function render(platform) {
+    var body = document.getElementById('howtoBody');
+    if (!body) return;
+    var fam = family(platform), v = VIDEOS[fam], html = '';
+    if (fam !== 'pc') {
+      html += '<div class="howto-item diff"><div class="t">Diferencias entre Primaria y Secundaria<span class="d">Para que elijas la modalidad que más te conviene.</span></div>' +
+        '<a href="' + DIFF + '" target="_blank" rel="noopener noreferrer">&#9654; Ver video</a></div>';
+    }
+    Object.keys(v).forEach(function (k) { if (v[k]) html += item(k, v[k]); });
+    if (fam === 'ps') html += '<p class="howto-intro">' + NOTE_CODIGO_PS + '</p>';
+    body.innerHTML = html;
+  }
+  function current() {
+    var b = document.querySelector('.choice-btn[data-platform][aria-pressed="true"]');
+    return b ? b.getAttribute('data-platform') : 'ps5';
+  }
+  var first = document.querySelector('.choice-btn[data-platform]');
+  var row = first && first.parentNode;
+  if (!row) return;
+  render(current());
+  row.addEventListener('click', function () { setTimeout(function () { render(current()); }, 0); });
+  new MutationObserver(function () { render(current()); }).observe(row, { attributes: true, subtree: true, attributeFilter: ['aria-pressed'] });
+})();
+</script>
 </body>
 </html>
