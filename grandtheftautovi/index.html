@@ -377,6 +377,35 @@
     .site-nav-row { padding: 0 16px 14px; }
   }
 
+
+  /* ===== Landing enfocada en compra: menos salidas, mas guia ===== */
+  #hc-festive-banner { display: none !important; }
+  .site-search, .site-nav-row, .site-locale-wrap, .site-profile-wrap, .portal-note { display: none !important; }
+  .site-topbar { position: static; }
+  .live-banner {
+    background: linear-gradient(90deg, #ff2e88, #b4126a); color: #fff; text-align: center;
+    font-weight: 800; font-size: 14px; letter-spacing: .02em; padding: 10px 16px;
+  }
+  .live-banner .dot { display:inline-block; width:9px; height:9px; border-radius:50%; background:#fff; margin-right:8px; animation: livepulse 1.4s infinite; vertical-align: middle; }
+  @keyframes livepulse { 0%{box-shadow:0 0 0 0 rgba(255,255,255,.8)} 70%{box-shadow:0 0 0 9px rgba(255,255,255,0)} 100%{box-shadow:0 0 0 0 rgba(255,255,255,0)} }
+  .how3 { display:flex; gap:8px; margin-top:18px; }
+  .how3 div { flex:1; background: hsl(250 20% 10% / .75); border:1px solid var(--border); border-radius: var(--radius); padding:10px 8px; text-align:center; font-size:13px; font-weight:700; line-height:1.25; }
+  .how3 b { display:block; color: var(--primary); font-size: 18px; }
+  .how3 small { display:block; font-weight:500; color: var(--muted-foreground); font-size: 11px; margin-top:2px; }
+  .guide-progress { display:flex; gap:6px; margin: 0 0 22px; }
+  .guide-progress i { flex:1; height:4px; border-radius:4px; background: var(--muted); }
+  .guide-progress i.on { background: var(--cta); }
+  #stepPlat, #stepEd, #stepPlans { scroll-margin-top: 12px; }
+  .sticky-buy {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 60; padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
+    background: hsl(250 25% 5% / .96); border-top: 1px solid var(--border); display:flex; align-items:center; gap:12px;
+    transform: translateY(110%); transition: transform .25s ease;
+  }
+  .sticky-buy.is-on { transform: none; }
+  .sticky-buy .t { font-size: 12px; color: var(--muted-foreground); line-height:1.2; }
+  .sticky-buy .t strong { display:block; color: var(--foreground); font-size: 16px; }
+  .sticky-buy .cta { margin: 0; flex: 1; padding: 14px 16px; }
+  body { padding-bottom: 78px; }
   @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 
   /* Desplegable "Cómo se instala" bajo las modalidades */
@@ -418,6 +447,7 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
 </head>
 <body>
 
+<div class="live-banner"><span class="dot"></span>HOY EMPEZAMOS A INSTALAR · Compra y recibe tu juego listo</div>
 <header class="site-topbar">
   <div class="site-topbar-row">
     <a class="site-logo" href="https://hardcoregames.co/">
@@ -515,11 +545,12 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
       <span class="price-unit" id="v-price_unit">COP</span>
     </div>
 
-    <button class="cta" id="v-cta_label" onclick="document.getElementById('choiceRowPlatform').scrollIntoView({behavior:'smooth', block:'center'})">Reservar ahora</button>
+    <button class="cta" id="v-cta_label" onclick="document.getElementById('stepPlat').scrollIntoView({behavior:'smooth', block:'start'})">Comprar ahora</button>
+    <div class="how3"><div><b>1</b>Elige consola<small>10 segundos</small></div><div><b>2</b>Paga seguro<small>Nequi, PSE, tarjeta</small></div><div><b>3</b>Instalamos hoy<small>Soporte por WhatsApp</small></div></div>
   </div>
 </section>
 
-<div class="release-strip">Se podrá jugar el <span>19 de noviembre de 2026</span> — preventa con stock limitado</div>
+<div class="release-strip"><span>Instalaciones desde hoy</span> · lanzamiento oficial el 19 de noviembre de 2026 · stock limitado</div>
 
 <div class="wrap">
 
@@ -527,8 +558,9 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
     <div class="trust" id="trustBar"></div>
   </section>
 
-  <section>
-    <div class="eyebrow" id="v-step1_eyebrow">Paso 1</div>
+  <section id="stepPlat">
+    <div class="guide-progress"><i class="on"></i><i></i><i></i></div>
+    <div class="eyebrow" id="v-step1_eyebrow">Paso 1 de 3</div>
     <h2 class="sec-title" id="v-step1_title">¿En qué consola vas a jugar?</h2>
     <p class="sec-body" id="v-step1_body">El código y la cuenta se preparan para tu plataforma exacta.</p>
 
@@ -544,8 +576,9 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
     </div>
   </section>
 
-  <section>
-    <div class="eyebrow" id="v-step2_eyebrow">Paso 2</div>
+  <section id="stepEd">
+    <div class="guide-progress"><i class="on"></i><i class="on"></i><i></i></div>
+    <div class="eyebrow" id="v-step2_eyebrow">Paso 2 de 3</div>
     <h2 class="sec-title" id="v-step2_title">Elige tu edición</h2>
     <p class="sec-body" id="v-step2_body">Standard incluye la campaña completa. Ultimate suma el contenido exclusivo de lanzamiento.</p>
 
@@ -561,9 +594,10 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
     </div>
   </section>
 
-  <section>
-    <div class="eyebrow" id="v-step3_eyebrow">Paso 3</div>
-    <h2 class="sec-title" id="v-step3_title">Elige tu modalidad</h2>
+  <section id="stepPlans">
+    <div class="guide-progress"><i class="on"></i><i class="on"></i><i class="on"></i></div>
+    <div class="eyebrow" id="v-step3_eyebrow">Paso 3 de 3</div>
+    <h2 class="sec-title" id="v-step3_title">Elige y compra</h2>
     <p class="sec-body" id="plansBody">Primaria y secundaria: correo y clave. Código: se activa directo en tu cuenta.</p>
 
     <div class="pago-switch" id="pagoSwitch" role="group" aria-label="Forma de pago">
@@ -596,6 +630,8 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
   </section>
 
   <footer id="v-footer">Hardcore Games — todos los derechos reservados. Grand Theft Auto VI es marca registrada de Rockstar Games / Take-Two Interactive.</footer>
+
+  <div class="sticky-buy" id="stickyBuy"><div class="t">Desde<strong id="stickyPrice">$169.990</strong></div><button class="cta" type="button" id="stickyBtn">Comprar ahora</button></div>
 
   <div class="gc-overlay" id="gcOverlay" role="dialog" aria-modal="true" aria-labelledby="gcTitle" aria-hidden="true">
     <div class="gc-dialog">
@@ -858,6 +894,12 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
     window.__CONTENT_RAW = c || null;
     c = Object.assign({}, CONTENT_DEFAULTS, c || {});
     c.faq = withCurrentCuotasFaq(c.faq, c.faq_cuotas);
+    // Landing de compra: copy fijo que la variable del admin no debe revertir.
+    c.cta_label = 'Comprar ahora';
+    c.pick_button_label = 'Comprar';
+    c.step1_eyebrow = 'Paso 1 de 3'; c.step2_eyebrow = 'Paso 2 de 3'; c.step3_eyebrow = 'Paso 3 de 3';
+    c.step3_title = 'Elige y compra';
+    c.subtitle = 'Hoy comenzamos a instalar. Compra ahora y juega el día del lanzamiento, con garantía y soporte por WhatsApp.';
     if (window.HCCurrency) c = window.HCCurrency.localizeContent(c);
     window.__CONTENT = c;
     setText('v-platform_label', c.platform_label);
@@ -1045,18 +1087,43 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
     loadCombos(productId);
   }
 
+  function goTo(id) {
+    setTimeout(function () { var el = document.getElementById(id); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 250);
+  }
   document.querySelectorAll('#choiceRowPlatform .choice-btn').forEach(function (btn) {
     btn.addEventListener('click', function () {
       state.platform = btn.getAttribute('data-platform');
       refreshSelection();
+      goTo('stepEd');
     });
   });
   document.querySelectorAll('#choiceRowEdition .choice-btn').forEach(function (btn) {
     btn.addEventListener('click', function () {
       state.edition = btn.getAttribute('data-edition');
       refreshSelection();
+      goTo('stepPlans');
     });
   });
+
+  // Barra de compra fija: lleva al primer paso y se oculta al llegar a los planes.
+  (function () {
+    var bar = document.getElementById('stickyBuy');
+    document.getElementById('stickyBtn').addEventListener('click', function () {
+      var target = document.getElementById('stepPlat');
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+    var hero = document.querySelector('.hero-banner');
+    var plans = document.getElementById('stepPlans');
+    var heroOut = false, plansIn = false;
+    function upd() { bar.classList.toggle('is-on', heroOut && !plansIn); }
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (e) { heroOut = !e[0].isIntersecting; upd(); }).observe(hero);
+      new IntersectionObserver(function (e) { plansIn = e[0].isIntersecting; upd(); }, { threshold: 0.25 }).observe(plans);
+    }
+    var priceEl = document.getElementById('v-price_amount');
+    new MutationObserver(function () { document.getElementById('stickyPrice').textContent = priceEl.textContent; })
+      .observe(priceEl, { childList: true, characterData: true, subtree: true });
+  })();
 
   // ---------------- selector de forma de pago ----------------
   // Un solo interruptor para todas las tarjetas, como en fc27 y la ficha.
