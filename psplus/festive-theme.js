@@ -71,7 +71,7 @@
         'cta-foreground': '285 55% 14%'
       },
       gradient: 'radial-gradient(70% 45% at 100% 0%,#4f94c2 0%,rgba(79,148,194,0) 100%),linear-gradient(180deg,#5a4aa8 0%,#9a6bb0 32%,#e07fa0 62%,#f28f7c 100%)',
-      banner: '🌴 Bienvenido a Vice City · todo para GTA VI 🌴',
+      banner: '', // sin banner superior en GTA VI (ahora hay cuenta regresiva)
       emojis: [],
       bgImage: '/gta6-bg.webp',
       accent: '#ff2e93',
@@ -229,7 +229,7 @@
       // Banner superior (descartable por sesion).
       var dismissed = false;
       try { dismissed = sessionStorage.getItem('hc_festive_banner_x') === '1'; } catch (e) { /* ignorar */ }
-      if (!dismissed) {
+      if (!dismissed && t.banner) {
         var b = document.createElement('div');
         b.id = 'hc-festive-banner';
         b.textContent = t.banner;
