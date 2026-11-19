@@ -424,6 +424,10 @@
   .howto-item a:hover { filter: brightness(1.08); }
   .howto-item a:focus-visible { outline: 2px solid var(--foreground); outline-offset: 2px; }
   .howto-item.diff { border-color: var(--cta); }
+  .aviso-entrega{display:flex;align-items:center;gap:14px;margin:16px auto;max-width:1200px;width:calc(100% - 32px);padding:16px 20px;border:2px solid #f5c542;border-radius:14px;background:rgba(245,197,66,.14);color:var(--foreground)}
+  .aviso-entrega .ic{font-size:34px;line-height:1}
+  .aviso-entrega strong{display:block;font-size:clamp(18px,3.4vw,28px);font-weight:800;line-height:1.2}
+  .aviso-entrega span.t{display:block;margin-top:4px;font-size:clamp(13px,2vw,15px);color:var(--muted-foreground)}
 </style>
 <!-- Meta Pixel Code -->
 <script>
@@ -493,6 +497,11 @@ src="https://www.facebook.com/tr?id=1242058424697245&ev=PageView&noscript=1"
     <a href="https://hardcoregames.co/filters?types=3">Suscripciones</a>
   </nav>
 </header>
+
+<div class="aviso-entrega" role="alert">
+  <div class="ic" aria-hidden="true">⚠️</div>
+  <div><strong>Las entregas de GTA VI tardarán hasta 24 horas</strong><span class="t">Por la alta demanda del lanzamiento, tu juego puede tardar hasta 24 horas en ser entregado. Gracias por tu paciencia.</span></div>
+</div>
 
 <div class="site-drawer-scrim" id="drawerScrim"></div>
 <aside class="site-drawer" id="siteDrawer" aria-hidden="true">
