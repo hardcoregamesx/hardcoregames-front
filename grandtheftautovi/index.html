@@ -26,6 +26,29 @@
     location.replace('https://www.hardcoregames.co' + location.pathname + location.search + location.hash);
   }
 </script>
+<script>
+  // Abrir SIEMPRE arriba. Los navegadores internos (WhatsApp, Instagram,
+  // Facebook) restauran el scroll anterior y, al llegar por la redireccion
+  // /gta6 -> /grandtheftautovi, la pagina podia aparecer en el fondo. Se
+  // desactiva la restauracion y se fuerza el top hasta que el usuario toque
+  // la pantalla. Si el enlace trae #ancla, se respeta.
+  (function () {
+    try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; } catch (e) {}
+    try { document.documentElement.style.overflowAnchor = 'none'; } catch (e) {}
+    if (location.hash) return;
+    var moved = false;
+    function stop() { moved = true; }
+    ['touchstart', 'wheel', 'mousedown', 'keydown'].forEach(function (ev) {
+      window.addEventListener(ev, stop, { passive: true, once: true });
+    });
+    function top() { if (!moved && (window.pageYOffset || document.documentElement.scrollTop)) window.scrollTo(0, 0); }
+    top();
+    document.addEventListener('DOMContentLoaded', top);
+    window.addEventListener('load', top);
+    window.addEventListener('pageshow', top);
+    [100, 300, 700, 1500, 3000].forEach(function (t) { setTimeout(top, t); });
+  })();
+</script>
 <style>
   :root {
     --background: hsl(250 25% 5%);
