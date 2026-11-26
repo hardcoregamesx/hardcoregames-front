@@ -124,7 +124,7 @@
         'cta-foreground': '0 0% 5%'
       },
       gradient: 'linear-gradient(135deg,#000000 0%,#1a1500 55%,#5c4a00 130%)',
-      banner: '🖤 BLACK FRIDAY en Hardcore Games · ofertas por tiempo limitado ⚡',
+      banner: '', // sin banner superior: la campaña va en los banners del home
       emojis: [],
       sparkles: true,
       accent: '#ffd400',
